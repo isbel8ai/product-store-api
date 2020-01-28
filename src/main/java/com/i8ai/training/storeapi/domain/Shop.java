@@ -1,21 +1,26 @@
 package com.i8ai.training.storeapi.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Shop {
     @Id
     private Long id;
-    @NonNull
+    @NotBlank
+    @Column(nullable = false)
     private String name;
-    @NonNull
+    @NotBlank
+    @Column(nullable = false)
     private String address;
     private String Description;
 }
