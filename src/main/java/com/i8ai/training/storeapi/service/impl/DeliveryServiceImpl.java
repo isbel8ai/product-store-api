@@ -24,14 +24,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (end == null) end = new Date();
 
         if (productId == null) {
-            if(shopId == null) {
+            if (shopId == null) {
                 return deliveryRepository.findAllByDeliveredBetween(start, end);
             } else {
                 return deliveryRepository.findAllByDeliveredBetweenAndToId(start, end, shopId);
             }
         }
 
-        if(shopId == null) {
+        if (shopId == null) {
             return deliveryRepository.findAllByDeliveredBetweenAndFromProductId(start, end, productId);
         } else {
             return deliveryRepository.findAllByDeliveredBetweenAndFromProductIdAndToId(start, end, productId, shopId);
@@ -40,6 +40,10 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public Delivery registerDelivery(Delivery newDelivery) {
+        Double currentLotAmount = newDelivery.getFrom().getAmount() - deliveryRepository.getDeliveredAmountByLotId(newDelivery.getFrom().getId());
+        if (newDelivery.getAmount() > currentLotAmount) {
+            throw new RuntimeException("Not enough amount in lot to make the delivery");
+        }
         return deliveryRepository.save(newDelivery);
     }
 
