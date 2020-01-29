@@ -12,4 +12,6 @@ public interface LotService {
     Lot registerLot(Lot newLot);
 
     void deleteLot(Long lotId);
+
+    Double getProductReceivedAmount(Long productId);
 }

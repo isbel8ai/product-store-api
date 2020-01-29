@@ -37,4 +37,9 @@ public class LotServiceImpl implements LotService {
     public void deleteLot(Long lotId) {
         lotRepository.deleteById(lotId);
     }
+
+    @Override
+    public Double getProductReceivedAmount(Long productId) {
+        return lotRepository.getAmountArrivedByProductId(productId);
+    }
 }
