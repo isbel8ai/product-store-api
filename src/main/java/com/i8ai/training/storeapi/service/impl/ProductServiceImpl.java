@@ -4,6 +4,7 @@ import com.i8ai.training.storeapi.domain.Product;
 import com.i8ai.training.storeapi.repository.ProductRepository;
 import com.i8ai.training.storeapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product newProduct) {
-        return productRepository.save(newProduct);
+        try {
+            return productRepository.save(newProduct);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Product with this code already exist");
+        }
     }
 
     @Override
@@ -41,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
         product.setMeasure(modifiedProduct.getMeasure());
         product.setDescription(modifiedProduct.getDescription());
         productRepository.save(product);
-        return null;
+        return product;
     }
 
     @Override
