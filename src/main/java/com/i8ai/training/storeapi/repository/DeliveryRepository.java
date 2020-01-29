@@ -2,6 +2,7 @@ package com.i8ai.training.storeapi.repository;
 
 import com.i8ai.training.storeapi.domain.Delivery;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -16,4 +17,7 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
     List<Delivery> findAllByDeliveredBetweenAndToId(Date start, Date end, Long shopId);
 
     List<Delivery> findAllByDeliveredBetween(Date start, Date end);
+
+    @Query("select sum(d.amount) from Delivery d where d.from.id = ?1")
+    Double getDeliveredAmountByLotId(Long lotId);
 }
