@@ -59,17 +59,6 @@ class LotServiceImplTest {
     }
 
     @Test
-    void addLot() {
-        Lot lot = lotService.addLot(new Lot(null, new Date(7000), 3.5, 650.0, productB));
-        assertNotNull(lot.getId());
-    }
-
-    @Test
-    void deleteLot() {
-        lotService.deleteLot(removableLot.getId());
-    }
-
-    @Test
     void getLotsWithAllFilters() {
         List<Lot> lots = lotService.getLots(new Date(2000), new Date(5000), productB.getId());
         assertEquals(1, lots.size());
@@ -103,5 +92,22 @@ class LotServiceImplTest {
     void getAllLots() {
         List<Lot> lots = lotService.getLots(null, null, null);
         assertEquals(5, lots.size());
+    }
+
+
+    @Test
+    void registerLot() {
+        assertNotNull(lotService.registerLot(new Lot(null, new Date(7000), 3.5, 650.0, productB)));
+    }
+
+    @Test
+    void deleteLot() {
+        lotService.deleteLot(removableLot.getId());
+    }
+
+    @Test
+    void getProductReceivedAmount() {
+        assertEquals(110, lotService.getProductReceivedAmount(productB.getId()));
+        assertEquals(80, lotService.getProductReceivedAmount(productA.getId()));
     }
 }
