@@ -3,10 +3,8 @@ package com.i8ai.training.storeapi.controller;
 import com.i8ai.training.storeapi.domain.Delivery;
 import com.i8ai.training.storeapi.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +24,16 @@ public class DeliveryController {
                                         @RequestParam(required = false) Date endDate,
                                         @RequestParam(required = false) Long productId,
                                         @RequestParam(required = false) Long shopId) {
-        return deliveryService.getDeliveries(startDate, endDate, productId,shopId);
+        return deliveryService.getDeliveries(startDate, endDate, productId, shopId);
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Delivery registerDelivery(@RequestBody Delivery newDelivery) {
+        return deliveryService.registerDelivery(newDelivery);
+    }
+
+    @DeleteMapping("/{deliveryId}")
+    public void deleteDelivery(@PathVariable Long deliveryId) {
+        deliveryService.deleteDelivery(deliveryId);
     }
 }

@@ -37,4 +37,14 @@ public class DeliveryServiceImpl implements DeliveryService {
             return deliveryRepository.findAllByDeliveredBetweenAndFromProductIdAndToId(start, end, productId, shopId);
         }
     }
+
+    @Override
+    public Delivery registerDelivery(Delivery newDelivery) {
+        return deliveryRepository.save(newDelivery);
+    }
+
+    @Override
+    public void deleteDelivery(Long deliveryId) {
+        deliveryRepository.deleteById(deliveryId);
+    }
 }
