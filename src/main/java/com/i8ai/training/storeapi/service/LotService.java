@@ -9,7 +9,7 @@ public interface LotService {
 
     List<Lot> getLots(Date start, Date end, Long productId);
 
-    Lot addLot(Lot newLot);
+    Lot registerLot(Lot newLot);
 
     void deleteLot(Long lotId);
 }

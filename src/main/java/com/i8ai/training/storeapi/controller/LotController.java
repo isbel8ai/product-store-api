@@ -27,8 +27,8 @@ public class LotController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Lot addLot(@RequestBody Lot newLot) {
-        return lotService.addLot(newLot);
+    public Lot registerLot(@RequestBody Lot newLot) {
+        return lotService.registerLot(newLot);
     }
 
     @DeleteMapping("/{lotId}")
