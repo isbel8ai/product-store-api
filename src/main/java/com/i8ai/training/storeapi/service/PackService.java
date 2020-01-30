@@ -10,5 +10,7 @@ public interface PackService {
 
     Pack registerPack(Pack newPack);
 
+    Pack getPack(Long packId);
+
     void deletePack(Long packId);
 }

@@ -51,9 +51,14 @@ public class PackServiceImpl implements PackService {
     @Override
     public Pack registerPack(Pack newPack) {
         if (newPack.getAmount() > getCurrentLotAmount(newPack.getLot().getId())) {
-            throw new RuntimeException("Not enough amount in lot shop make the pack");
+            throw new RuntimeException("Not enough amount in lot to deliver the pack");
         }
         return packRepository.save(newPack);
+    }
+
+    @Override
+    public Pack getPack(Long packId) {
+        return packRepository.findById(packId).orElseThrow();
     }
 
     @Override
