@@ -3,6 +3,7 @@ package com.i8ai.training.storeapi.service.impl;
 import com.i8ai.training.storeapi.domain.Delivery;
 import com.i8ai.training.storeapi.repository.DeliveryRepository;
 import com.i8ai.training.storeapi.service.DeliveryService;
+import com.i8ai.training.storeapi.service.LotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +12,14 @@ import java.util.List;
 
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
+    private final LotService lotService;
 
     private final DeliveryRepository deliveryRepository;
 
     @Autowired
-    public DeliveryServiceImpl(DeliveryRepository deliveryRepository) {
+    public DeliveryServiceImpl(DeliveryRepository deliveryRepository, LotService lotService) {
         this.deliveryRepository = deliveryRepository;
+        this.lotService = lotService;
     }
 
     @Override
@@ -39,10 +42,15 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
     }
 
+    private Double getCurrentLotAmount(Long lotId) {
+        Double initLotAmount = lotService.getLot(lotId).getAmount();
+        Double alreadyDeliveredLotAmount = deliveryRepository.getDeliveredAmountByLotId(lotId);
+        return initLotAmount - alreadyDeliveredLotAmount;
+    }
+
     @Override
     public Delivery registerDelivery(Delivery newDelivery) {
-        Double currentLotAmount = newDelivery.getLot().getAmount() - deliveryRepository.getDeliveredAmountByLotId(newDelivery.getLot().getId());
-        if (newDelivery.getAmount() > currentLotAmount) {
+        if (newDelivery.getAmount() > getCurrentLotAmount(newDelivery.getLot().getId())) {
             throw new RuntimeException("Not enough amount in lot shop make the delivery");
         }
         return deliveryRepository.save(newDelivery);
@@ -52,5 +60,4 @@ public class DeliveryServiceImpl implements DeliveryService {
     public void deleteDelivery(Long deliveryId) {
         deliveryRepository.deleteById(deliveryId);
     }
-
 }
