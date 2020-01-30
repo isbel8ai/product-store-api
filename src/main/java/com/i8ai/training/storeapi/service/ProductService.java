@@ -5,6 +5,7 @@ import com.i8ai.training.storeapi.domain.Product;
 import java.util.List;
 
 public interface ProductService {
+
     List<Product> getAllProducts();
 
     Product addProduct(Product newProduct);
@@ -14,4 +15,5 @@ public interface ProductService {
     Product replaceProduct(Long productId, Product modifiedProduct);
 
     void deleteProduct(Long productId);
+
 }

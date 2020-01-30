@@ -13,19 +13,25 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Delivery {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @Column(nullable = false)
     private Date delivered;
+
     @NotNull
     @Column(nullable = false)
     private Double amount;
+
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     private Lot lot;
+
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     private Shop shop;
+
 }

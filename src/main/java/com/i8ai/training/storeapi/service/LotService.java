@@ -14,4 +14,5 @@ public interface LotService {
     void deleteLot(Long lotId);
 
     Double getProductReceivedAmount(Long productId);
+
 }

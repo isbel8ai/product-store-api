@@ -73,4 +73,5 @@ class ProductServiceImplTest {
     void deleteProduct() {
         productService.deleteProduct(createdProduct.getId());
     }
+
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/shop")
 public class ShopController {
+
     private final ShopService shopService;
 
     @Autowired
@@ -44,4 +45,5 @@ public class ShopController {
     public void deleteShop(@PathVariable Long shopId) {
         shopService.deleteShop(shopId);
     }
+
 }

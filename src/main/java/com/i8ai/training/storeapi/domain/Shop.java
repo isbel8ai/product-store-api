@@ -12,14 +12,19 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Shop {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     @Column(nullable = false)
     private String name;
+
     @NotBlank
     @Column(nullable = false)
     private String address;
+
     private String Description;
+
 }

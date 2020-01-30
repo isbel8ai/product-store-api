@@ -4,7 +4,6 @@ import com.i8ai.training.storeapi.domain.Product;
 import com.i8ai.training.storeapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
+
     private final ProductService productService;
 
     @Autowired
@@ -44,4 +44,5 @@ public class ProductController {
     public void deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
     }
+
 }

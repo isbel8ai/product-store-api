@@ -123,4 +123,5 @@ class DeliveryServiceImplTest {
     void deleteDelivery() {
         deliveryService.deleteDelivery(removableDelivery.getId());
     }
+
 }

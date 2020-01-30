@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
+
     private final DeliveryRepository deliveryRepository;
 
     @Autowired
@@ -27,22 +28,22 @@ public class DeliveryServiceImpl implements DeliveryService {
             if (shopId == null) {
                 return deliveryRepository.findAllByDeliveredBetween(start, end);
             } else {
-                return deliveryRepository.findAllByDeliveredBetweenAndToId(start, end, shopId);
+                return deliveryRepository.findAllByDeliveredBetweenAndShopId(start, end, shopId);
             }
         }
 
         if (shopId == null) {
-            return deliveryRepository.findAllByDeliveredBetweenAndFromProductId(start, end, productId);
+            return deliveryRepository.findAllByDeliveredBetweenAndLotProductId(start, end, productId);
         } else {
-            return deliveryRepository.findAllByDeliveredBetweenAndFromProductIdAndToId(start, end, productId, shopId);
+            return deliveryRepository.findAllByDeliveredBetweenAndLotProductIdAndShopId(start, end, productId, shopId);
         }
     }
 
     @Override
     public Delivery registerDelivery(Delivery newDelivery) {
-        Double currentLotAmount = newDelivery.getFrom().getAmount() - deliveryRepository.getDeliveredAmountByLotId(newDelivery.getFrom().getId());
+        Double currentLotAmount = newDelivery.getLot().getAmount() - deliveryRepository.getDeliveredAmountByLotId(newDelivery.getLot().getId());
         if (newDelivery.getAmount() > currentLotAmount) {
-            throw new RuntimeException("Not enough amount in lot to make the delivery");
+            throw new RuntimeException("Not enough amount in lot shop make the delivery");
         }
         return deliveryRepository.save(newDelivery);
     }
@@ -51,4 +52,5 @@ public class DeliveryServiceImpl implements DeliveryService {
     public void deleteDelivery(Long deliveryId) {
         deliveryRepository.deleteById(deliveryId);
     }
+
 }

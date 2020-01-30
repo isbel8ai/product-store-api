@@ -12,17 +12,23 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     @Column(nullable = false, unique = true)
     private String code;
+
     @NotBlank
     @Column(nullable = false)
     private String name;
+
     @NotBlank
     @Column(nullable = false)
     private String measure;
+
     private String description;
+
 }

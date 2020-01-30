@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/delivery")
 public class DeliveryController {
+
     private final DeliveryService deliveryService;
 
     @Autowired
@@ -36,4 +37,5 @@ public class DeliveryController {
     public void deleteDelivery(@PathVariable Long deliveryId) {
         deliveryService.deleteDelivery(deliveryId);
     }
+
 }

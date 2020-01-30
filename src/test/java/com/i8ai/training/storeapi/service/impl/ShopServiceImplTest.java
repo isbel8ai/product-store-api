@@ -9,13 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.List;
-
 @SpringBootTest
 class ShopServiceImplTest {
+
     private static final String SHOP1_NAME = "name of shop 1";
     private static final String SHOP1_ADDRESS = "address of shop 1";
     private static final String SHOP2_NAME = "name of shop 2";
@@ -64,4 +65,5 @@ class ShopServiceImplTest {
     void deleteShop() {
         shopService.deleteShop(createdShop.getId());
     }
+
 }

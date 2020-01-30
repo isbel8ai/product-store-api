@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
+
     List<Delivery> findAllByDeliveredBetweenAndLotProductIdAndShopId(Date start, Date end, Long productId, Long shopId);
 
     List<Delivery> findAllByDeliveredBetweenAndLotProductId(Date start, Date end, Long productId);
@@ -20,4 +21,5 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
 
     @Query("select sum(d.amount) from Delivery d where d.lot.id = ?1")
     Double getDeliveredAmountByLotId(Long lotId);
+
 }

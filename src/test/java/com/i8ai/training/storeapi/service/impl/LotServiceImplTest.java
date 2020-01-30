@@ -94,7 +94,6 @@ class LotServiceImplTest {
         assertEquals(5, lots.size());
     }
 
-
     @Test
     void registerLot() {
         assertNotNull(lotService.registerLot(new Lot(null, new Date(7000), 3.5, 650.0, productB)));
@@ -110,4 +109,5 @@ class LotServiceImplTest {
         assertEquals(110, lotService.getProductReceivedAmount(productB.getId()));
         assertEquals(80, lotService.getProductReceivedAmount(productA.getId()));
     }
+
 }

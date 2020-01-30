@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 public class LotServiceImpl implements LotService {
+
     private final LotRepository lotRepository;
 
     @Autowired
@@ -42,4 +43,5 @@ public class LotServiceImpl implements LotService {
     public Double getProductReceivedAmount(Long productId) {
         return lotRepository.getAmountArrivedByProductId(productId);
     }
+
 }

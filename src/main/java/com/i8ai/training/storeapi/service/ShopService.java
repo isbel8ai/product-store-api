@@ -5,6 +5,7 @@ import com.i8ai.training.storeapi.domain.Shop;
 import java.util.List;
 
 public interface ShopService {
+
     List<Shop> getAllShops();
 
     Shop addShop(Shop newShop);

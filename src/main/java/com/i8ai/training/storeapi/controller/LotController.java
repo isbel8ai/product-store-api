@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/lot")
 public class LotController {
+
     private final LotService lotService;
 
     @Autowired
@@ -35,4 +36,5 @@ public class LotController {
     public void deleteLot(@PathVariable Long lotId) {
         lotService.deleteLot(lotId);
     }
+
 }
