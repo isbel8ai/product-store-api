@@ -11,7 +11,6 @@ import java.util.List;
 
 @Service
 public class LotServiceImpl implements LotService {
-
     private final LotRepository lotRepository;
 
     @Autowired
@@ -35,6 +34,11 @@ public class LotServiceImpl implements LotService {
     }
 
     @Override
+    public Lot getLot(Long lotId) {
+        return lotRepository.findById(lotId).orElseThrow();
+    }
+
+    @Override
     public void deleteLot(Long lotId) {
         lotRepository.deleteById(lotId);
     }
@@ -43,5 +47,4 @@ public class LotServiceImpl implements LotService {
     public Double getProductReceivedAmount(Long productId) {
         return lotRepository.getAmountArrivedByProductId(productId);
     }
-
 }
