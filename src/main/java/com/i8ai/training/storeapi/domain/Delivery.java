@@ -24,8 +24,8 @@ public class Delivery {
     private Double amount;
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Lot from;
+    private Lot lot;
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Shop to;
+    private Shop shop;
 }
