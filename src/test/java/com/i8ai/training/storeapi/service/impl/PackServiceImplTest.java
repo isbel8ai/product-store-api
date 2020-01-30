@@ -59,20 +59,22 @@ class PackServiceImplTest {
 
     private Pack removablePack;
 
-
     @BeforeEach
     void setUp() {
         productA = productRepository.save(new Product(null, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null));
         productB = productRepository.save(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
-        lotA = lotRepository.save(new Lot(null, new Date(100), 5.5, 500.0, productA));
-        lotB = lotRepository.save(new Lot(null, new Date(100), 8.0, 800.0, productB));
+
+        lotA = lotRepository.save(new Lot(null, new Date(1), 500.0, 5.5, productA));
+        lotB = lotRepository.save(new Lot(null, new Date(2), 800.0, 8.0, productB));
+
         shop1 = shopRepository.save(new Shop(null, SHOP1_NAME, SHOP1_ADDRESS, null));
         shop2 = shopRepository.save(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
-        packRepository.save(new Pack(null, new Date(5000), 50.0, lotA, shop2));
-        packRepository.save(new Pack(null, new Date(9000), 50.0, lotA, shop2));
-        packRepository.save(new Pack(null, new Date(4000), 100.0, lotB, shop1));
-        packRepository.save(new Pack(null, new Date(6000), 70.0, lotB, shop2));
-        removablePack = packRepository.save(new Pack(null, new Date(7000), 150.0, lotA, shop1));
+
+        packRepository.save(new Pack(null, new Date(4), 100.0, lotB, shop1));
+        packRepository.save(new Pack(null, new Date(5), 50.0, lotA, shop2));
+        packRepository.save(new Pack(null, new Date(6), 70.0, lotB, shop2));
+        packRepository.save(new Pack(null, new Date(7), 150.0, lotA, shop1));
+        removablePack = packRepository.save(new Pack(null, new Date(9), 50.0, lotA, shop2));
     }
 
     @AfterEach
@@ -84,7 +86,7 @@ class PackServiceImplTest {
 
     @Test
     void getPacksWithAllFilters() {
-        List<Pack> pack = packService.getPacks(new Date(3000), new Date(6000), productA.getId(), shop2.getId());
+        List<Pack> pack = packService.getPacks(new Date(3), new Date(6), productA.getId(), shop2.getId());
         assertEquals(1, pack.size());
     }
 
@@ -115,7 +117,7 @@ class PackServiceImplTest {
 
     @Test
     void registerPack() {
-        assertNotNull(packService.registerPack(new Pack(null, new Date(), 100.0, lotB, shop1)));
+        packService.registerPack(new Pack(null, new Date(), 100.0, lotB, shop1));
     }
 
     @Test

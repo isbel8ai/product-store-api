@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProductServiceImplTest {
-
     private static final String PRODUCT_A_CODE = "a_product_code";
     private static final String PRODUCT_B_CODE = "b_product_code";
     private static final String PRODUCT_A_NAME = "a_product_name";
@@ -56,7 +55,7 @@ class ProductServiceImplTest {
 
     @Test
     void addProduct() {
-        assertNotNull(productService.addProduct(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null)));
+        productService.addProduct(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
     }
 
     @Test
@@ -66,12 +65,11 @@ class ProductServiceImplTest {
 
     @Test
     void replaceProduct() {
-        assertNotNull(productService.replaceProduct(createdProduct.getId(), new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null)));
+        productService.replaceProduct(createdProduct.getId(), new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
     }
 
     @Test
     void deleteProduct() {
         productService.deleteProduct(createdProduct.getId());
     }
-
 }

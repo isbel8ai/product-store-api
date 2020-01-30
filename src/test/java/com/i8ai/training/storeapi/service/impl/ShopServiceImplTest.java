@@ -12,11 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class ShopServiceImplTest {
-
     private static final String SHOP1_NAME = "name of shop 1";
     private static final String SHOP1_ADDRESS = "address of shop 1";
     private static final String SHOP2_NAME = "name of shop 2";
@@ -48,22 +46,21 @@ class ShopServiceImplTest {
 
     @Test
     void addShop() {
-        assertNotNull(shopService.addShop(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null)));
+        shopService.addShop(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
     }
 
     @Test
     void getShop() {
-        assertNotNull(shopService.getShop(createdShop.getId()));
+        shopService.getShop(createdShop.getId());
     }
 
     @Test
     void replaceShop() {
-        assertNotNull(shopService.replaceShop(createdShop.getId(), new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null)));
+        shopService.replaceShop(createdShop.getId(), new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
     }
 
     @Test
     void deleteShop() {
         shopService.deleteShop(createdShop.getId());
     }
-
 }
