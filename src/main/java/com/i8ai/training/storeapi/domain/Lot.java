@@ -13,7 +13,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Lot {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,14 +23,13 @@ public class Lot {
 
     @NotNull
     @Column(nullable = false)
-    private Double cost;
+    private Double amount;
 
     @NotNull
     @Column(nullable = false)
-    private Double amount;
+    private Double cost;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     private Product product;
-
 }
