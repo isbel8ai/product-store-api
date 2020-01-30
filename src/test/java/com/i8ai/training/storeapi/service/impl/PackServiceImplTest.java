@@ -1,14 +1,14 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.domain.Delivery;
 import com.i8ai.training.storeapi.domain.Lot;
+import com.i8ai.training.storeapi.domain.Pack;
 import com.i8ai.training.storeapi.domain.Product;
 import com.i8ai.training.storeapi.domain.Shop;
-import com.i8ai.training.storeapi.repository.DeliveryRepository;
 import com.i8ai.training.storeapi.repository.LotRepository;
+import com.i8ai.training.storeapi.repository.PackRepository;
 import com.i8ai.training.storeapi.repository.ProductRepository;
 import com.i8ai.training.storeapi.repository.ShopRepository;
-import com.i8ai.training.storeapi.service.DeliveryService;
+import com.i8ai.training.storeapi.service.PackService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +21,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class DeliveryServiceImplTest {
-
+class PackServiceImplTest {
     private static final String PRODUCT_A_CODE = "a_product_code";
     private static final String PRODUCT_B_CODE = "b_product_code";
     private static final String PRODUCT_A_NAME = "a_product_name";
@@ -44,10 +43,10 @@ class DeliveryServiceImplTest {
     private ShopRepository shopRepository;
 
     @Autowired
-    private DeliveryRepository deliveryRepository;
+    private PackRepository packRepository;
 
     @Autowired
-    private DeliveryService deliveryService;
+    private PackService packService;
 
     private Product productA;
     private Product productB;
@@ -58,7 +57,7 @@ class DeliveryServiceImplTest {
     private Shop shop1;
     private Shop shop2;
 
-    private Delivery removableDelivery;
+    private Pack removablePack;
 
 
     @BeforeEach
@@ -69,59 +68,58 @@ class DeliveryServiceImplTest {
         lotB = lotRepository.save(new Lot(null, new Date(100), 8.0, 800.0, productB));
         shop1 = shopRepository.save(new Shop(null, SHOP1_NAME, SHOP1_ADDRESS, null));
         shop2 = shopRepository.save(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
-        deliveryRepository.save(new Delivery(null, new Date(5000), 50.0, lotA, shop2));
-        deliveryRepository.save(new Delivery(null, new Date(9000), 50.0, lotA, shop2));
-        deliveryRepository.save(new Delivery(null, new Date(4000), 100.0, lotB, shop1));
-        deliveryRepository.save(new Delivery(null, new Date(6000), 70.0, lotB, shop2));
-        removableDelivery = deliveryRepository.save(new Delivery(null, new Date(7000), 150.0, lotA, shop1));
+        packRepository.save(new Pack(null, new Date(5000), 50.0, lotA, shop2));
+        packRepository.save(new Pack(null, new Date(9000), 50.0, lotA, shop2));
+        packRepository.save(new Pack(null, new Date(4000), 100.0, lotB, shop1));
+        packRepository.save(new Pack(null, new Date(6000), 70.0, lotB, shop2));
+        removablePack = packRepository.save(new Pack(null, new Date(7000), 150.0, lotA, shop1));
     }
 
     @AfterEach
     void tearDown() {
-        deliveryRepository.deleteAll();
+        packRepository.deleteAll();
         lotRepository.deleteAll();
         productRepository.deleteAll();
     }
 
     @Test
-    void getDeliveriesWithAllFilters() {
-        List<Delivery> deliveries = deliveryService.getDeliveries(new Date(3000), new Date(6000), productA.getId(), shop2.getId());
-        assertEquals(1, deliveries.size());
+    void getPacksWithAllFilters() {
+        List<Pack> pack = packService.getPacks(new Date(3000), new Date(6000), productA.getId(), shop2.getId());
+        assertEquals(1, pack.size());
     }
 
     @Test
-    void getDeliveriesWithShopFilter() {
-        List<Delivery> deliveries = deliveryService.getDeliveries(null, null, null, shop1.getId());
-        assertEquals(2, deliveries.size());
+    void getPacksWithShopFilter() {
+        List<Pack> pack = packService.getPacks(null, null, null, shop1.getId());
+        assertEquals(2, pack.size());
     }
 
     @Test
-    void getDeliveriesWithProductFilter() {
-        List<Delivery> deliveries = deliveryService.getDeliveries(null, null, productB.getId(), null);
-        assertEquals(2, deliveries.size());
+    void getPackWithProductFilter() {
+        List<Pack> pack = packService.getPacks(null, null, productB.getId(), null);
+        assertEquals(2, pack.size());
     }
 
     @Test
-    void getAllDeliveries() {
-        List<Delivery> deliveries = deliveryService.getDeliveries(null, null, null, null);
-        assertEquals(5, deliveries.size());
+    void getAllPack() {
+        List<Pack> pack = packService.getPacks(null, null, null, null);
+        assertEquals(5, pack.size());
     }
 
     @Test
-    void registerDeliveryWithNotValidAmount() {
+    void registerPackWithNotValidAmount() {
         Exception e = assertThrows(RuntimeException.class, () ->
-                deliveryService.registerDelivery(new Delivery(null, new Date(), 1000.0, lotA, shop1)));
+                packService.registerPack(new Pack(null, new Date(), 1000.0, lotA, shop1)));
         assertTrue(e.getMessage().contains("enough"));
     }
 
     @Test
-    void registerDelivery() {
-        assertNotNull(deliveryService.registerDelivery(new Delivery(null, new Date(), 100.0, lotB, shop1)));
+    void registerPack() {
+        assertNotNull(packService.registerPack(new Pack(null, new Date(), 100.0, lotB, shop1)));
     }
 
     @Test
-    void deleteDelivery() {
-        deliveryService.deleteDelivery(removableDelivery.getId());
+    void deletePack() {
+        packService.deletePack(removablePack.getId());
     }
-
 }

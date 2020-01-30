@@ -12,8 +12,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Delivery {
-
+public class Pack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,5 +32,4 @@ public class Delivery {
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     private Shop shop;
-
 }
