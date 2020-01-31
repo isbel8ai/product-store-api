@@ -29,8 +29,8 @@ class PackServiceImplTest {
     private static final String PRODUCT_A_MEASURE = "a_product_measure";
     private static final String PRODUCT_B_MEASURE = "b_product_measure";
     private static final String SHOP1_NAME = "name of shop 1";
-    private static final String SHOP1_ADDRESS = "address of shop 1";
     private static final String SHOP2_NAME = "name of shop 2";
+    private static final String SHOP1_ADDRESS = "address of shop 1";
     private static final String SHOP2_ADDRESS = "address of shop 2";
 
     @Autowired
@@ -123,5 +123,15 @@ class PackServiceImplTest {
     @Test
     void deletePack() {
         packService.deletePack(removablePack.getId());
+    }
+
+    @Test
+    void getProductDeliveredAmount() {
+        assertEquals(170.0, packService.getProductDeliveredAmount(productB.getId()));
+    }
+
+    @Test
+    void getProductDeliveredToShopAmount() {
+        assertEquals(100.0, packService.getProductDeliveredToShopAmount(productA.getId(), shop2.getId()));
     }
 }
