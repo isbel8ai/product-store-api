@@ -65,4 +65,14 @@ public class PackServiceImpl implements PackService {
     public void deletePack(Long packId) {
         packRepository.deleteById(packId);
     }
+
+    @Override
+    public Double getProductDeliveredAmount(Long productId) {
+        return packRepository.getDeliveredAmountByProductId(productId);
+    }
+
+    @Override
+    public Double getProductDeliveredToShopAmount(Long productId, Long shopId) {
+        return packRepository.getDeliveredAmountByProductIdAndShopId(productId, shopId);
+    }
 }

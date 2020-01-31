@@ -20,4 +20,10 @@ public interface PackRepository extends JpaRepository<Pack, Long> {
 
     @Query("select sum(d.amount) from Pack d where d.lot.id = ?1")
     Double getDeliveredAmountByLotId(Long lotId);
+
+    @Query("select sum(d.amount) from Pack d where d.lot.product.id = ?1")
+    Double getDeliveredAmountByProductId(Long productId);
+
+    @Query("select sum(d.amount) from Pack d where d.lot.product.id = ?1 and d.shop.id = ?2")
+    Double getDeliveredAmountByProductIdAndShopId(Long productId, Long shopId);
 }
