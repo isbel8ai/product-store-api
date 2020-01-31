@@ -20,4 +20,7 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     @Query("select sum(s.amount) from Sale s where s.pack.id = ?1")
     Double getSoldAmountByPackId(Long packId);
+
+    @Query("select sum(s.amount) from Sale s where s.pack.lot.product.id = ?1 and s.pack.shop.id = ?2")
+    Double getSoldAmountByProductIdAndShopId(Long productId, Long shopId);
 }

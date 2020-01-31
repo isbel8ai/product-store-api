@@ -60,4 +60,9 @@ public class SaleServiceImpl implements SaleService {
     public void deleteSale(Long saleId) {
         saleRepository.deleteById(saleId);
     }
+
+    @Override
+    public Double getProductSoldInShopAmount(Long productId, Long shopId) {
+        return saleRepository.getSoldAmountByProductIdAndShopId(productId, shopId);
+    }
 }

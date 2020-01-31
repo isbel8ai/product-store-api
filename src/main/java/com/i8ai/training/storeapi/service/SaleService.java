@@ -11,4 +11,6 @@ public interface SaleService {
     Sale registerSale(Sale newSale);
 
     void deleteSale(Long saleId);
+
+    Double getProductSoldInShopAmount(Long productId, Long shopId);
 }
