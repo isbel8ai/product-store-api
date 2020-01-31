@@ -23,8 +23,8 @@ class SaleServiceImplTest {
     private static final String PRODUCT_A_MEASURE = "a_product_measure";
     private static final String PRODUCT_B_MEASURE = "b_product_measure";
     private static final String SHOP1_NAME = "name of shop 1";
-    private static final String SHOP1_ADDRESS = "address of shop 1";
     private static final String SHOP2_NAME = "name of shop 2";
+    private static final String SHOP1_ADDRESS = "address of shop 1";
     private static final String SHOP2_ADDRESS = "address of shop 2";
 
     @Autowired
@@ -121,7 +121,7 @@ class SaleServiceImplTest {
     void registerSaleWithNoValidAmount() {
         Exception e = assertThrows(RuntimeException.class, () ->
                 saleService.registerSale(new Sale(null, new Date(20), 500.0, 8.0, packA1)));
-        assertTrue(e.getMessage().contains("enough amount"));
+        assertTrue(e.getMessage().contains("enough"));
     }
 
     @Test
@@ -132,5 +132,10 @@ class SaleServiceImplTest {
     @Test
     void deleteSale() {
         saleService.deleteSale(removableSale.getId());
+    }
+
+    @Test
+    void getProductSoldInShopAmount() {
+        assertEquals(7, saleService.getProductSoldInShopAmount(productA.getId(), shop1.getId()));
     }
 }
