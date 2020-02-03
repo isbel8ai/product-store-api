@@ -3,6 +3,7 @@ package com.i8ai.training.storeapi.service.impl;
 import com.i8ai.training.storeapi.domain.*;
 import com.i8ai.training.storeapi.repository.*;
 import com.i8ai.training.storeapi.service.ExistenceService;
+import com.i8ai.training.storeapi.service.dto.ExistenceDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 class ExistenceServiceImplTest {
@@ -80,15 +83,42 @@ class ExistenceServiceImplTest {
         packRepository.deleteAll();
         lotRepository.deleteAll();
         productRepository.deleteAll();
+        shopRepository.deleteAll();
+
     }
 
     @Test
-    void getProductExistenceWithNullShopIp() {
-        assertEquals(193.0, existenceService.getProductExistence(productA.getId(), shop1.getId()).getAmount());
+    void getProductExistenceInMain() {
+        assertEquals(300.0, existenceService.getProductExistenceInMain(productB.getId()).getAmount());
     }
 
     @Test
-    void getProductExistence() {
-        assertEquals(300.0, existenceService.getProductExistence(productB.getId(), null).getAmount());
+    void getAllProductsExistenceInMain() {
+        List<ExistenceDTO> existences = existenceService.getAllProductsExistenceInMain();
+        assertEquals(2, existences.size());
+        assertNull(existences.get(0).getShop());
+        assertEquals(existences.get(0).getProduct().getName(), PRODUCT_A_NAME);
+        assertEquals(150.0, existences.get(0).getAmount());
+        assertNull(existences.get(1).getShop());
+        assertEquals(existences.get(1).getProduct().getName(), PRODUCT_B_NAME);
+        assertEquals(300.0, existences.get(1).getAmount());
     }
+
+    @Test
+    void getProductExistenceInShop() {
+        assertEquals(193.0, existenceService.getProductExistenceInShop(productA.getId(), shop1.getId()).getAmount());
+    }
+
+    @Test
+    void getProductExistenceInAllShops() {
+        List<ExistenceDTO> existences = existenceService.getProductExistenceInAllShops(productB.getId());
+        assertEquals(2, existences.size());
+        assertEquals(existences.get(0).getShop().getName(), SHOP1_NAME);
+        assertEquals(existences.get(0).getProduct().getName(), PRODUCT_B_NAME);
+        assertEquals(197.0, existences.get(0).getAmount());
+        assertEquals(existences.get(1).getShop().getName(), SHOP2_NAME);
+        assertEquals(existences.get(1).getProduct().getName(), PRODUCT_B_NAME);
+        assertEquals(291.0, existences.get(1).getAmount());
+    }
+
 }
