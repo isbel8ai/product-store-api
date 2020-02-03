@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PackServiceImpl implements PackService {
@@ -68,11 +69,11 @@ public class PackServiceImpl implements PackService {
 
     @Override
     public Double getProductDeliveredAmount(Long productId) {
-        return packRepository.getDeliveredAmountByProductId(productId);
+        return Optional.ofNullable(packRepository.getDeliveredAmountByProductId(productId)).orElse(0.0);
     }
 
     @Override
     public Double getProductDeliveredToShopAmount(Long productId, Long shopId) {
-        return packRepository.getDeliveredAmountByProductIdAndShopId(productId, shopId);
+        return Optional.ofNullable(packRepository.getDeliveredAmountByProductIdAndShopId(productId, shopId)).orElse(0.0);
     }
 }

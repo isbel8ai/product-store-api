@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaleServiceImpl implements SaleService {
@@ -63,6 +64,6 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public Double getProductSoldInShopAmount(Long productId, Long shopId) {
-        return saleRepository.getSoldAmountByProductIdAndShopId(productId, shopId);
+        return Optional.ofNullable(saleRepository.getSoldAmountByProductIdAndShopId(productId, shopId)).orElse(0.0);
     }
 }
