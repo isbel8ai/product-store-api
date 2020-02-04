@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${PSA_POSTGRES_HOST}:${PSA_POSTGRES_PORT}/${PSA_POSTGRES_DB}
+    username: ${PSA_POSTGRES_USER}
+    password: ${PSA_POSTGRES_PASSWORD}
+
+  jpa:
+    generate-ddl: true
+    hibernate.ddl-auto: create-drop
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
