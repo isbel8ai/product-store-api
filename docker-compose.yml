@@ -1,0 +1,37 @@
+version: '3'
+services:
+  db:
+    image: postgres:12.1-alpine
+    environment:
+      POSTGRES_DB: $PSA_POSTGRES_DB
+      POSTGRES_USER: $PSA_POSTGRES_USER
+      POSTGRES_PASSWORD: $PSA_POSTGRES_PASSWORD
+
+    restart: always
+    ports:
+    - $PSA_POSTGRES_PORT:5432
+
+    volumes:
+    - $PSA_APP_STORAGE/pgdata:/var/lib/postgresql/data:rw
+
+  backend:
+    image:  zenika/alpine-maven:3-jdk8
+    environment:
+      PSA_POSTGRES_HOST: db
+      PSA_POSTGRES_PORT: 5432
+      PSA_POSTGRES_DB: $PSA_POSTGRES_DB
+      PSA_POSTGRES_USER: $PSA_POSTGRES_USER
+      PSA_POSTGRES_PASSWORD: $PSA_POSTGRES_PASSWORD
+
+    volumes:
+    - .:/usr/src/app
+    - $PSA_MAVEN_M2_DIR:/root/.m2
+
+    working_dir: /usr/src/app
+    restart: always
+    ports:
+    - $PSA_BACKEND_PORT:8080
+
+    command: mvn spring-boot:run
+    depends_on:
+    - db
