@@ -81,10 +81,15 @@ class SaleServiceImplTest {
 
     @AfterEach
     void tearDown() {
+        cleanDatabase(saleRepository, packRepository, lotRepository, productRepository, shopRepository);
+    }
+
+    static void cleanDatabase(SaleRepository saleRepository, PackRepository packRepository, LotRepository lotRepository, ProductRepository productRepository, ShopRepository shopRepository) {
         saleRepository.deleteAll();
         packRepository.deleteAll();
         lotRepository.deleteAll();
         productRepository.deleteAll();
+        shopRepository.deleteAll();
     }
 
     @Test

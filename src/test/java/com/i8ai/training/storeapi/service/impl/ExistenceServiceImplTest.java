@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 class ExistenceServiceImplTest {
-
     private static final String PRODUCT_A_CODE = "a_product_code";
     private static final String PRODUCT_B_CODE = "b_product_code";
     private static final String PRODUCT_A_NAME = "a_product_name";
@@ -26,8 +25,8 @@ class ExistenceServiceImplTest {
     private static final String PRODUCT_A_MEASURE = "a_product_measure";
     private static final String PRODUCT_B_MEASURE = "b_product_measure";
     private static final String SHOP1_NAME = "name of shop 1";
-    private static final String SHOP1_ADDRESS = "address of shop 1";
     private static final String SHOP2_NAME = "name of shop 2";
+    private static final String SHOP1_ADDRESS = "address of shop 1";
     private static final String SHOP2_ADDRESS = "address of shop 2";
 
     @Autowired
@@ -79,12 +78,7 @@ class ExistenceServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        saleRepository.deleteAll();
-        packRepository.deleteAll();
-        lotRepository.deleteAll();
-        productRepository.deleteAll();
-        shopRepository.deleteAll();
-
+        SaleServiceImplTest.cleanDatabase(saleRepository, packRepository, lotRepository, productRepository, shopRepository);
     }
 
     @Test
