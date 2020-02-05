@@ -1,6 +1,7 @@
 package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.domain.Lot;
+import com.i8ai.training.storeapi.exception.ElementNotFoundException;
 import com.i8ai.training.storeapi.repository.LotRepository;
 import com.i8ai.training.storeapi.service.LotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LotServiceImpl implements LotService {
@@ -35,7 +37,7 @@ public class LotServiceImpl implements LotService {
 
     @Override
     public Lot getLot(Long lotId) {
-        return lotRepository.findById(lotId).orElseThrow();
+        return lotRepository.findById(lotId).orElseThrow(ElementNotFoundException::new);
     }
 
     @Override
@@ -45,6 +47,6 @@ public class LotServiceImpl implements LotService {
 
     @Override
     public Double getProductReceivedAmount(Long productId) {
-        return lotRepository.getAmountArrivedByProductId(productId);
+        return Optional.ofNullable(lotRepository.getAmountArrivedByProductId(productId)).orElse(0.0);
     }
 }

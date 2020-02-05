@@ -4,6 +4,7 @@ import com.i8ai.training.storeapi.domain.Lot;
 import com.i8ai.training.storeapi.domain.Pack;
 import com.i8ai.training.storeapi.domain.Product;
 import com.i8ai.training.storeapi.domain.Shop;
+import com.i8ai.training.storeapi.exception.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.LotRepository;
 import com.i8ai.training.storeapi.repository.PackRepository;
 import com.i8ai.training.storeapi.repository.ProductRepository;
@@ -110,9 +111,9 @@ class PackServiceImplTest {
 
     @Test
     void registerPackWithNotValidAmount() {
-        Exception e = assertThrows(RuntimeException.class, () ->
-                packService.registerPack(new Pack(null, new Date(), 1000.0, lotA, shop1)));
-        assertTrue(e.getMessage().contains("enough"));
+        assertThrows(NotValidAmountException.class, () ->
+                packService.registerPack(new Pack(null, new Date(), 1000.0, lotA, shop1))
+        );
     }
 
     @Test

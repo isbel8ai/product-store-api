@@ -1,6 +1,8 @@
 package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.domain.Pack;
+import com.i8ai.training.storeapi.exception.ElementNotFoundException;
+import com.i8ai.training.storeapi.exception.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.PackRepository;
 import com.i8ai.training.storeapi.service.LotService;
 import com.i8ai.training.storeapi.service.PackService;
@@ -45,15 +47,15 @@ public class PackServiceImpl implements PackService {
 
     @Override
     public Pack registerPack(Pack newPack) {
-        if (newPack.getAmount() > getCurrentLotAmount(newPack.getLot().getId())) {
-            throw new RuntimeException("Not enough amount in lot to deliver the pack");
+        if (newPack.getAmount() <= 0.0 || newPack.getAmount() > getCurrentLotAmount(newPack.getLot().getId())) {
+            throw new NotValidAmountException();
         }
         return packRepository.save(newPack);
     }
 
     @Override
     public Pack getPack(Long packId) {
-        return packRepository.findById(packId).orElseThrow();
+        return packRepository.findById(packId).orElseThrow(ElementNotFoundException::new);
     }
 
     @Override

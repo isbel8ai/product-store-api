@@ -1,6 +1,7 @@
 package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.domain.Sale;
+import com.i8ai.training.storeapi.exception.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.SaleRepository;
 import com.i8ai.training.storeapi.service.PackService;
 import com.i8ai.training.storeapi.service.SaleService;
@@ -51,8 +52,8 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public Sale registerSale(Sale newSale) {
-        if (newSale.getAmount() > getCurrentPackAmount(newSale.getPack().getId())) {
-            throw new RuntimeException("Not enough amount in pack to register the sale");
+        if (newSale.getAmount() <= 0.0 || newSale.getAmount() > getCurrentPackAmount(newSale.getPack().getId())) {
+            throw new NotValidAmountException();
         }
         return saleRepository.save(newSale);
     }

@@ -1,6 +1,8 @@
 package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.domain.Product;
+import com.i8ai.training.storeapi.exception.ElementNotFoundException;
+import com.i8ai.training.storeapi.exception.NotValidElementDataException;
 import com.i8ai.training.storeapi.repository.ProductRepository;
 import com.i8ai.training.storeapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +31,13 @@ public class ProductServiceImpl implements ProductService {
         try {
             return productRepository.save(newProduct);
         } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("Product with this code already exist");
+            throw new NotValidElementDataException();
         }
     }
 
     @Override
     public Product getProduct(Long productId) {
-        return productRepository.findById(productId).orElseThrow();
+        return productRepository.findById(productId).orElseThrow(ElementNotFoundException::new);
     }
 
     @Override
@@ -45,7 +47,11 @@ public class ProductServiceImpl implements ProductService {
         product.setName(modifiedProduct.getName());
         product.setMeasure(modifiedProduct.getMeasure());
         product.setDescription(modifiedProduct.getDescription());
-        productRepository.save(product);
+        try {
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new NotValidElementDataException();
+        }
         return product;
     }
 

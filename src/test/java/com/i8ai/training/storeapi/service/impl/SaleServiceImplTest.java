@@ -1,6 +1,7 @@
 package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.domain.*;
+import com.i8ai.training.storeapi.exception.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.*;
 import com.i8ai.training.storeapi.service.SaleService;
 import org.junit.jupiter.api.AfterEach;
@@ -123,9 +124,9 @@ class SaleServiceImplTest {
 
     @Test
     void registerSaleWithNoValidAmount() {
-        Exception e = assertThrows(RuntimeException.class, () ->
-                saleService.registerSale(new Sale(null, new Date(20), 500.0, 8.0, packA1)));
-        assertTrue(e.getMessage().contains("enough"));
+        Exception e = assertThrows(NotValidAmountException.class, () ->
+                saleService.registerSale(new Sale(null, new Date(20), 500.0, 8.0, packA1))
+        );
     }
 
     @Test
