@@ -2,8 +2,8 @@ package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.domain.Pack;
 import com.i8ai.training.storeapi.repository.PackRepository;
-import com.i8ai.training.storeapi.service.PackService;
 import com.i8ai.training.storeapi.service.LotService;
+import com.i8ai.training.storeapi.service.PackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,12 +43,6 @@ public class PackServiceImpl implements PackService {
         }
     }
 
-    private Double getCurrentLotAmount(Long lotId) {
-        Double initLotAmount = lotService.getLot(lotId).getAmount();
-        Double alreadyDeliveredLotAmount = packRepository.getDeliveredAmountByLotId(lotId);
-        return initLotAmount - alreadyDeliveredLotAmount;
-    }
-
     @Override
     public Pack registerPack(Pack newPack) {
         if (newPack.getAmount() > getCurrentLotAmount(newPack.getLot().getId())) {
@@ -75,5 +69,15 @@ public class PackServiceImpl implements PackService {
     @Override
     public Double getProductDeliveredToShopAmount(Long productId, Long shopId) {
         return Optional.ofNullable(packRepository.getDeliveredAmountByProductIdAndShopId(productId, shopId)).orElse(0.0);
+    }
+
+    private Double getCurrentLotAmount(Long lotId) {
+        Double initLotAmount = lotService.getLot(lotId).getAmount();
+        Double alreadyDeliveredLotAmount = getProductDeliveredAmountFromLot(lotId);
+        return initLotAmount - alreadyDeliveredLotAmount;
+    }
+
+    private Double getProductDeliveredAmountFromLot(Long lotId) {
+        return Optional.ofNullable(packRepository.getDeliveredAmountByLotId(lotId)).orElse(0.0);
     }
 }
