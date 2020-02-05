@@ -1,6 +1,6 @@
 # Product Store Api
 ## Description
-Management system for a local shop business. It helps owners to supervise and control the live cycle of the products they sell, from the moment they are received to when they are sold.
+Management system for a local shop business. It helps owners to supervise and control the life cycle of the products they sell, from the moment they are received to when they are sold.
 
 ## Requirements 
 - Management of products
@@ -23,14 +23,14 @@ Management system for a local shop business. It helps owners to supervise and co
 | List all shops                                       | /shop                                      | GET    |                                  |
 | Add a shop                                           | /shop                                      | POST   | name, address, description       |
 | Get a shop information                               | /shop/{shop_id}                            | GET    |                                  |
-| Update a product information                         | /shop/{shop_id}                            | PUT    | name, address, description       |
-| Delete a product                                     | /shop/{shop_id}                            | DELETE |                                  |
+| Update a shop information                            | /shop/{shop_id}                            | PUT    | name, address, description       |
+| Delete a shop                                        | /shop/{shop_id}                            | DELETE |                                  |
 | History of receipts with filters                     | /lot                                       | GET    | start, end, product_id           |
 | Register a product receipt                           | /lot                                       | POST   | date, cost, amount, product_id   |
 | Delete a product receipt record                      | /lot/{lot_id}                              | DELETE |                                  |
 | History of deliveries with filters                   | /pack                                      | GET    | start, end, product_id, shop_id  |
-| Register a product pack                              | /pack                                      | POST   | date, amount, lot_id, shop_id    |
-| Delete a product pack record                         | /pack/{pack_id}                            | DELETE |                                  |
+| Register a product delivery                          | /pack                                      | POST   | date, amount, lot_id, shop_id    |
+| Delete a product delivery record                     | /pack/{pack_id}                            | DELETE |                                  |
 | History of sales with filters                        | /sale                                      | GET    | start, end, product_id, shop_id  |
 | Register a sale                                      | /sale                                      | POST   | date, amount, price, pack_id     |
 | Delete a sale record                                 | /sale/{sale_id}                            | DELETE |                                  |
@@ -51,7 +51,7 @@ Management system for a local shop business. It helps owners to supervise and co
 ![Product store API database model](database/product-store-api_model.png)
 
 ## Building the application
-- Install JKD 8 or later
+- Install JDK 8 or later
 - Set environment variable JAVA_HOME pointing to java root directory
 - Build the application JAR file
 
