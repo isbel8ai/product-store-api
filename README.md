@@ -1,10 +1,8 @@
 # Product Store Api
 ## Description
-
 Management system for a local shop business. It helps owners to supervise and control the live cycle of the products they sell, from the moment they are received to when they are sold.
 
 ## Requirements 
-
 - Management of products
 - Management of shops
 - Product existence on main warehouse, for all and for specific product
@@ -15,7 +13,6 @@ Management system for a local shop business. It helps owners to supervise and co
 - Get balance in a lapse of time, filtering by product and shop
 
 ## API Definition
-
 | Action                                               | URL                                        | Method | Parameters                       |
 |------------------------------------------------------|--------------------------------------------|--------|----------------------------------|
 | List all products                                    | /product                                   | GET    |                                  |
@@ -50,9 +47,37 @@ Management system for a local shop business. It helps owners to supervise and co
 | Get balances for each product on a shop              | /balance/shop/{shopId}/product             | GET    | start, end                       |
 | Get net balance of a product on a shop               | /balance/product/{productId}/shop/{shopId} | GET    | start, end                       |
 
-
-
 ## Database Model
-
 ![Product store API database model](database/product-store-api_model.png)
 
+## Building the application
+- Install JKD 8 or later
+- Set environment variable JAVA_HOME pointing to java root directory
+- Build the application JAR file
+
+    With maven
+    
+        $> mvn clean package
+        
+    With maven wrapper
+    
+        $> mvnw clean package
+
+The generated application JAR file will be "./target/<name>-<version>.jar"
+
+## Running the application
+- Set needed environment variables        
+        
+        # Port to map the database server out of docker network
+        PSA_POSTGRES_PORT=5432
+        PSA_POSTGRES_DB=<database name>
+        PSA_POSTGRES_USER=<username>
+        PSA_POSTGRES_PASSWORD=<password>
+        # Path to built JAR file
+        PSA_APP_JAR=./target/<name>-<version>.jar
+        # Port to map the application out of docker network
+        PSA_APP_PORT=8080
+
+- Run the application with docker-compose
+
+        $> docker-compose up -d
