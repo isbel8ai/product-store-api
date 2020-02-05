@@ -55,21 +55,29 @@ class ProductServiceImplTest {
 
     @Test
     void addProduct() {
-        productService.addProduct(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
+        assertDoesNotThrow(() ->
+                productService.addProduct(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null))
+        );
     }
 
     @Test
     void getProduct() {
-        assertNotNull(productService.getProduct(createdProduct.getId()));
+        assertDoesNotThrow(() ->
+                productService.getProduct(createdProduct.getId())
+        );
     }
 
     @Test
     void replaceProduct() {
-        productService.replaceProduct(createdProduct.getId(), new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
+        assertDoesNotThrow(() ->
+                productService.replaceProduct(createdProduct.getId(), new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null))
+        );
     }
 
     @Test
     void deleteProduct() {
-        productService.deleteProduct(createdProduct.getId());
+        assertDoesNotThrow(() ->
+                productService.deleteProduct(createdProduct.getId())
+        );
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -95,12 +96,16 @@ class LotServiceImplTest {
 
     @Test
     void registerLot() {
-        lotService.registerLot(new Lot(null, new Date(7), 650.0,3.5,  productB));
+        assertDoesNotThrow(() ->
+                lotService.registerLot(new Lot(null, new Date(7), 650.0, 3.5, productB))
+        );
     }
 
     @Test
     void deleteLot() {
-        lotService.deleteLot(removableLot.getId());
+        assertDoesNotThrow(() ->
+                lotService.deleteLot(removableLot.getId())
+        );
     }
 
     @Test

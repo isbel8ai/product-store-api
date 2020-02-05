@@ -117,12 +117,16 @@ class PackServiceImplTest {
 
     @Test
     void registerPack() {
-        packService.registerPack(new Pack(null, new Date(), 100.0, lotB, shop1));
+        assertDoesNotThrow(() ->
+                packService.registerPack(new Pack(null, new Date(), 100.0, lotB, shop1))
+        );
     }
 
     @Test
     void deletePack() {
-        packService.deletePack(removablePack.getId());
+        assertDoesNotThrow(() ->
+                packService.deletePack(removablePack.getId())
+        );
     }
 
     @Test

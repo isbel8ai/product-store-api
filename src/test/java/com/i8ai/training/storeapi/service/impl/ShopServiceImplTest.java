@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -46,21 +47,27 @@ class ShopServiceImplTest {
 
     @Test
     void addShop() {
-        shopService.addShop(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
+        assertDoesNotThrow(() ->
+                shopService.addShop(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null))
+        );
     }
 
     @Test
     void getShop() {
-        shopService.getShop(createdShop.getId());
+        assertDoesNotThrow(() ->
+                shopService.getShop(createdShop.getId()));
     }
 
     @Test
     void replaceShop() {
-        shopService.replaceShop(createdShop.getId(), new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
+        assertDoesNotThrow(() ->
+                shopService.replaceShop(createdShop.getId(), new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null))
+        );
     }
 
     @Test
     void deleteShop() {
-        shopService.deleteShop(createdShop.getId());
+        assertDoesNotThrow(() -> shopService.deleteShop(createdShop.getId())
+        );
     }
 }

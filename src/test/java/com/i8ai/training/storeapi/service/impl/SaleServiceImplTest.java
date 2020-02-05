@@ -55,6 +55,13 @@ class SaleServiceImplTest {
 
     private Sale removableSale;
 
+    static void cleanDatabase(SaleRepository saleRepository, PackRepository packRepository, LotRepository lotRepository, ProductRepository productRepository, ShopRepository shopRepository) {
+        saleRepository.deleteAll();
+        packRepository.deleteAll();
+        lotRepository.deleteAll();
+        productRepository.deleteAll();
+        shopRepository.deleteAll();
+    }
 
     @BeforeEach
     void setUp() {
@@ -82,14 +89,6 @@ class SaleServiceImplTest {
     @AfterEach
     void tearDown() {
         cleanDatabase(saleRepository, packRepository, lotRepository, productRepository, shopRepository);
-    }
-
-    static void cleanDatabase(SaleRepository saleRepository, PackRepository packRepository, LotRepository lotRepository, ProductRepository productRepository, ShopRepository shopRepository) {
-        saleRepository.deleteAll();
-        packRepository.deleteAll();
-        lotRepository.deleteAll();
-        productRepository.deleteAll();
-        shopRepository.deleteAll();
     }
 
     @Test
@@ -131,12 +130,16 @@ class SaleServiceImplTest {
 
     @Test
     void registerSale() {
-        saleService.registerSale(new Sale(null, new Date(20), 2.0, 8.0, packA1));
+        assertDoesNotThrow(() ->
+                saleService.registerSale(new Sale(null, new Date(20), 2.0, 8.0, packA1))
+        );
     }
 
     @Test
     void deleteSale() {
-        saleService.deleteSale(removableSale.getId());
+        assertDoesNotThrow(() ->
+                saleService.deleteSale(removableSale.getId())
+        );
     }
 
     @Test

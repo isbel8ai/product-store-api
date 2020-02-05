@@ -91,10 +91,10 @@ class ExistenceServiceImplTest {
         List<ExistenceDTO> existences = existenceService.getAllProductsExistenceInMain();
         assertEquals(2, existences.size());
         assertNull(existences.get(0).getShop());
-        assertEquals(existences.get(0).getProduct().getName(), PRODUCT_A_NAME);
+        assertEquals(PRODUCT_A_NAME, existences.get(0).getProduct().getName());
         assertEquals(150.0, existences.get(0).getAmount());
         assertNull(existences.get(1).getShop());
-        assertEquals(existences.get(1).getProduct().getName(), PRODUCT_B_NAME);
+        assertEquals(PRODUCT_B_NAME, existences.get(1).getProduct().getName());
         assertEquals(300.0, existences.get(1).getAmount());
     }
 
@@ -107,11 +107,11 @@ class ExistenceServiceImplTest {
     void getProductExistenceInAllShops() {
         List<ExistenceDTO> existences = existenceService.getProductExistenceInAllShops(productB.getId());
         assertEquals(2, existences.size());
-        assertEquals(existences.get(0).getShop().getName(), SHOP1_NAME);
-        assertEquals(existences.get(0).getProduct().getName(), PRODUCT_B_NAME);
+        assertEquals(SHOP1_NAME, existences.get(0).getShop().getName());
+        assertEquals(PRODUCT_B_NAME, existences.get(0).getProduct().getName());
         assertEquals(197.0, existences.get(0).getAmount());
-        assertEquals(existences.get(1).getShop().getName(), SHOP2_NAME);
-        assertEquals(existences.get(1).getProduct().getName(), PRODUCT_B_NAME);
+        assertEquals(SHOP2_NAME, existences.get(1).getShop().getName());
+        assertEquals(PRODUCT_B_NAME, existences.get(1).getProduct().getName());
         assertEquals(291.0, existences.get(1).getAmount());
     }
 
