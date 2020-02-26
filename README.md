@@ -63,7 +63,7 @@ Management system for a local shop business. It helps owners to supervise and co
     
         $> mvnw clean package
 
-The generated application JAR file will be "./target/<name>-<version>.jar"
+The generated application JAR file will be ```./target/<name>-<version>.jar```
 
 ## Running the application
 - Set needed environment variables        
