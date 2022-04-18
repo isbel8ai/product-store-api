@@ -1,6 +1,6 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.domain.Product;
+import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.exception.ElementNotFoundException;
 import com.i8ai.training.storeapi.exception.NotValidElementDataException;
 import com.i8ai.training.storeapi.repository.ProductRepository;

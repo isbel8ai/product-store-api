@@ -1,35 +1,34 @@
-package com.i8ai.training.storeapi.domain;
+package com.i8ai.training.storeapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Sale {
+public class Pack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     @Column(nullable = false)
-    private Date registered;
+    private Date delivered;
 
     @NotNull
     @Column(nullable = false)
     private Double amount;
 
-    @NotNull
-    @Column(nullable = false)
-    private Double price;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private Lot lot;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Pack pack;
+    private Shop shop;
 }

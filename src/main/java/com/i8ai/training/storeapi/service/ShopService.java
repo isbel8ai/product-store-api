@@ -1,6 +1,6 @@
 package com.i8ai.training.storeapi.service;
 
-import com.i8ai.training.storeapi.domain.Shop;
+import com.i8ai.training.storeapi.model.Shop;
 
 import java.util.List;
 

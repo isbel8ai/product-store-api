@@ -1,6 +1,6 @@
 package com.i8ai.training.storeapi.service;
 
-import com.i8ai.training.storeapi.domain.Sale;
+import com.i8ai.training.storeapi.model.Sale;
 
 import java.util.Date;
 import java.util.List;

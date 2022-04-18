@@ -1,9 +1,9 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.domain.*;
+import com.i8ai.training.storeapi.model.*;
 import com.i8ai.training.storeapi.repository.*;
 import com.i8ai.training.storeapi.service.BalanceService;
-import com.i8ai.training.storeapi.service.dto.BalanceDTO;
+import com.i8ai.training.storeapi.rest.dto.BalanceDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

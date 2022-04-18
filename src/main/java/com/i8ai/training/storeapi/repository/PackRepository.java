@@ -1,6 +1,6 @@
 package com.i8ai.training.storeapi.repository;
 
-import com.i8ai.training.storeapi.domain.Pack;
+import com.i8ai.training.storeapi.model.Pack;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

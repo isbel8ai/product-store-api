@@ -1,7 +1,7 @@
-package com.i8ai.training.storeapi.controller;
+package com.i8ai.training.storeapi.rest;
 
 import com.i8ai.training.storeapi.service.BalanceService;
-import com.i8ai.training.storeapi.service.dto.BalanceDTO;
+import com.i8ai.training.storeapi.rest.dto.BalanceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,7 +64,7 @@ public class BalanceController {
         return balanceService.getShopAllProductsBalances(start, end, shopId);
     }
 
-    @GetMapping(value = {"/product/{productId}/shop/{shopId}", "/shop/{shopId}/product/{productId}"})
+    @GetMapping({"/product/{productId}/shop/{shopId}", "/shop/{shopId}/product/{productId}"})
     public BalanceDTO getProductShopNetBalance(@RequestParam(required = false) Date start,
                                                @RequestParam(required = false) Date end,
                                                @PathVariable Long productId,

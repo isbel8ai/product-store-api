@@ -1,7 +1,7 @@
-package com.i8ai.training.storeapi.service.dto;
+package com.i8ai.training.storeapi.rest.dto;
 
-import com.i8ai.training.storeapi.domain.Product;
-import com.i8ai.training.storeapi.domain.Shop;
+import com.i8ai.training.storeapi.model.Product;
+import com.i8ai.training.storeapi.model.Shop;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

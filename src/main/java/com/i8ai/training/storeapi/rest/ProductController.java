@@ -1,6 +1,6 @@
-package com.i8ai.training.storeapi.controller;
+package com.i8ai.training.storeapi.rest;
 
-import com.i8ai.training.storeapi.domain.Product;
+import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

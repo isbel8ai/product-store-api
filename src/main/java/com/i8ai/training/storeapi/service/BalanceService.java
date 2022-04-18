@@ -1,6 +1,6 @@
 package com.i8ai.training.storeapi.service;
 
-import com.i8ai.training.storeapi.service.dto.BalanceDTO;
+import com.i8ai.training.storeapi.rest.dto.BalanceDTO;
 
 import java.util.Date;
 import java.util.List;

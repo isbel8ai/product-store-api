@@ -1,6 +1,6 @@
-package com.i8ai.training.storeapi.controller;
+package com.i8ai.training.storeapi.rest;
 
-import com.i8ai.training.storeapi.domain.Lot;
+import com.i8ai.training.storeapi.model.Lot;
 import com.i8ai.training.storeapi.service.LotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lot")
+@RequestMapping(value = "/lot")
 public class LotController {
 
     private final LotService lotService;

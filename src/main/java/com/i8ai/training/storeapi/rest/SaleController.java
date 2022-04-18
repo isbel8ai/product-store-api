@@ -1,6 +1,6 @@
-package com.i8ai.training.storeapi.controller;
+package com.i8ai.training.storeapi.rest;
 
-import com.i8ai.training.storeapi.domain.Sale;
+import com.i8ai.training.storeapi.model.Sale;
 import com.i8ai.training.storeapi.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

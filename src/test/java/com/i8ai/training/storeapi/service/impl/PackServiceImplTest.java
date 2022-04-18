@@ -1,9 +1,9 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.domain.Lot;
-import com.i8ai.training.storeapi.domain.Pack;
-import com.i8ai.training.storeapi.domain.Product;
-import com.i8ai.training.storeapi.domain.Shop;
+import com.i8ai.training.storeapi.model.Lot;
+import com.i8ai.training.storeapi.model.Pack;
+import com.i8ai.training.storeapi.model.Product;
+import com.i8ai.training.storeapi.model.Shop;
 import com.i8ai.training.storeapi.exception.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.LotRepository;
 import com.i8ai.training.storeapi.repository.PackRepository;

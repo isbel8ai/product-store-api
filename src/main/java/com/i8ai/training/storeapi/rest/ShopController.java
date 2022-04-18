@@ -1,7 +1,7 @@
-package com.i8ai.training.storeapi.controller;
+package com.i8ai.training.storeapi.rest;
 
 
-import com.i8ai.training.storeapi.domain.Shop;
+import com.i8ai.training.storeapi.model.Shop;
 import com.i8ai.training.storeapi.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/shop")
+@RequestMapping("/shop")
 public class ShopController {
 
     private final ShopService shopService;

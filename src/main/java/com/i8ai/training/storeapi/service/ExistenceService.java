@@ -1,6 +1,6 @@
 package com.i8ai.training.storeapi.service;
 
-import com.i8ai.training.storeapi.service.dto.ExistenceDTO;
+import com.i8ai.training.storeapi.rest.dto.ExistenceDTO;
 
 import java.util.List;
 

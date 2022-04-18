@@ -1,6 +1,6 @@
-package com.i8ai.training.storeapi.controller;
+package com.i8ai.training.storeapi.rest;
 
-import com.i8ai.training.storeapi.domain.Pack;
+import com.i8ai.training.storeapi.model.Pack;
 import com.i8ai.training.storeapi.service.PackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,7 +32,7 @@ public class PackController {
         return packService.registerPack(newPack);
     }
 
-    @DeleteMapping("/{packId}")
+    @DeleteMapping(value = "/{packId}")
     public void deletePack(@PathVariable Long packId) {
         packService.deletePack(packId);
     }

@@ -1,6 +1,6 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.domain.Pack;
+import com.i8ai.training.storeapi.model.Pack;
 import com.i8ai.training.storeapi.exception.ElementNotFoundException;
 import com.i8ai.training.storeapi.exception.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.PackRepository;

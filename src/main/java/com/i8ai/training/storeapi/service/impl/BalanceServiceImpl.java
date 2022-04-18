@@ -1,13 +1,13 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.domain.Product;
-import com.i8ai.training.storeapi.domain.Sale;
-import com.i8ai.training.storeapi.domain.Shop;
+import com.i8ai.training.storeapi.model.Product;
+import com.i8ai.training.storeapi.model.Sale;
+import com.i8ai.training.storeapi.model.Shop;
 import com.i8ai.training.storeapi.service.BalanceService;
 import com.i8ai.training.storeapi.service.ProductService;
 import com.i8ai.training.storeapi.service.SaleService;
 import com.i8ai.training.storeapi.service.ShopService;
-import com.i8ai.training.storeapi.service.dto.BalanceDTO;
+import com.i8ai.training.storeapi.rest.dto.BalanceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
