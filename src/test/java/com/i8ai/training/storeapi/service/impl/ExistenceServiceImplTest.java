@@ -3,7 +3,7 @@ package com.i8ai.training.storeapi.service.impl;
 import com.i8ai.training.storeapi.model.*;
 import com.i8ai.training.storeapi.repository.*;
 import com.i8ai.training.storeapi.service.ExistenceService;
-import com.i8ai.training.storeapi.rest.dto.ExistenceDTO;
+import com.i8ai.training.storeapi.service.data.Existence;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,7 +78,11 @@ class ExistenceServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        SaleServiceImplTest.cleanDatabase(saleRepository, packRepository, lotRepository, productRepository, shopRepository);
+        saleRepository.deleteAll();
+        packRepository.deleteAll();
+        lotRepository.deleteAll();
+        productRepository.deleteAll();
+        shopRepository.deleteAll();
     }
 
     @Test
@@ -88,7 +92,7 @@ class ExistenceServiceImplTest {
 
     @Test
     void getAllProductsExistenceInMain() {
-        List<ExistenceDTO> existences = existenceService.getAllProductsExistenceInMain();
+        List<Existence> existences = existenceService.getAllProductsExistenceInMain();
         assertEquals(2, existences.size());
         assertNull(existences.get(0).getShop());
         assertEquals(PRODUCT_A_NAME, existences.get(0).getProduct().getName());
@@ -105,7 +109,7 @@ class ExistenceServiceImplTest {
 
     @Test
     void getProductExistenceInAllShops() {
-        List<ExistenceDTO> existences = existenceService.getProductExistenceInAllShops(productB.getId());
+        List<Existence> existences = existenceService.getProductExistenceInAllShops(productB.getId());
         assertEquals(2, existences.size());
         assertEquals(SHOP1_NAME, existences.get(0).getShop().getName());
         assertEquals(PRODUCT_B_NAME, existences.get(0).getProduct().getName());

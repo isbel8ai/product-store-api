@@ -3,7 +3,7 @@ package com.i8ai.training.storeapi.service.impl;
 import com.i8ai.training.storeapi.model.*;
 import com.i8ai.training.storeapi.repository.*;
 import com.i8ai.training.storeapi.service.BalanceService;
-import com.i8ai.training.storeapi.rest.dto.BalanceDTO;
+import com.i8ai.training.storeapi.service.data.Balance;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,57 +76,61 @@ class BalanceServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        SaleServiceImplTest.cleanDatabase(saleRepository, packRepository, lotRepository, productRepository, shopRepository);
+        saleRepository.deleteAll();
+        packRepository.deleteAll();
+        lotRepository.deleteAll();
+        productRepository.deleteAll();
+        shopRepository.deleteAll();
     }
 
     @Test
     void getNetBalance() {
-        BalanceDTO balance = balanceService.getNetBalance(null, null);
+        Balance balance = balanceService.getNetBalance(null, null);
         assertEquals(1400.0, balance.getSpent());
         assertEquals(2180.0, balance.getIncome());
     }
 
     @Test
     void getAllProductsBalances() {
-        List<BalanceDTO> balances = balanceService.getAllProductsBalances(null, null);
+        List<Balance> balances = balanceService.getBalancesPerProduct(null, null);
         assertEquals(2, balances.size());
     }
 
     @Test
     void getAllShopsBalances() {
-        List<BalanceDTO> balances = balanceService.getAllShopsBalances(null, null);
+        List<Balance> balances = balanceService.getBalancesPerShop(null, null);
         assertEquals(2, balances.size());
     }
 
     @Test
     void getProductNetBalance() {
-        BalanceDTO balance = balanceService.getProductNetBalance(null, null, productA.getId());
+        Balance balance = balanceService.getBalanceByProduct(null, null, productA.getId());
         assertEquals(440.0, balance.getSpent());
         assertEquals(650.0, balance.getIncome());
     }
 
     @Test
     void getShopNetBalance() {
-        BalanceDTO balance = balanceService.getShopNetBalance(null, null, shop1.getId());
+        Balance balance = balanceService.getBalanceByShop(null, null, shop1.getId());
         assertEquals(625.0, balance.getSpent());
         assertEquals(1010.0, balance.getIncome());
     }
 
     @Test
     void getProductAllShopsBalances() {
-        List<BalanceDTO> balances = balanceService.getProductAllShopsBalances(null, null, productA.getId());
+        List<Balance> balances = balanceService.getBalancesByProductPerShop(null, null, productA.getId());
         assertEquals(2, balances.size());
     }
 
     @Test
     void getShopAllProductsBalances() {
-        List<BalanceDTO> balances = balanceService.getShopAllProductsBalances(null, null, shop1.getId());
+        List<Balance> balances = balanceService.getBalancesByShopPerProduct(null, null, shop1.getId());
         assertEquals(2, balances.size());
     }
 
     @Test
     void getProductShopNetBalance() {
-        BalanceDTO balance = balanceService.getProductShopNetBalance(null, null, productA.getId(), shop1.getId());
+        Balance balance = balanceService.getBalanceByProductAndShop(null, null, productA.getId(), shop1.getId());
         assertEquals(385.0, balance.getSpent());
         assertEquals(560.0, balance.getIncome());
     }

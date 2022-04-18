@@ -1,24 +1,26 @@
 package com.i8ai.training.storeapi.service;
 
-import com.i8ai.training.storeapi.rest.dto.BalanceDTO;
+import com.i8ai.training.storeapi.service.data.Balance;
 
 import java.util.Date;
 import java.util.List;
 
 public interface BalanceService {
-    BalanceDTO getNetBalance(Date start, Date end);
+    Balance getNetBalance(Date start, Date end);
 
-    List<BalanceDTO> getAllProductsBalances(Date start, Date end);
+    List<Balance> getBalancesPerProduct(Date start, Date end);
 
-    List<BalanceDTO> getAllShopsBalances(Date start, Date end);
+    List<Balance> getBalancesPerShop(Date start, Date end);
 
-    BalanceDTO getProductNetBalance(Date start, Date end, Long productId);
+    List<Balance> getBalancesPerProductPerShop(Date start, Date end);
 
-    BalanceDTO getShopNetBalance(Date start, Date end, Long shopId);
+    Balance getBalanceByProduct(Date start, Date end, Long productId);
 
-    List<BalanceDTO> getProductAllShopsBalances(Date start, Date end, Long productId);
+    Balance getBalanceByShop(Date start, Date end, Long shopId);
 
-    List<BalanceDTO> getShopAllProductsBalances(Date start, Date end, Long shopId);
+    List<Balance> getBalancesByProductPerShop(Date start, Date end, Long productId);
 
-    BalanceDTO getProductShopNetBalance(Date start, Date end, Long productId, Long shopId);
+    List<Balance> getBalancesByShopPerProduct(Date start, Date end, Long shopId);
+
+    Balance getBalanceByProductAndShop(Date start, Date end, Long productId, Long shopId);
 }

@@ -1,7 +1,7 @@
 package com.i8ai.training.storeapi.service.impl;
 
+import com.i8ai.training.storeapi.error.NotValidAmountException;
 import com.i8ai.training.storeapi.model.*;
-import com.i8ai.training.storeapi.exception.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.*;
 import com.i8ai.training.storeapi.service.SaleService;
 import org.junit.jupiter.api.AfterEach;
@@ -56,14 +56,6 @@ class SaleServiceImplTest {
 
     private Sale removableSale;
 
-    static void cleanDatabase(SaleRepository saleRepository, PackRepository packRepository, LotRepository lotRepository, ProductRepository productRepository, ShopRepository shopRepository) {
-        saleRepository.deleteAll();
-        packRepository.deleteAll();
-        lotRepository.deleteAll();
-        productRepository.deleteAll();
-        shopRepository.deleteAll();
-    }
-
     @BeforeEach
     void setUp() {
         productA = productRepository.save(new Product(null, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null));
@@ -89,7 +81,11 @@ class SaleServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        cleanDatabase(saleRepository, packRepository, lotRepository, productRepository, shopRepository);
+        saleRepository.deleteAll();
+        packRepository.deleteAll();
+        lotRepository.deleteAll();
+        productRepository.deleteAll();
+        shopRepository.deleteAll();
     }
 
     @Test

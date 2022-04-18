@@ -1,4 +1,4 @@
-package com.i8ai.training.storeapi.rest.dto;
+package com.i8ai.training.storeapi.service.data;
 
 import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.model.Shop;
@@ -7,10 +7,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ExistenceDTO {
-    private Double amount;
+public class Balance {
+    Double spent;
 
-    private Product product;
+    Double income;
 
-    private Shop shop;
+    Product product;
+
+    Shop shop;
 }

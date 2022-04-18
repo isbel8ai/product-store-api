@@ -1,7 +1,7 @@
 package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.model.Sale;
-import com.i8ai.training.storeapi.exception.NotValidAmountException;
+import com.i8ai.training.storeapi.error.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.SaleRepository;
 import com.i8ai.training.storeapi.service.PackService;
 import com.i8ai.training.storeapi.service.SaleService;

@@ -1,4 +1,4 @@
-package com.i8ai.training.storeapi.exception;
+package com.i8ai.training.storeapi.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

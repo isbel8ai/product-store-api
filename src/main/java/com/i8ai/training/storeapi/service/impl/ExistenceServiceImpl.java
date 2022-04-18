@@ -3,7 +3,7 @@ package com.i8ai.training.storeapi.service.impl;
 import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.model.Shop;
 import com.i8ai.training.storeapi.service.*;
-import com.i8ai.training.storeapi.rest.dto.ExistenceDTO;
+import com.i8ai.training.storeapi.service.data.Existence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,31 +28,31 @@ public class ExistenceServiceImpl implements ExistenceService {
     }
 
     @Override
-    public List<ExistenceDTO> getAllProductsExistenceInMain() {
+    public List<Existence> getAllProductsExistenceInMain() {
         return productService.getAllProducts().stream().map(product -> getProductExistenceInMain(product.getId())).collect(Collectors.toList());
     }
 
     @Override
-    public ExistenceDTO getProductExistenceInMain(Long productId) {
+    public Existence getProductExistenceInMain(Long productId) {
         Product product = productService.getProduct(productId);
 
         Double amount = lotService.getProductReceivedAmount(productId) - packService.getProductDeliveredAmount(productId);
 
-        return new ExistenceDTO(amount, product, null);
+        return new Existence(amount, product, null);
     }
 
     @Override
-    public List<ExistenceDTO> getProductExistenceInAllShops(Long productId) {
+    public List<Existence> getProductExistenceInAllShops(Long productId) {
         return shopService.getAllShops().stream().map(shop -> getProductExistenceInShop(productId, shop.getId())).collect(Collectors.toList());
     }
 
     @Override
-    public ExistenceDTO getProductExistenceInShop(Long productId, Long shopId) {
+    public Existence getProductExistenceInShop(Long productId, Long shopId) {
         Product product = productService.getProduct(productId);
         Shop shop = shopService.getShop(shopId);
 
         Double amount = packService.getProductDeliveredToShopAmount(productId, shopId) - saleService.getProductSoldInShopAmount(productId, shopId);
 
-        return new ExistenceDTO(amount, product, shop);
+        return new Existence(amount, product, shop);
     }
 }
