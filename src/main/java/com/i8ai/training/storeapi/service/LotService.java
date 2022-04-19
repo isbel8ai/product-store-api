@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface LotService {
-    List<Lot> getLots(Date start, Date end, Long productId);
+    List<Lot> getLots(Long productId, Date start, Date end);
 
     Lot registerLot(Lot newLot);
 

@@ -21,10 +21,10 @@ public class LotController {
     }
 
     @GetMapping
-    public List<Lot> getLots(@RequestParam(required = false) Date start,
-                             @RequestParam(required = false) Date end,
-                             @RequestParam(required = false) Long productId) {
-        return lotService.getLots(start, end, productId);
+    public List<Lot> getLots(@RequestParam(required = false) Long productId,
+                             @RequestParam(required = false) Date start,
+                             @RequestParam(required = false) Date end) {
+        return lotService.getLots(productId, start, end);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

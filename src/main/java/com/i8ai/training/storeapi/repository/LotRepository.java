@@ -12,7 +12,7 @@ import java.util.List;
 public interface LotRepository extends JpaRepository<Lot, Long> {
     List<Lot> findAllByReceivedBetween(Date startDate, Date endDate);
 
-    List<Lot> findAllByReceivedBetweenAndProductId(Date startDate, Date endDate, Long productId);
+    List<Lot> findAllByProductIdAndReceivedBetween(Long productId, Date startDate, Date endDate);
 
     @Query("select sum(l.amount) from Lot l where l.product.id = ?1")
     Double getAmountArrivedByProductId(Long productId);

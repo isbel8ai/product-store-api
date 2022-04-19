@@ -19,10 +19,10 @@ class RepositoryTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private LotRepository lotRepository;
+    private ShopRepository shopRepository;
 
     @Autowired
-    private ShopRepository shopRepository;
+    private LotRepository lotRepository;
 
     @Autowired
     private PackRepository packRepository;
@@ -63,6 +63,18 @@ class RepositoryTest {
         lotRepository.deleteAll();
         productRepository.deleteAll();
         shopRepository.deleteAll();
+    }
+
+    @Test
+    void findAllByReceivedBetween() {
+    }
+
+    @Test
+    void findAllByReceivedBetweenAndProductId() {
+    }
+
+    @Test
+    void getAmountArrivedByProductId() {
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.i8ai.training.storeapi.model.Lot;
 import com.i8ai.training.storeapi.error.ElementNotFoundException;
 import com.i8ai.training.storeapi.repository.LotRepository;
 import com.i8ai.training.storeapi.service.LotService;
+import com.i8ai.training.storeapi.util.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,14 @@ public class LotServiceImpl implements LotService {
     }
 
     @Override
-    public List<Lot> getLots(Date start, Date end, Long productId) {
-        if (start == null) start = new Date(0);
-        if (end == null) end = new Date();
-
+    public List<Lot> getLots(Long productId, Date start, Date end) {
         return productId == null ?
-                lotRepository.findAllByReceivedBetween(start, end) :
-                lotRepository.findAllByReceivedBetweenAndProductId(start, end, productId);
+                lotRepository.findAllByReceivedBetween(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)) :
+                lotRepository.findAllByProductIdAndReceivedBetween(
+                        productId,
+                        DateTimeUtils.dateOrMin(start),
+                        DateTimeUtils.dateOrMax(end)
+                );
     }
 
     @Override
