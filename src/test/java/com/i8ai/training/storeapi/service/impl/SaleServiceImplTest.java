@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -141,6 +142,6 @@ class SaleServiceImplTest {
 
     @Test
     void getProductSoldInShopAmount() {
-        assertEquals(7, saleService.getProductSoldInShopAmount(productA.getId(), shop1.getId()));
+        assertEquals(7, saleService.getSoldAmountByProductAndShop(productA.getId(), shop1.getId()));
     }
 }

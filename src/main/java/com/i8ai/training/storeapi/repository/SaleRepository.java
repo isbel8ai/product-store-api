@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
@@ -18,9 +19,39 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     List<Sale> findAllByRegisteredBetweenAndPackLotProductIdAndPackShopId(Date start, Date end, Long productId, Long shopId);
 
-    @Query("select sum(s.amount) from Sale s where s.pack.id = ?1")
-    Double getSoldAmountByPackId(Long packId);
+    @Query("select s.pack.amount - sum(s.amount) from Sale s where s.pack.id = :packId")
+    Optional<Double> getRemainingAmountByPackId(Long packId);
 
-    @Query("select sum(s.amount) from Sale s where s.pack.lot.product.id = ?1 and s.pack.shop.id = ?2")
-    Double getSoldAmountByProductIdAndShopId(Long productId, Long shopId);
+    @Query("select sum(s.amount) from Sale s where s.pack.lot.product.id = :productId and s.pack.shop.id = :shopId")
+    Optional<Double> getSoldAmountByProductIdAndShopId(Long productId, Long shopId);
+
+    @Query("select sum(s.amount * s.price) from Sale s where s.registered between :start and :end")
+    Optional<Double> getNetSalesIncome(Date start, Date end);
+
+    @Query("select sum(s.amount * s.price) from Sale s where s.pack.lot.product.id = :productId " +
+            "and s.registered between :start and :end")
+    Optional<Double> getIncomeByProductId(Long productId, Date start, Date end);
+
+    @Query("select sum(s.amount * s.price) from Sale s where s.pack.shop.id = :shopId " +
+            "and s.registered between :start and :end")
+    Optional<Double> getIncomeByShopId(Long shopId, Date start, Date end);
+
+    @Query("select sum(s.amount * s.price) from Sale s where s.pack.lot.product.id = :productId " +
+            "and s.pack.shop.id = :shopId and s.registered between :start and :end")
+    Optional<Double> getIncomeByProductIdAndShopId(Long productId, Long shopId, Date start, Date end);
+
+    @Query("select sum(s.amount * s.pack.lot.cost) from Sale s where s.registered between :start and :end")
+    Optional<Double> getNetSalesExpenses(Date start, Date end);
+
+    @Query("select sum(s.amount * s.pack.lot.cost) from Sale s where s.pack.lot.product.id = :productId " +
+            "and s.registered between :start and :end")
+    Optional<Double> getSaleExpensesByProductId(Long productId, Date start, Date end);
+
+    @Query("select sum(s.amount * s.pack.lot.cost) from Sale s where s.pack.shop.id = :shopId " +
+            "and s.registered between :start and :end")
+    Optional<Double> getSaleExpensesByShopId(Long shopId, Date start, Date end);
+
+    @Query("select sum(s.amount * s.pack.lot.cost) from Sale s where s.pack.lot.product.id = :productId " +
+            "and s.pack.shop.id = :shopId and s.registered between :start and :end")
+    Optional<Double> getSaleExpensesByProductIdAndShopId(Long productId, Long shopId, Date start, Date end);
 }

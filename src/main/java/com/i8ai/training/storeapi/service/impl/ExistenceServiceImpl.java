@@ -51,7 +51,7 @@ public class ExistenceServiceImpl implements ExistenceService {
         Product product = productService.getProduct(productId);
         Shop shop = shopService.getShop(shopId);
 
-        Double amount = packService.getProductDeliveredToShopAmount(productId, shopId) - saleService.getProductSoldInShopAmount(productId, shopId);
+        Double amount = packService.getProductDeliveredToShopAmount(productId, shopId) - saleService.getSoldAmountByProductAndShop(productId, shopId);
 
         return new Existence(amount, product, shop);
     }

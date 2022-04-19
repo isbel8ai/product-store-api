@@ -1,137 +1,233 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.model.*;
-import com.i8ai.training.storeapi.repository.*;
-import com.i8ai.training.storeapi.service.BalanceService;
+import com.i8ai.training.storeapi.service.ProductService;
+import com.i8ai.training.storeapi.service.SaleService;
+import com.i8ai.training.storeapi.service.ShopService;
 import com.i8ai.training.storeapi.service.data.Balance;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
-import java.util.Date;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.List;
 
+import static com.i8ai.training.storeapi.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class BalanceServiceImplTest {
-    private static final String PRODUCT_A_CODE = "a_product_code";
-    private static final String PRODUCT_B_CODE = "b_product_code";
-    private static final String PRODUCT_A_NAME = "a_product_name";
-    private static final String PRODUCT_B_NAME = "b_product_name";
-    private static final String PRODUCT_A_MEASURE = "a_product_measure";
-    private static final String PRODUCT_B_MEASURE = "b_product_measure";
-    private static final String SHOP1_NAME = "name of shop 1";
-    private static final String SHOP2_NAME = "name of shop 2";
-    private static final String SHOP1_ADDRESS = "address of shop 1";
-    private static final String SHOP2_ADDRESS = "address of shop 2";
 
-    @Autowired
-    private ProductRepository productRepository;
+    @Mock
+    private ProductService productService;
 
-    @Autowired
-    private LotRepository lotRepository;
+    @Mock
+    private ShopService shopService;
 
-    @Autowired
-    private ShopRepository shopRepository;
+    @Mock
+    private SaleService saleService;
 
-    @Autowired
-    private PackRepository packRepository;
-
-    @Autowired
-    private SaleRepository saleRepository;
-
-    @Autowired
-    private BalanceService balanceService;
-
-    private Product productA;
-
-    private Shop shop1;
-
-
-    @BeforeEach
-    void setUp() {
-        productA = productRepository.save(new Product(null, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null));
-        Product productB = productRepository.save(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
-
-        Lot lotA = lotRepository.save(new Lot(null, new Date(1), 500.0, 5.5, productA));
-        Lot lotB = lotRepository.save(new Lot(null, new Date(2), 800.0, 8.0, productB));
-
-        shop1 = shopRepository.save(new Shop(null, SHOP1_NAME, SHOP1_ADDRESS, null));
-        Shop shop2 = shopRepository.save(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
-
-        Pack packA1 = packRepository.save(new Pack(null, new Date(3), 200.0, lotA, shop1));
-        Pack packA2 = packRepository.save(new Pack(null, new Date(4), 150.0, lotA, shop2));
-        Pack packB1 = packRepository.save(new Pack(null, new Date(5), 200.0, lotB, shop1));
-        Pack packB2 = packRepository.save(new Pack(null, new Date(6), 300.0, lotB, shop2));
-
-        saleRepository.save(new Sale(null, new Date(3), 50.0, 8.0, packA1));
-        saleRepository.save(new Sale(null, new Date(5), 10.0, 9.0, packA2));
-        saleRepository.save(new Sale(null, new Date(7), 30.0, 15.0, packB1));
-        saleRepository.save(new Sale(null, new Date(9), 90.0, 12.0, packB2));
-        saleRepository.save(new Sale(null, new Date(15), 20.0, 8.0, packA1));
-    }
-
-    @AfterEach
-    void tearDown() {
-        saleRepository.deleteAll();
-        packRepository.deleteAll();
-        lotRepository.deleteAll();
-        productRepository.deleteAll();
-        shopRepository.deleteAll();
-    }
+    @InjectMocks
+    private BalanceServiceImpl balanceService;
 
     @Test
     void getNetBalance() {
+        when(saleService.getNetSalesExpenses(null, null)).thenReturn(NET_SALES_EXPENSES);
+        when(saleService.getNetSalesIncome(null, null)).thenReturn(NET_SALES_INCOME);
+
         Balance balance = balanceService.getNetBalance(null, null);
-        assertEquals(1400.0, balance.getSpent());
-        assertEquals(2180.0, balance.getIncome());
+
+        assertEquals(NET_SALES_EXPENSES, balance.getSpent());
+        assertEquals(NET_SALES_INCOME, balance.getIncome());
+        assertNull(balance.getProduct());
+        assertNull(balance.getShop());
     }
 
     @Test
-    void getAllProductsBalances() {
+    void getBalancesPerProduct() {
+        when(saleService.getSalesExpensesByProduct(PRODUCT_A_ID, null, null)).thenReturn(PRODUCT_A_EXPENSES);
+        when(saleService.getSalesIncomeByProduct(PRODUCT_A_ID, null, null)).thenReturn(PRODUCT_A_INCOME);
+        when(saleService.getSalesExpensesByProduct(PRODUCT_B_ID, null, null)).thenReturn(PRODUCT_B_EXPENSES);
+        when(saleService.getSalesIncomeByProduct(PRODUCT_B_ID, null, null)).thenReturn(PRODUCT_B_INCOME);
+        when(productService.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
+
         List<Balance> balances = balanceService.getBalancesPerProduct(null, null);
+
         assertEquals(2, balances.size());
+        assertEquals(PRODUCT_A_EXPENSES, balances.get(0).getSpent());
+        assertEquals(PRODUCT_A_INCOME, balances.get(0).getIncome());
+        assertEquals(PRODUCT_A, balances.get(0).getProduct());
+        assertNull(balances.get(0).getShop());
+        assertEquals(PRODUCT_B_EXPENSES, balances.get(1).getSpent());
+        assertEquals(PRODUCT_B_INCOME, balances.get(1).getIncome());
+        assertEquals(PRODUCT_B, balances.get(1).getProduct());
+        assertNull(balances.get(1).getShop());
     }
 
     @Test
-    void getAllShopsBalances() {
+    void getBalancesPerShop() {
+        when(saleService.getSalesExpensesByShop(SHOP1_ID, null, null)).thenReturn(SHOP1_EXPENSES);
+        when(saleService.getSalesIncomeByShop(SHOP1_ID, null, null)).thenReturn(SHOP1_INCOME);
+        when(saleService.getSalesExpensesByShop(SHOP2_ID, null, null)).thenReturn(SHOP2_EXPENSES);
+        when(saleService.getSalesIncomeByShop(SHOP2_ID, null, null)).thenReturn(SHOP2_INCOME);
+        when(shopService.getAllShops()).thenReturn(List.of(SHOP1, SHOP2));
+
         List<Balance> balances = balanceService.getBalancesPerShop(null, null);
+
         assertEquals(2, balances.size());
+        assertEquals(SHOP1_EXPENSES, balances.get(0).getSpent());
+        assertEquals(SHOP1_INCOME, balances.get(0).getIncome());
+        assertNull(balances.get(0).getProduct());
+        assertEquals(SHOP1, balances.get(0).getShop());
+        assertEquals(SHOP2_EXPENSES, balances.get(1).getSpent());
+        assertEquals(SHOP2_INCOME, balances.get(1).getIncome());
+        assertNull(balances.get(1).getProduct());
+        assertEquals(SHOP2, balances.get(1).getShop());
     }
 
     @Test
-    void getProductNetBalance() {
-        Balance balance = balanceService.getBalanceByProduct(null, null, productA.getId());
-        assertEquals(440.0, balance.getSpent());
-        assertEquals(650.0, balance.getIncome());
+    void getBalanceByProduct() {
+        when(saleService.getSalesExpensesByProduct(PRODUCT_A_ID, null, null)).thenReturn(PRODUCT_A_EXPENSES);
+        when(saleService.getSalesIncomeByProduct(PRODUCT_A_ID, null, null)).thenReturn(PRODUCT_A_INCOME);
+        when(productService.getProduct(PRODUCT_A_ID)).thenReturn(PRODUCT_A);
+
+        Balance balance = balanceService.getBalanceByProduct(PRODUCT_A_ID, null, null);
+
+        assertEquals(PRODUCT_A_EXPENSES, balance.getSpent());
+        assertEquals(PRODUCT_A_INCOME, balance.getIncome());
+        assertEquals(PRODUCT_A, balance.getProduct());
+        assertNull(balance.getShop());
     }
 
     @Test
-    void getShopNetBalance() {
-        Balance balance = balanceService.getBalanceByShop(null, null, shop1.getId());
-        assertEquals(625.0, balance.getSpent());
-        assertEquals(1010.0, balance.getIncome());
+    void getBalanceByShop() {
+        when(saleService.getSalesExpensesByShop(SHOP1_ID, null, null)).thenReturn(SHOP1_EXPENSES);
+        when(saleService.getSalesIncomeByShop(SHOP1_ID, null, null)).thenReturn(SHOP1_INCOME);
+        when(shopService.getShop(SHOP1_ID)).thenReturn(SHOP1);
+
+        Balance balance = balanceService.getBalanceByShop(SHOP1_ID, null, null);
+
+        assertEquals(SHOP1_EXPENSES, balance.getSpent());
+        assertEquals(SHOP1_INCOME, balance.getIncome());
+        assertNull(balance.getProduct());
+        assertEquals(SHOP1, balance.getShop());
     }
 
     @Test
-    void getProductAllShopsBalances() {
-        List<Balance> balances = balanceService.getBalancesByProductPerShop(null, null, productA.getId());
+    void getBalancesByProductPerShop() {
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1A_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1A_SALES_INCOME);
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP2_ID, null, null))
+                .thenReturn(PACK2A_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP2_ID, null, null))
+                .thenReturn(PACK2A_SALES_INCOME);
+        when(productService.getProduct(PRODUCT_A_ID)).thenReturn(PRODUCT_A);
+        when(shopService.getAllShops()).thenReturn(List.of(SHOP1, SHOP2));
+
+        List<Balance> balances = balanceService.getBalancesByProductPerShop(PRODUCT_A_ID, null, null);
+
         assertEquals(2, balances.size());
+        assertEquals(PACK1A_SALES_EXPENSES, balances.get(0).getSpent());
+        assertEquals(PACK1A_SALES_INCOME, balances.get(0).getIncome());
+        assertEquals(PRODUCT_A, balances.get(0).getProduct());
+        assertEquals(SHOP1, balances.get(0).getShop());
+        assertEquals(PACK2A_SALES_EXPENSES, balances.get(1).getSpent());
+        assertEquals(PACK2A_SALES_INCOME, balances.get(1).getIncome());
+        assertEquals(PRODUCT_A, balances.get(1).getProduct());
+        assertEquals(SHOP2, balances.get(1).getShop());
     }
 
     @Test
-    void getShopAllProductsBalances() {
-        List<Balance> balances = balanceService.getBalancesByShopPerProduct(null, null, shop1.getId());
+    void getBalancesByShopPerProduct() {
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1A_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1A_SALES_INCOME);
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1B_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1B_SALES_INCOME);
+        when(productService.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
+        when(shopService.getShop(SHOP1_ID)).thenReturn(SHOP1);
+
+        List<Balance> balances = balanceService.getBalancesByShopPerProduct(SHOP1_ID, null, null);
+
         assertEquals(2, balances.size());
+        assertEquals(PACK1A_SALES_EXPENSES, balances.get(0).getSpent());
+        assertEquals(PACK1A_SALES_INCOME, balances.get(0).getIncome());
+        assertEquals(PRODUCT_A, balances.get(0).getProduct());
+        assertEquals(SHOP1, balances.get(0).getShop());
+        assertEquals(PACK1B_SALES_EXPENSES, balances.get(1).getSpent());
+        assertEquals(PACK1B_SALES_INCOME, balances.get(1).getIncome());
+        assertEquals(PRODUCT_B, balances.get(1).getProduct());
+        assertEquals(SHOP1, balances.get(1).getShop());
     }
 
     @Test
-    void getProductShopNetBalance() {
-        Balance balance = balanceService.getBalanceByProductAndShop(null, null, productA.getId(), shop1.getId());
-        assertEquals(385.0, balance.getSpent());
-        assertEquals(560.0, balance.getIncome());
+    void getBalanceByProductAndShop() {
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP2_ID, null, null))
+                .thenReturn(PACK2B_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP2_ID, null, null))
+                .thenReturn(PACK2B_SALES_INCOME);
+        when(productService.getProduct(PRODUCT_B_ID)).thenReturn(PRODUCT_B);
+        when(shopService.getShop(SHOP2_ID)).thenReturn(SHOP2);
+
+        Balance balance = balanceService.getBalanceByProductAndShop(
+                PRODUCT_B.getId(),
+                SHOP2.getId(),
+                null,
+                null);
+
+        assertEquals(PACK2B_SALES_EXPENSES, balance.getSpent());
+        assertEquals(PACK2B_SALES_INCOME, balance.getIncome());
+        assertEquals(PRODUCT_B, balance.getProduct());
+        assertEquals(SHOP2, balance.getShop());
+    }
+
+    @Test
+    void getBalancesPerProductPerShop() {
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1A_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1A_SALES_INCOME);
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1B_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null))
+                .thenReturn(PACK1B_SALES_INCOME);
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP2_ID, null, null))
+                .thenReturn(PACK2A_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP2_ID, null, null))
+                .thenReturn(PACK2A_SALES_INCOME);
+        when(saleService.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP2_ID, null, null))
+                .thenReturn(PACK2B_SALES_EXPENSES);
+        when(saleService.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP2_ID, null, null))
+                .thenReturn(PACK2B_SALES_INCOME);
+        when(productService.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
+        when(shopService.getAllShops()).thenReturn(List.of(SHOP1, SHOP2));
+
+        List<Balance> balances = balanceService.getBalancesPerProductPerShop(null, null);
+
+        assertEquals(4, balances.size());
+        assertEquals(PACK1A_SALES_EXPENSES, balances.get(0).getSpent());
+        assertEquals(PACK1A_SALES_INCOME, balances.get(0).getIncome());
+        assertEquals(PRODUCT_A, balances.get(0).getProduct());
+        assertEquals(SHOP1, balances.get(0).getShop());
+        assertEquals(PACK1B_SALES_EXPENSES, balances.get(1).getSpent());
+        assertEquals(PACK1B_SALES_INCOME, balances.get(1).getIncome());
+        assertEquals(PRODUCT_B, balances.get(1).getProduct());
+        assertEquals(SHOP1, balances.get(1).getShop());
+        assertEquals(PACK2A_SALES_EXPENSES, balances.get(2).getSpent());
+        assertEquals(PACK2A_SALES_INCOME, balances.get(2).getIncome());
+        assertEquals(PRODUCT_A, balances.get(2).getProduct());
+        assertEquals(SHOP2, balances.get(2).getShop());
+        assertEquals(PACK2B_SALES_EXPENSES, balances.get(3).getSpent());
+        assertEquals(PACK2B_SALES_INCOME, balances.get(3).getIncome());
+        assertEquals(PRODUCT_B, balances.get(3).getProduct());
+        assertEquals(SHOP2, balances.get(3).getShop());
     }
 }

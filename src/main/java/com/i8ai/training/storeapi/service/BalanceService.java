@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface BalanceService {
+
     Balance getNetBalance(Date start, Date end);
 
     List<Balance> getBalancesPerProduct(Date start, Date end);
@@ -14,13 +15,13 @@ public interface BalanceService {
 
     List<Balance> getBalancesPerProductPerShop(Date start, Date end);
 
-    Balance getBalanceByProduct(Date start, Date end, Long productId);
+    Balance getBalanceByProduct(Long productId, Date start, Date end);
 
-    Balance getBalanceByShop(Date start, Date end, Long shopId);
+    Balance getBalanceByShop(Long shopId, Date start, Date end);
 
-    List<Balance> getBalancesByProductPerShop(Date start, Date end, Long productId);
+    List<Balance> getBalancesByProductPerShop(Long productId, Date start, Date end);
 
-    List<Balance> getBalancesByShopPerProduct(Date start, Date end, Long shopId);
+    List<Balance> getBalancesByShopPerProduct(Long shopId, Date start, Date end);
 
-    Balance getBalanceByProductAndShop(Date start, Date end, Long productId, Long shopId);
+    Balance getBalanceByProductAndShop(Long productId, Long shopId, Date start, Date end);
 }
