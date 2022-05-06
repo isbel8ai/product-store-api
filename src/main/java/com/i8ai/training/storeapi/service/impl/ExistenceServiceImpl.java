@@ -19,7 +19,12 @@ public class ExistenceServiceImpl implements ExistenceService {
     private final SaleService saleService;
 
     @Autowired
-    public ExistenceServiceImpl(ProductService productService, ShopService shopService, LotService lotService, PackService packService, SaleService saleService) {
+    public ExistenceServiceImpl(
+            ProductService productService,
+            ShopService shopService,
+            LotService lotService,
+            PackService packService,
+            SaleService saleService) {
         this.productService = productService;
         this.shopService = shopService;
         this.lotService = lotService;
@@ -29,21 +34,25 @@ public class ExistenceServiceImpl implements ExistenceService {
 
     @Override
     public List<Existence> getAllProductsExistenceInMain() {
-        return productService.getAllProducts().stream().map(product -> getProductExistenceInMain(product.getId())).collect(Collectors.toList());
+        return productService.getAllProducts().stream().map(
+                this::getExistenceByProductInMain).collect(Collectors.toList()
+        );
     }
 
     @Override
     public Existence getProductExistenceInMain(Long productId) {
         Product product = productService.getProduct(productId);
 
-        Double amount = lotService.getProductReceivedAmount(productId) - packService.getProductDeliveredAmount(productId);
-
-        return new Existence(amount, product, null);
+        return getExistenceByProductInMain(product);
     }
 
     @Override
     public List<Existence> getProductExistenceInAllShops(Long productId) {
-        return shopService.getAllShops().stream().map(shop -> getProductExistenceInShop(productId, shop.getId())).collect(Collectors.toList());
+        Product product = productService.getProduct(productId);
+
+        return shopService.getAllShops().stream().map(
+                shop -> getExistenceByProductAndShop(product, shop)).collect(Collectors.toList()
+        );
     }
 
     @Override
@@ -51,7 +60,19 @@ public class ExistenceServiceImpl implements ExistenceService {
         Product product = productService.getProduct(productId);
         Shop shop = shopService.getShop(shopId);
 
-        Double amount = packService.getProductDeliveredToShopAmount(productId, shopId) - saleService.getSoldAmountByProductAndShop(productId, shopId);
+        return getExistenceByProductAndShop(product, shop);
+    }
+
+    public Existence getExistenceByProductInMain(Product product) {
+        Double amount = lotService.getProductReceivedAmount(product.getId()) -
+                packService.getProductDeliveredAmount(product.getId());
+
+        return new Existence(amount, product, null);
+    }
+
+    private Existence getExistenceByProductAndShop(Product product, Shop shop) {
+        Double amount = packService.getProductDeliveredToShopAmount(product.getId(), shop.getId()) -
+                saleService.getSoldAmountByProductAndShop(product.getId(), shop.getId());
 
         return new Existence(amount, product, shop);
     }

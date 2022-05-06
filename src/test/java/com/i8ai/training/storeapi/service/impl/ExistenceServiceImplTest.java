@@ -1,99 +1,51 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.model.*;
-import com.i8ai.training.storeapi.repository.*;
-import com.i8ai.training.storeapi.service.ExistenceService;
+import com.i8ai.training.storeapi.service.*;
 import com.i8ai.training.storeapi.service.data.Existence;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
+import static com.i8ai.training.storeapi.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class ExistenceServiceImplTest {
-    private static final String PRODUCT_A_CODE = "a_product_code";
-    private static final String PRODUCT_B_CODE = "b_product_code";
-    private static final String PRODUCT_A_NAME = "a_product_name";
-    private static final String PRODUCT_B_NAME = "b_product_name";
-    private static final String PRODUCT_A_MEASURE = "a_product_measure";
-    private static final String PRODUCT_B_MEASURE = "b_product_measure";
-    private static final String SHOP1_NAME = "name of shop 1";
-    private static final String SHOP2_NAME = "name of shop 2";
-    private static final String SHOP1_ADDRESS = "address of shop 1";
-    private static final String SHOP2_ADDRESS = "address of shop 2";
 
-    @Autowired
-    private ProductRepository productRepository;
+    @Mock
+    ProductService productServiceMock;
 
-    @Autowired
-    private LotRepository lotRepository;
+    @Mock
+    ShopService shopServiceMock;
 
-    @Autowired
-    private ShopRepository shopRepository;
+    @Mock
+    LotService lotServiceMock;
 
-    @Autowired
-    private PackRepository packRepository;
+    @Mock
+    PackService packServiceMock;
 
-    @Autowired
-    private SaleRepository saleRepository;
+    @Mock
+    SaleService saleServiceMock;
 
-    @Autowired
-    private ExistenceService existenceService;
-
-    private Product productA;
-    private Product productB;
-
-    private Shop shop1;
-
-
-    @BeforeEach
-    void setUp() {
-        productA = productRepository.save(new Product(null, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null));
-        productB = productRepository.save(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
-
-        Lot lotA = lotRepository.save(new Lot(null, new Date(1), 500.0, 5.5, productA));
-        Lot lotB = lotRepository.save(new Lot(null, new Date(2), 800.0, 8.0, productB));
-
-        shop1 = shopRepository.save(new Shop(null, SHOP1_NAME, SHOP1_ADDRESS, null));
-        Shop shop2 = shopRepository.save(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
-
-        Pack packA1 = packRepository.save(new Pack(null, new Date(3), 200.0, lotA, shop1));
-        Pack packA2 = packRepository.save(new Pack(null, new Date(4), 150.0, lotA, shop2));
-        Pack packB1 = packRepository.save(new Pack(null, new Date(5), 200.0, lotB, shop1));
-        Pack packB2 = packRepository.save(new Pack(null, new Date(6), 300.0, lotB, shop2));
-
-        saleRepository.save(new Sale(null, new Date(3), 5.0, 8.0, packA1));
-        saleRepository.save(new Sale(null, new Date(5), 1.0, 9.0, packA2));
-        saleRepository.save(new Sale(null, new Date(7), 3.0, 15.0, packB1));
-        saleRepository.save(new Sale(null, new Date(9), 9.0, 12.0, packB2));
-        saleRepository.save(new Sale(null, new Date(15), 2.0, 8.0, packA1));
-    }
-
-    @AfterEach
-    void tearDown() {
-        saleRepository.deleteAll();
-        packRepository.deleteAll();
-        lotRepository.deleteAll();
-        productRepository.deleteAll();
-        shopRepository.deleteAll();
-    }
-
-    @Test
-    void getProductExistenceInMain() {
-        assertEquals(300.0, existenceService.getProductExistenceInMain(productB.getId()).getAmount());
-    }
+    @InjectMocks
+    private ExistenceServiceImpl existenceService;
 
     @Test
     void getAllProductsExistenceInMain() {
+        when(productServiceMock.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
+        when(lotServiceMock.getProductReceivedAmount(PRODUCT_A_ID)).thenReturn(300.0);
+        when(lotServiceMock.getProductReceivedAmount(PRODUCT_B_ID)).thenReturn(500.0);
+        when(packServiceMock.getProductDeliveredAmount(PRODUCT_A_ID)).thenReturn(150.0);
+        when(packServiceMock.getProductDeliveredAmount(PRODUCT_B_ID)).thenReturn(200.0);
+
         List<Existence> existences = existenceService.getAllProductsExistenceInMain();
+
         assertEquals(2, existences.size());
         assertNull(existences.get(0).getShop());
         assertEquals(PRODUCT_A_NAME, existences.get(0).getProduct().getName());
@@ -104,20 +56,42 @@ class ExistenceServiceImplTest {
     }
 
     @Test
-    void getProductExistenceInShop() {
-        assertEquals(193.0, existenceService.getProductExistenceInShop(productA.getId(), shop1.getId()).getAmount());
+    void getProductExistenceInMain() {
+        when(productServiceMock.getProduct(PRODUCT_B_ID)).thenReturn(PRODUCT_B);
+        when(lotServiceMock.getProductReceivedAmount(PRODUCT_B_ID)).thenReturn(500.0);
+        when(packServiceMock.getProductDeliveredAmount(PRODUCT_B_ID)).thenReturn(200.0);
+
+        assertEquals(300.0, existenceService.getProductExistenceInMain(PRODUCT_B_ID).getAmount());
     }
 
     @Test
     void getProductExistenceInAllShops() {
-        List<Existence> existences = existenceService.getProductExistenceInAllShops(productB.getId());
+        when(productServiceMock.getProduct(PRODUCT_B_ID)).thenReturn(PRODUCT_B);
+        when(shopServiceMock.getAllShops()).thenReturn(List.of(SHOP1, SHOP2));
+        when(packServiceMock.getProductDeliveredToShopAmount(PRODUCT_B_ID, SHOP1_ID)).thenReturn(600.0);
+        when(packServiceMock.getProductDeliveredToShopAmount(PRODUCT_B_ID, SHOP2_ID)).thenReturn(550.0);
+        when(saleServiceMock.getSoldAmountByProductAndShop(PRODUCT_B_ID, SHOP1_ID)).thenReturn(250.0);
+        when(saleServiceMock.getSoldAmountByProductAndShop(PRODUCT_B_ID, SHOP2_ID)).thenReturn(350.0);
+
+        List<Existence> existences = existenceService.getProductExistenceInAllShops(PRODUCT_B_ID);
+
         assertEquals(2, existences.size());
         assertEquals(SHOP1_NAME, existences.get(0).getShop().getName());
         assertEquals(PRODUCT_B_NAME, existences.get(0).getProduct().getName());
-        assertEquals(197.0, existences.get(0).getAmount());
+        assertEquals(350.0, existences.get(0).getAmount());
         assertEquals(SHOP2_NAME, existences.get(1).getShop().getName());
         assertEquals(PRODUCT_B_NAME, existences.get(1).getProduct().getName());
-        assertEquals(291.0, existences.get(1).getAmount());
+        assertEquals(200.0, existences.get(1).getAmount());
+    }
+
+    @Test
+    void getProductExistenceInShop() {
+        when(productServiceMock.getProduct(PRODUCT_A_ID)).thenReturn(PRODUCT_A);
+        when(shopServiceMock.getShop(SHOP1_ID)).thenReturn(SHOP1);
+        when(packServiceMock.getProductDeliveredToShopAmount(PRODUCT_A_ID, SHOP1_ID)).thenReturn(400.0);
+        when(saleServiceMock.getSoldAmountByProductAndShop(PRODUCT_A_ID, SHOP1_ID)).thenReturn(210.0);
+
+        assertEquals(190.0, existenceService.getProductExistenceInShop(PRODUCT_A_ID, SHOP1_ID).getAmount());
     }
 
 }
