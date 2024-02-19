@@ -7,13 +7,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.List;
 
 import static com.i8ai.training.storeapi.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ExistenceServiceImplTest {
@@ -37,7 +39,7 @@ class ExistenceServiceImplTest {
     private ExistenceServiceImpl existenceService;
 
     @Test
-    void getAllProductsExistenceInMain() {
+    void getAllProductExistenceInMain() {
         when(productServiceMock.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
         when(lotServiceMock.getProductReceivedAmount(PRODUCT_A_ID)).thenReturn(300.0);
         when(lotServiceMock.getProductReceivedAmount(PRODUCT_B_ID)).thenReturn(500.0);

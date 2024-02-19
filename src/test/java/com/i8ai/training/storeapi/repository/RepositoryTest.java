@@ -32,11 +32,13 @@ class RepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Product productA = productRepository.save(PRODUCT_A);
-        Product productB = productRepository.save(PRODUCT_B);
+        Product productA = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
+        Product productB = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
+        productRepository.save(productA);
+        productRepository.save(productB);
 
-        Shop shop1 = shopRepository.save(SHOP1);
-        Shop shop2 = shopRepository.save(SHOP2);
+        Shop shop1 = shopRepository.save(new Shop(SHOP1_ID, SHOP1_NAME, SHOP1_ADDRESS, null));
+        Shop shop2 = shopRepository.save(new Shop(SHOP2_ID, SHOP2_NAME, SHOP2_ADDRESS, null));
 
         Lot lotA = lotRepository.save(new Lot(LOT_A_ID, new Date(5), LOT_A_AMOUNT, PRODUCT_A_COST, productA));
         Lot lotB = lotRepository.save(new Lot(LOT_B_ID, new Date(10), LOT_B_AMOUNT, PRODUCT_B_COST, productB));

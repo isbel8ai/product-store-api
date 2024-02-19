@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -121,8 +120,9 @@ class SaleServiceImplTest {
 
     @Test
     void registerSaleWithNoValidAmount() {
+        Sale sale = new Sale(null, new Date(20), 500.0, 8.0, packA1);
         Exception e = assertThrows(NotValidAmountException.class, () ->
-                saleService.registerSale(new Sale(null, new Date(20), 500.0, 8.0, packA1))
+                saleService.registerSale(sale)
         );
     }
 

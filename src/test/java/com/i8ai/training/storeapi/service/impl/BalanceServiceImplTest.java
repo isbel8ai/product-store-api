@@ -47,11 +47,11 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalancesPerProduct() {
+        when(productServiceMock.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
         when(saleServiceMock.getSalesExpensesByProduct(PRODUCT_A_ID, null, null)).thenReturn(PRODUCT_A_EXPENSES);
         when(saleServiceMock.getSalesIncomeByProduct(PRODUCT_A_ID, null, null)).thenReturn(PRODUCT_A_INCOME);
         when(saleServiceMock.getSalesExpensesByProduct(PRODUCT_B_ID, null, null)).thenReturn(PRODUCT_B_EXPENSES);
         when(saleServiceMock.getSalesIncomeByProduct(PRODUCT_B_ID, null, null)).thenReturn(PRODUCT_B_INCOME);
-        when(productServiceMock.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
 
         List<Balance> balances = balanceService.getBalancesPerProduct(null, null);
 
@@ -68,11 +68,11 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalancesPerShop() {
-        when(saleServiceMock.getSalesExpensesByShop(SHOP1_ID, null, null)).thenReturn(SHOP1_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByShop(SHOP1_ID, null, null)).thenReturn(SHOP1_INCOME);
-        when(saleServiceMock.getSalesExpensesByShop(SHOP2_ID, null, null)).thenReturn(SHOP2_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByShop(SHOP2_ID, null, null)).thenReturn(SHOP2_INCOME);
         when(shopServiceMock.getAllShops()).thenReturn(List.of(SHOP1, SHOP2));
+        when(saleServiceMock.getSalesExpensesByShop(SHOP1.getId(), null, null)).thenReturn(SHOP1_EXPENSES);
+        when(saleServiceMock.getSalesIncomeByShop(SHOP1.getId(), null, null)).thenReturn(SHOP1_INCOME);
+        when(saleServiceMock.getSalesExpensesByShop(SHOP2.getId(), null, null)).thenReturn(SHOP2_EXPENSES);
+        when(saleServiceMock.getSalesIncomeByShop(SHOP2.getId(), null, null)).thenReturn(SHOP2_INCOME);
 
         List<Balance> balances = balanceService.getBalancesPerShop(null, null);
 
@@ -103,11 +103,11 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalanceByShop() {
-        when(saleServiceMock.getSalesExpensesByShop(SHOP1_ID, null, null)).thenReturn(SHOP1_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByShop(SHOP1_ID, null, null)).thenReturn(SHOP1_INCOME);
-        when(shopServiceMock.getShop(SHOP1_ID)).thenReturn(SHOP1);
+        when(saleServiceMock.getSalesExpensesByShop(SHOP1.getId(), null, null)).thenReturn(SHOP1_EXPENSES);
+        when(saleServiceMock.getSalesIncomeByShop(SHOP1.getId(), null, null)).thenReturn(SHOP1_INCOME);
+        when(shopServiceMock.getShop(SHOP1.getId())).thenReturn(SHOP1);
 
-        Balance balance = balanceService.getBalanceByShop(SHOP1_ID, null, null);
+        Balance balance = balanceService.getBalanceByShop(SHOP1.getId(), null, null);
 
         assertEquals(SHOP1_EXPENSES, balance.getSpent());
         assertEquals(SHOP1_INCOME, balance.getIncome());
@@ -117,13 +117,13 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalancesByProductPerShop() {
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1A_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1A_SALES_INCOME);
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP2_ID, null, null))
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP2.getId(), null, null))
                 .thenReturn(PACK2A_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP2_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP2.getId(), null, null))
                 .thenReturn(PACK2A_SALES_INCOME);
         when(productServiceMock.getProduct(PRODUCT_A_ID)).thenReturn(PRODUCT_A);
         when(shopServiceMock.getAllShops()).thenReturn(List.of(SHOP1, SHOP2));
@@ -143,18 +143,18 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalancesByShopPerProduct() {
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+        when(shopServiceMock.getShop(SHOP1.getId())).thenReturn(SHOP1);
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1A_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1A_SALES_INCOME);
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null))
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1B_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1B_SALES_INCOME);
         when(productServiceMock.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
-        when(shopServiceMock.getShop(SHOP1_ID)).thenReturn(SHOP1);
 
-        List<Balance> balances = balanceService.getBalancesByShopPerProduct(SHOP1_ID, null, null);
+        List<Balance> balances = balanceService.getBalancesByShopPerProduct(SHOP1.getId(), null, null);
 
         assertEquals(2, balances.size());
         assertEquals(PACK1A_SALES_EXPENSES, balances.get(0).getSpent());
@@ -169,15 +169,15 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalanceByProductAndShop() {
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP2_ID, null, null))
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP2.getId(), null, null))
                 .thenReturn(PACK2B_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP2_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP2.getId(), null, null))
                 .thenReturn(PACK2B_SALES_INCOME);
         when(productServiceMock.getProduct(PRODUCT_B_ID)).thenReturn(PRODUCT_B);
-        when(shopServiceMock.getShop(SHOP2_ID)).thenReturn(SHOP2);
+        when(shopServiceMock.getShop(SHOP2.getId())).thenReturn(SHOP2);
 
         Balance balance = balanceService.getBalanceByProductAndShop(
-                PRODUCT_B.getId(),
+                PRODUCT_B_ID,
                 SHOP2.getId(),
                 null,
                 null);
@@ -190,24 +190,24 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalancesPerProductPerShop() {
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+        when(shopServiceMock.getAllShops()).thenReturn(List.of(SHOP1, SHOP2));
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1A_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1A_SALES_INCOME);
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null))
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1B_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP1.getId(), null, null))
                 .thenReturn(PACK1B_SALES_INCOME);
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP2_ID, null, null))
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_A_ID, SHOP2.getId(), null, null))
                 .thenReturn(PACK2A_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP2_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_A_ID, SHOP2.getId(), null, null))
                 .thenReturn(PACK2A_SALES_INCOME);
-        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP2_ID, null, null))
+        when(saleServiceMock.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP2.getId(), null, null))
                 .thenReturn(PACK2B_SALES_EXPENSES);
-        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP2_ID, null, null))
+        when(saleServiceMock.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP2.getId(), null, null))
                 .thenReturn(PACK2B_SALES_INCOME);
         when(productServiceMock.getAllProducts()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
-        when(shopServiceMock.getAllShops()).thenReturn(List.of(SHOP1, SHOP2));
 
         List<Balance> balances = balanceService.getBalancesPerProductPerShop(null, null);
 

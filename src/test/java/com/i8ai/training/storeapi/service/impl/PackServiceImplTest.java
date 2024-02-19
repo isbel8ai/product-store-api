@@ -1,10 +1,10 @@
 package com.i8ai.training.storeapi.service.impl;
 
+import com.i8ai.training.storeapi.error.NotValidAmountException;
 import com.i8ai.training.storeapi.model.Lot;
 import com.i8ai.training.storeapi.model.Pack;
 import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.model.Shop;
-import com.i8ai.training.storeapi.error.NotValidAmountException;
 import com.i8ai.training.storeapi.repository.LotRepository;
 import com.i8ai.training.storeapi.repository.PackRepository;
 import com.i8ai.training.storeapi.repository.ProductRepository;
@@ -111,9 +111,8 @@ class PackServiceImplTest {
 
     @Test
     void registerPackWithNotValidAmount() {
-        assertThrows(NotValidAmountException.class, () ->
-                packService.registerPack(new Pack(null, new Date(), 1000.0, lotA, shop1))
-        );
+        Pack pack = new Pack(null, new Date(), 1000.0, lotA, shop1);
+        assertThrows(NotValidAmountException.class, () -> packService.registerPack(pack));
     }
 
     @Test

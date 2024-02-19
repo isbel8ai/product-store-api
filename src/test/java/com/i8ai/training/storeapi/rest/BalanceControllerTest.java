@@ -84,7 +84,7 @@ class BalanceControllerTest {
 
     @Test
     void getBalancesByProductPerShop() throws Exception {
-        when(balanceService.getBalancesByProductPerShop(TestUtils.PRODUCT_B_ID, null, null))
+        when(balanceService.getBalancesByProductPerShop(TestUtils.PRODUCT_B.getId(), null, null))
                 .thenReturn(List.of(
                         new Balance(
                                 TestUtils.PACK1B_SALES_EXPENSES,
@@ -100,14 +100,14 @@ class BalanceControllerTest {
                         )
                 ));
 
-        mockMvc.perform(get("/balance/product/" + TestUtils.PRODUCT_B_ID + "/shop"))
+        mockMvc.perform(get("/balance/product/" + TestUtils.PRODUCT_B.getId() + "/shop"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].product.id").value(TestUtils.PRODUCT_B_ID))
-                .andExpect(jsonPath("$[0].shop.id").value(TestUtils.SHOP1_ID))
+                .andExpect(jsonPath("$[0].product.id").value(TestUtils.PRODUCT_B.getId()))
+                .andExpect(jsonPath("$[0].shop.id").value(TestUtils.SHOP1.getId()))
                 .andExpect(jsonPath("$[0].spent").value(TestUtils.PACK1B_SALES_EXPENSES))
                 .andExpect(jsonPath("$[0].income").value(TestUtils.PACK1B_SALES_INCOME))
-                .andExpect(jsonPath("$[1].product.id").value(TestUtils.PRODUCT_B_ID))
-                .andExpect(jsonPath("$[1].shop.id").value(TestUtils.SHOP2_ID))
+                .andExpect(jsonPath("$[1].product.id").value(TestUtils.PRODUCT_B.getId()))
+                .andExpect(jsonPath("$[1].shop.id").value(TestUtils.SHOP2.getId()))
                 .andExpect(jsonPath("$[1].spent").value(TestUtils.PACK2B_SALES_EXPENSES))
                 .andExpect(jsonPath("$[1].income").value(TestUtils.PACK2B_SALES_INCOME));
     }
@@ -132,17 +132,17 @@ class BalanceControllerTest {
 
         mockMvc.perform(get("/balance/shop"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].shop.id").value(TestUtils.SHOP1_ID))
+                .andExpect(jsonPath("$[0].shop.id").value(TestUtils.SHOP1.getId()))
                 .andExpect(jsonPath("$[0].spent").value(TestUtils.SHOP1_EXPENSES))
                 .andExpect(jsonPath("$[0].income").value(TestUtils.SHOP1_INCOME))
-                .andExpect(jsonPath("$[1].shop.id").value(TestUtils.SHOP2_ID))
+                .andExpect(jsonPath("$[1].shop.id").value(TestUtils.SHOP2.getId()))
                 .andExpect(jsonPath("$[1].spent").value(TestUtils.SHOP2_EXPENSES))
                 .andExpect(jsonPath("$[1].income").value(TestUtils.SHOP2_INCOME));
     }
 
     @Test
     void getBalanceByShop() throws Exception {
-        when(balanceService.getBalanceByShop(TestUtils.SHOP1_ID, null, null))
+        when(balanceService.getBalanceByShop(TestUtils.SHOP1.getId(), null, null))
                 .thenReturn(new Balance(
                         TestUtils.SHOP1_EXPENSES,
                         TestUtils.SHOP1_INCOME,
@@ -150,16 +150,16 @@ class BalanceControllerTest {
                         TestUtils.SHOP1
                 ));
 
-        mockMvc.perform(get("/balance/shop/" + TestUtils.SHOP1_ID))
+        mockMvc.perform(get("/balance/shop/" + TestUtils.SHOP1.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.shop.id").value(TestUtils.SHOP1_ID))
+                .andExpect(jsonPath("$.shop.id").value(TestUtils.SHOP1.getId()))
                 .andExpect(jsonPath("$.spent").value(TestUtils.SHOP1_EXPENSES))
                 .andExpect(jsonPath("$.income").value(TestUtils.SHOP1_INCOME));
     }
 
     @Test
     void getBalancesByShopPerProduct() throws Exception {
-        when(balanceService.getBalancesByShopPerProduct(TestUtils.SHOP2_ID, null, null)).thenReturn(List.of(
+        when(balanceService.getBalancesByShopPerProduct(TestUtils.SHOP2.getId(), null, null)).thenReturn(List.of(
                 new Balance(
                         TestUtils.PACK2A_SALES_EXPENSES,
                         TestUtils.PACK2A_SALES_INCOME,
@@ -174,21 +174,21 @@ class BalanceControllerTest {
                 )
         ));
 
-        mockMvc.perform(get("/balance/shop/" + TestUtils.SHOP2_ID + "/product"))
+        mockMvc.perform(get("/balance/shop/" + TestUtils.SHOP2.getId() + "/product"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].product.id").value(TestUtils.PRODUCT_A_ID))
-                .andExpect(jsonPath("$[0].shop.id").value(TestUtils.SHOP2_ID))
+                .andExpect(jsonPath("$[0].product.id").value(TestUtils.PRODUCT_A.getId()))
+                .andExpect(jsonPath("$[0].shop.id").value(TestUtils.SHOP2.getId()))
                 .andExpect(jsonPath("$[0].spent").value(TestUtils.PACK2A_SALES_EXPENSES))
                 .andExpect(jsonPath("$[0].income").value(TestUtils.PACK2A_SALES_INCOME))
-                .andExpect(jsonPath("$[1].product.id").value(TestUtils.PRODUCT_B_ID))
-                .andExpect(jsonPath("$[1].shop.id").value(TestUtils.SHOP2_ID))
+                .andExpect(jsonPath("$[1].product.id").value(TestUtils.PRODUCT_B.getId()))
+                .andExpect(jsonPath("$[1].shop.id").value(TestUtils.SHOP2.getId()))
                 .andExpect(jsonPath("$[1].spent").value(TestUtils.PACK2B_SALES_EXPENSES))
                 .andExpect(jsonPath("$[1].income").value(TestUtils.PACK2B_SALES_INCOME));
     }
 
     @Test
     void getBalanceByProductAndShop() throws Exception {
-        when(balanceService.getBalanceByProductAndShop(TestUtils.PRODUCT_B_ID, TestUtils.SHOP2_ID, null, null))
+        when(balanceService.getBalanceByProductAndShop(TestUtils.PRODUCT_B.getId(), TestUtils.SHOP2.getId(), null, null))
                 .thenReturn(new Balance(
                         TestUtils.PACK2B_SALES_EXPENSES,
                         TestUtils.PACK2B_SALES_INCOME,
@@ -196,10 +196,10 @@ class BalanceControllerTest {
                         TestUtils.SHOP2
                 ));
 
-        mockMvc.perform(get("/balance/product/" + TestUtils.PRODUCT_B_ID + "/shop/" + TestUtils.SHOP2_ID))
+        mockMvc.perform(get("/balance/product/" + TestUtils.PRODUCT_B.getId() + "/shop/" + TestUtils.SHOP2.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.product.code").value(TestUtils.PRODUCT_B_CODE))
-                .andExpect(jsonPath("$.shop.id").value(TestUtils.SHOP2_ID))
+                .andExpect(jsonPath("$.shop.id").value(TestUtils.SHOP2.getId()))
                 .andExpect(jsonPath("$.spent").value(TestUtils.PACK2B_SALES_EXPENSES))
                 .andExpect(jsonPath("$.income").value(TestUtils.PACK2B_SALES_INCOME));
     }
@@ -236,20 +236,20 @@ class BalanceControllerTest {
 
         mockMvc.perform(get("/balance/product/shop"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].product.id").value(TestUtils.PRODUCT_A_ID))
-                .andExpect(jsonPath("$[0].shop.id").value(TestUtils.SHOP1_ID))
+                .andExpect(jsonPath("$[0].product.id").value(TestUtils.PRODUCT_A.getId()))
+                .andExpect(jsonPath("$[0].shop.id").value(TestUtils.SHOP1.getId()))
                 .andExpect(jsonPath("$[0].spent").value(TestUtils.PACK1A_SALES_EXPENSES))
                 .andExpect(jsonPath("$[0].income").value(TestUtils.PACK1A_SALES_INCOME))
-                .andExpect(jsonPath("$[1].product.id").value(TestUtils.PRODUCT_B_ID))
-                .andExpect(jsonPath("$[1].shop.id").value(TestUtils.SHOP1_ID))
+                .andExpect(jsonPath("$[1].product.id").value(TestUtils.PRODUCT_B.getId()))
+                .andExpect(jsonPath("$[1].shop.id").value(TestUtils.SHOP1.getId()))
                 .andExpect(jsonPath("$[1].spent").value(TestUtils.PACK1B_SALES_EXPENSES))
                 .andExpect(jsonPath("$[1].income").value(TestUtils.PACK1B_SALES_INCOME))
-                .andExpect(jsonPath("$[2].product.id").value(TestUtils.PRODUCT_A_ID))
-                .andExpect(jsonPath("$[2].shop.id").value(TestUtils.SHOP2_ID))
+                .andExpect(jsonPath("$[2].product.id").value(TestUtils.PRODUCT_A.getId()))
+                .andExpect(jsonPath("$[2].shop.id").value(TestUtils.SHOP2.getId()))
                 .andExpect(jsonPath("$[2].spent").value(TestUtils.PACK2A_SALES_EXPENSES))
                 .andExpect(jsonPath("$[2].income").value(TestUtils.PACK2A_SALES_INCOME))
-                .andExpect(jsonPath("$[3].product.id").value(TestUtils.PRODUCT_B_ID))
-                .andExpect(jsonPath("$[3].shop.id").value(TestUtils.SHOP2_ID))
+                .andExpect(jsonPath("$[3].product.id").value(TestUtils.PRODUCT_B.getId()))
+                .andExpect(jsonPath("$[3].shop.id").value(TestUtils.SHOP2.getId()))
                 .andExpect(jsonPath("$[3].spent").value(TestUtils.PACK2B_SALES_EXPENSES))
                 .andExpect(jsonPath("$[3].income").value(TestUtils.PACK2B_SALES_INCOME));
     }

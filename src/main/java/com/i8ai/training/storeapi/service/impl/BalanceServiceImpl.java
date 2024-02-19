@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BalanceServiceImpl implements BalanceService {
@@ -45,7 +44,7 @@ public class BalanceServiceImpl implements BalanceService {
                         saleService.getSalesIncomeByProduct(product.getId(), start, end),
                         product,
                         null
-                )).collect(Collectors.toList());
+                )).toList();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class BalanceServiceImpl implements BalanceService {
                         saleService.getSalesIncomeByShop(shop.getId(), start, end),
                         null,
                         shop
-                )).collect(Collectors.toList());
+                )).toList();
     }
 
     @Override
@@ -70,7 +69,7 @@ public class BalanceServiceImpl implements BalanceService {
                                 product,
                                 shop
                         )
-                )).collect(Collectors.toList());
+                )).toList();
     }
 
     @Override
@@ -101,7 +100,7 @@ public class BalanceServiceImpl implements BalanceService {
                 saleService.getSalesIncomeByProductAndShop(productId, shop.getId(), start, end),
                 product,
                 shop
-        )).collect(Collectors.toList());
+        )).toList();
     }
 
     @Override
@@ -112,14 +111,11 @@ public class BalanceServiceImpl implements BalanceService {
                 saleService.getSalesIncomeByProductAndShop(product.getId(), shopId, start, end),
                 product,
                 shop
-        )).collect(Collectors.toList());
+        )).toList();
     }
 
     @Override
     public Balance getBalanceByProductAndShop(Long productId, Long shopId, Date start, Date end) {
-        Product product = productService.getProduct(productId);
-        Shop shop = shopService.getShop(shopId);
-
         return new Balance(
                 saleService.getSalesExpensesByProductAndShop(productId, shopId, start, end),
                 saleService.getSalesIncomeByProductAndShop(productId, shopId, start, end),

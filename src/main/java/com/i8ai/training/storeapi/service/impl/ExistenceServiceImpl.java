@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ExistenceServiceImpl implements ExistenceService {
@@ -34,9 +33,7 @@ public class ExistenceServiceImpl implements ExistenceService {
 
     @Override
     public List<Existence> getAllProductsExistenceInMain() {
-        return productService.getAllProducts().stream().map(
-                this::getExistenceByProductInMain).collect(Collectors.toList()
-        );
+        return productService.getAllProducts().stream().map(this::getExistenceByProductInMain).toList();
     }
 
     @Override
@@ -50,9 +47,7 @@ public class ExistenceServiceImpl implements ExistenceService {
     public List<Existence> getProductExistenceInAllShops(Long productId) {
         Product product = productService.getProduct(productId);
 
-        return shopService.getAllShops().stream().map(
-                shop -> getExistenceByProductAndShop(product, shop)).collect(Collectors.toList()
-        );
+        return shopService.getAllShops().stream().map(shop -> getExistenceByProductAndShop(product, shop)).toList();
     }
 
     @Override

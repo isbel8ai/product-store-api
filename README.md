@@ -5,11 +5,11 @@ Management system for a local shop business. It helps owners to supervise and co
 ## Requirements 
 - Management of products
 - Management of shops
-- Product existence on main warehouse, for all and for specific product
-- Product existence on a shop, for all and for specific product
-- History of products receipt on the main warehouse in a lapse of time, filtering by product
+- Product existence on the main warehouse, for all and for specific product
+- Product existence in a shop, for all and for specific product
+- History of products' receipt on the main warehouse in a lapse of time, filtering by product
 - History of products delivered to shops in a lapse of time, filtering by product and shop
-- History of sales on shops in a lapse of time, filtering by product and shop
+- History of sales in shops in a lapse of time, filtering by product and shop
 - Get balance in a lapse of time, filtering by product and shop
 
 ## API Definition
@@ -58,10 +58,6 @@ Management system for a local shop business. It helps owners to supervise and co
     With maven
     
         $> mvn clean package
-        
-    With maven wrapper
-    
-        $> mvnw clean package
 
 The generated application JAR file will be ```./target/<name>-<version>.jar```
 

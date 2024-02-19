@@ -2,9 +2,10 @@ spring:
   datasource:
     url: jdbc:postgresql://${PSA_POSTGRES_HOST}:${PSA_POSTGRES_PORT}/${PSA_POSTGRES_DB}
     username: ${PSA_POSTGRES_USER}
-    password: ${PSA_POSTGRES_PASSWORD}
+    password: ${PSA_POSTGRES_PASS}
 
   jpa:
     generate-ddl: true
     hibernate.ddl-auto: update
-    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect

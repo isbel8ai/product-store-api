@@ -1,7 +1,7 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.error.NotValidElementDataException;
+import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.repository.ProductRepository;
 import com.i8ai.training.storeapi.service.ProductService;
 import org.junit.jupiter.api.AfterEach;
@@ -54,9 +54,8 @@ class ProductServiceImplTest {
 
     @Test
     void addProductWithExistingCode() {
-        assertThrows(NotValidElementDataException.class, () ->
-                productService.addProduct(new Product(null, PRODUCT_A_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null))
-        );
+        Product product = new Product(null, PRODUCT_A_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
+        assertThrows(NotValidElementDataException.class, () -> productService.addProduct(product));
 
     }
 
@@ -69,16 +68,14 @@ class ProductServiceImplTest {
 
     @Test
     void getProduct() {
-        assertDoesNotThrow(() ->
-                productService.getProduct(productA.getId())
-        );
+        assertDoesNotThrow(() -> productService.getProduct(productA.getId()));
     }
 
     @Test
     void replaceProductWithExistingCode() {
-        assertThrows(NotValidElementDataException.class, () ->
-                productService.replaceProduct(productA.getId(), new Product(null, PRODUCT_B_CODE, PRODUCT_C_NAME, PRODUCT_C_MEASURE, null))
-        );
+        Product product = new Product(null, PRODUCT_B_CODE, PRODUCT_C_NAME, PRODUCT_C_MEASURE, null);
+        Long productId = productA.getId();
+        assertThrows(NotValidElementDataException.class, () -> productService.replaceProduct(productId, product));
     }
 
     @Test
@@ -90,8 +87,6 @@ class ProductServiceImplTest {
 
     @Test
     void deleteProduct() {
-        assertDoesNotThrow(() ->
-                productService.deleteProduct(productB.getId())
-        );
+        assertDoesNotThrow(() -> productService.deleteProduct(productB.getId()));
     }
 }
