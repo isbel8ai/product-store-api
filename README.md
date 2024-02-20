@@ -2,12 +2,12 @@
 ## Description
 Management system for a local shop business. It helps owners to supervise and control the life cycle of the products they sell, from the moment they are received to when they are sold.
 
-## Requirements 
-- Management of products
-- Management of shops
+## Functional requirements 
+- Products management
+- Shops management
 - Product existence on the main warehouse, for all and for specific product
 - Product existence in a shop, for all and for specific product
-- History of products' receipt on the main warehouse in a lapse of time, filtering by product
+- History of products received on the main warehouse in a lapse of time, filtering by product
 - History of products delivered to shops in a lapse of time, filtering by product and shop
 - History of sales in shops in a lapse of time, filtering by product and shop
 - Get balance in a lapse of time, filtering by product and shop
@@ -50,30 +50,19 @@ Management system for a local shop business. It helps owners to supervise and co
 ## Database Model
 ![Product store API database model](database/product-store-api_model.png)
 
-## Building the application
-- Install JDK 8 or later
-- Set environment variable JAVA_HOME pointing to java root directory
-- Build the application JAR file
+## Deploying the application
 
-    With maven
-    
-        $> mvn clean package
+- Install and run Docker
+- Create a .env file with the required environment variables
 
-The generated application JAR file will be ```./target/<name>-<version>.jar```
-
-## Running the application
-- Set needed environment variables        
-        
-        # Port to map the database server out of docker network
-        PSA_POSTGRES_PORT=5432
-        PSA_POSTGRES_DB=<database name>
-        PSA_POSTGRES_USER=<username>
-        PSA_POSTGRES_PASSWORD=<password>
-        # Path to built JAR file
-        PSA_APP_JAR=./target/<name>-<version>.jar
-        # Port to map the application out of docker network
-        PSA_APP_PORT=8080
+      # Port to map the database server out of docker network
+      PSA_POSTGRES_PORT=5432
+      PSA_POSTGRES_DB=<database_name>
+      PSA_POSTGRES_USER=<username>
+      PSA_POSTGRES_PASS=<password>
+      # Port to map the application out of docker network
+      PSA_APP_PORT=8080
 
 - Run the application with docker-compose
 
-        $> docker-compose up -d
+      docker-compose up -d
