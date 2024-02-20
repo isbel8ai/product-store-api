@@ -20,7 +20,7 @@ public interface SaleService {
 
     Double getSalesIncomeByShop(Long shopId, Date start, Date end);
 
-    Double getSalesIncomeByProductAndShop(Long productId, Long shopId , Date start, Date end);
+    Double getSalesIncomeByProductAndShop(Long productId, Long shopId, Date start, Date end);
 
     Double getNetSalesExpenses(Date start, Date end);
 

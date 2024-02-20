@@ -1,141 +1,151 @@
 package com.i8ai.training.storeapi.service.impl;
 
+import com.i8ai.training.storeapi.error.ElementNotFoundException;
 import com.i8ai.training.storeapi.error.NotValidAmountException;
 import com.i8ai.training.storeapi.model.Lot;
 import com.i8ai.training.storeapi.model.Pack;
 import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.model.Shop;
-import com.i8ai.training.storeapi.repository.LotRepository;
 import com.i8ai.training.storeapi.repository.PackRepository;
-import com.i8ai.training.storeapi.repository.ProductRepository;
-import com.i8ai.training.storeapi.repository.ShopRepository;
-import com.i8ai.training.storeapi.service.PackService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.i8ai.training.storeapi.service.LotService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import static com.i8ai.training.storeapi.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class PackServiceImplTest {
-    private static final String PRODUCT_A_CODE = "a_product_code";
-    private static final String PRODUCT_B_CODE = "b_product_code";
-    private static final String PRODUCT_A_NAME = "a_product_name";
-    private static final String PRODUCT_B_NAME = "b_product_name";
-    private static final String PRODUCT_A_MEASURE = "a_product_measure";
-    private static final String PRODUCT_B_MEASURE = "b_product_measure";
-    private static final String SHOP1_NAME = "name of shop 1";
-    private static final String SHOP2_NAME = "name of shop 2";
-    private static final String SHOP1_ADDRESS = "address of shop 1";
-    private static final String SHOP2_ADDRESS = "address of shop 2";
 
-    @Autowired
-    private ProductRepository productRepository;
+    private static final Product PRODUCT_A = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
+    private static final Product PRODUCT_B = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
 
-    @Autowired
-    private LotRepository lotRepository;
+    private static final Shop SHOP1 = new Shop(SHOP1_ID, SHOP1_NAME, SHOP1_ADDRESS, null);
+    private static final Shop SHOP2 = new Shop(SHOP2_ID, SHOP2_NAME, SHOP2_ADDRESS, null);
 
-    @Autowired
-    private ShopRepository shopRepository;
+    private static final Lot LOT_A = new Lot(LOT_A_ID, new Date(10), LOT_A_AMOUNT, PRODUCT_A_COST, PRODUCT_A);
+    private static final Lot LOT_B = new Lot(LOT_B_ID, new Date(10), LOT_B_AMOUNT, PRODUCT_B_COST, PRODUCT_B);
 
-    @Autowired
-    private PackRepository packRepository;
+    private static final Pack PACK1A = new Pack(PACK1A_ID, new Date(15), PACK1A_AMOUNT, LOT_A, SHOP1);
+    private static final Pack PACK1B = new Pack(PACK1B_ID, new Date(20), PACK1B_AMOUNT, LOT_B, SHOP1);
+    private static final Pack PACK2A = new Pack(PACK2A_ID, new Date(25), PACK2A_AMOUNT, LOT_A, SHOP2);
+    private static final Pack PACK2B = new Pack(PACK2B_ID, new Date(30), PACK2B_AMOUNT, LOT_B, SHOP2);
 
-    @Autowired
-    private PackService packService;
+    @Mock
+    private PackRepository packRepositoryMock;
+    @Mock
+    private LotService lotServiceMock;
 
-    private Product productA;
-    private Product productB;
-
-    private Lot lotA;
-    private Lot lotB;
-
-    private Shop shop1;
-    private Shop shop2;
-
-    private Pack removablePack;
-
-    @BeforeEach
-    void setUp() {
-        productA = productRepository.save(new Product(null, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null));
-        productB = productRepository.save(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
-
-        lotA = lotRepository.save(new Lot(null, new Date(1), 500.0, 5.5, productA));
-        lotB = lotRepository.save(new Lot(null, new Date(2), 800.0, 8.0, productB));
-
-        shop1 = shopRepository.save(new Shop(null, SHOP1_NAME, SHOP1_ADDRESS, null));
-        shop2 = shopRepository.save(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
-
-        packRepository.save(new Pack(null, new Date(4), 100.0, lotB, shop1));
-        packRepository.save(new Pack(null, new Date(5), 50.0, lotA, shop2));
-        packRepository.save(new Pack(null, new Date(6), 70.0, lotB, shop2));
-        packRepository.save(new Pack(null, new Date(7), 150.0, lotA, shop1));
-        removablePack = packRepository.save(new Pack(null, new Date(9), 50.0, lotA, shop2));
-    }
-
-    @AfterEach
-    void tearDown() {
-        packRepository.deleteAll();
-        lotRepository.deleteAll();
-        productRepository.deleteAll();
-    }
+    @InjectMocks
+    private PackServiceImpl packService;
 
     @Test
     void getPacksWithAllFilters() {
-        List<Pack> pack = packService.getPacks(new Date(3), new Date(6), productA.getId(), shop2.getId());
+        when(packRepositoryMock.findAllByDeliveredBetweenAndLotProductIdAndShopId(
+                        new Date(3), new Date(6), PRODUCT_A_ID, SHOP2_ID
+                )
+        ).thenReturn(List.of(PACK2A));
+
+        List<Pack> pack = packService.getPacks(new Date(3), new Date(6), PRODUCT_A_ID, SHOP2_ID);
+
         assertEquals(1, pack.size());
     }
 
     @Test
     void getPacksWithShopFilter() {
-        List<Pack> pack = packService.getPacks(null, null, null, shop1.getId());
+        when(packRepositoryMock.findAllByDeliveredBetweenAndShopId(any(), any(), eq((SHOP1_ID))))
+                .thenReturn(List.of(PACK1A, PACK1B));
+
+        List<Pack> pack = packService.getPacks(null, null, null, SHOP1_ID);
+
         assertEquals(2, pack.size());
     }
 
     @Test
     void getPackWithProductFilter() {
-        List<Pack> pack = packService.getPacks(null, null, productB.getId(), null);
+        when(packRepositoryMock.findAllByDeliveredBetweenAndLotProductId(any(), any(), eq(PRODUCT_B_ID)))
+                .thenReturn(List.of(PACK1B, PACK2B));
+
+        List<Pack> pack = packService.getPacks(null, null, PRODUCT_B_ID, null);
+
         assertEquals(2, pack.size());
     }
 
     @Test
     void getAllPack() {
+        when(packRepositoryMock.findAllByDeliveredBetween(any(), any()))
+                .thenReturn(List.of(PACK1A, PACK1B, PACK2A, PACK2B));
+
         List<Pack> pack = packService.getPacks(null, null, null, null);
-        assertEquals(5, pack.size());
+
+        assertEquals(4, pack.size());
+    }
+
+    @Test
+    void getNotExistingPack() {
+        when(packRepositoryMock.findById(PACK1A_ID)).thenReturn(Optional.empty());
+
+        assertThrows(ElementNotFoundException.class, () -> packService.getPack(PACK1A_ID));
+    }
+
+    @Test
+    void getPack() {
+        when(packRepositoryMock.findById(PACK2A_ID)).thenReturn(Optional.of(PACK2A));
+
+        Pack pack = packService.getPack(PACK2A_ID);
+
+        assertEquals(PACK2A_ID, pack.getId());
     }
 
     @Test
     void registerPackWithNotValidAmount() {
-        Pack pack = new Pack(null, new Date(), 1000.0, lotA, shop1);
+        Pack pack = new Pack(null, new Date(), -10.0, LOT_A, SHOP1);
+
+        assertThrows(NotValidAmountException.class, () -> packService.registerPack(pack));
+    }
+
+    @Test
+    void registerPackWithNotAvailableAmount() {
+        when(lotServiceMock.getLot(LOT_A_ID)).thenReturn(LOT_A);
+
+        Pack pack = new Pack(null, new Date(), LOT_A_AMOUNT + 1000, LOT_A, SHOP1);
+
         assertThrows(NotValidAmountException.class, () -> packService.registerPack(pack));
     }
 
     @Test
     void registerPack() {
-        assertDoesNotThrow(() ->
-                packService.registerPack(new Pack(null, new Date(), 100.0, lotB, shop1))
-        );
+        when(lotServiceMock.getLot(LOT_B_ID)).thenReturn(LOT_B);
+
+        assertDoesNotThrow(() -> packService.registerPack(PACK2B));
     }
 
     @Test
     void deletePack() {
-        assertDoesNotThrow(() ->
-                packService.deletePack(removablePack.getId())
-        );
+        assertDoesNotThrow(() -> packService.deletePack(PACK1B_ID));
     }
 
     @Test
     void getProductDeliveredAmount() {
-        assertEquals(170.0, packService.getProductDeliveredAmount(productB.getId()));
+        when(packRepositoryMock.getDeliveredAmountByProductId(PRODUCT_B_ID)).thenReturn(PACK1B_AMOUNT + PACK2B_AMOUNT);
+
+        assertEquals(PACK1B_AMOUNT + PACK2B_AMOUNT, packService.getProductDeliveredAmount(PRODUCT_B_ID));
     }
 
     @Test
     void getProductDeliveredToShopAmount() {
-        assertEquals(100.0, packService.getProductDeliveredToShopAmount(productA.getId(), shop2.getId()));
+        when(packRepositoryMock.getDeliveredAmountByProductIdAndShopId(PRODUCT_A_ID, SHOP2_ID)).thenReturn(PACK2A_AMOUNT);
+
+        assertEquals(PACK2A_AMOUNT, packService.getProductDeliveredToShopAmount(PRODUCT_A_ID, SHOP2_ID));
     }
 }

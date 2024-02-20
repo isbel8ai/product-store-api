@@ -1,9 +1,5 @@
 package com.i8ai.training.storeapi.util;
 
-import com.i8ai.training.storeapi.model.*;
-
-import java.util.Date;
-
 public class TestUtils {
     public static final Long PRODUCT_A_ID = 0x0AL;
     public static final String PRODUCT_A_CODE = "a_product_code";
@@ -79,27 +75,4 @@ public class TestUtils {
 
     public static final double NET_SALES_EXPENSES = PRODUCT_A_EXPENSES + PRODUCT_B_EXPENSES;
     public static final double NET_SALES_INCOME = PRODUCT_A_INCOME + PRODUCT_B_INCOME;
-
-    public static final Product PRODUCT_A = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
-    public static final Product PRODUCT_B = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
-
-    public static final Shop SHOP1 = new Shop(SHOP1_ID, SHOP1_NAME, SHOP1_ADDRESS, null);
-    public static final Shop SHOP2 = new Shop(SHOP2_ID, SHOP2_NAME, SHOP2_ADDRESS, null);
-
-    public static final Lot LOT_A = new Lot(LOT_A_ID, new Date(5), LOT_A_AMOUNT, PRODUCT_A_COST, PRODUCT_A);
-    public static final Lot LOT_B = new Lot(LOT_B_ID, new Date(10), LOT_B_AMOUNT, PRODUCT_B_COST, PRODUCT_B);
-
-    public static final Pack PACK1A = new Pack(PACK1A_ID, new Date(15), PACK1A_AMOUNT, LOT_A, SHOP1);
-    public static final Pack PACK1B = new Pack(PACK1B_ID, new Date(20), PACK1B_AMOUNT, LOT_B, SHOP1);
-    public static final Pack PACK2A = new Pack(PACK2A_ID, new Date(25), PACK2A_AMOUNT, LOT_A, SHOP2);
-    public static final Pack PACK2B = new Pack(PACK2B_ID, new Date(30), PACK2B_AMOUNT, LOT_B, SHOP2);
-
-    public static final Sale SALE_1A35 = new Sale(null, new Date(35), SALE_1A35_AMOUNT, PRODUCT_A_PRICE, PACK1A);
-    public static final Sale SALE_1A40 = new Sale(null, new Date(40), SALE_1A40_AMOUNT, PRODUCT_A_PRICE, PACK1A);
-    public static final Sale SALE_1B45 = new Sale(null, new Date(45), SALE_1B45_AMOUNT, PRODUCT_B_PRICE, PACK1B);
-    public static final Sale SALE_1B50 = new Sale(null, new Date(50), SALE_1B50_AMOUNT, PRODUCT_B_PRICE, PACK1B);
-    public static final Sale SALE_2A55 = new Sale(null, new Date(55), SALE_2A55_AMOUNT, PRODUCT_A_PRICE, PACK2A);
-    public static final Sale SALE_2A60 = new Sale(null, new Date(60), SALE_2A60_AMOUNT, PRODUCT_A_PRICE, PACK2A);
-    public static final Sale SALE_2B65 = new Sale(null, new Date(65), SALE_2B65_AMOUNT, PRODUCT_B_PRICE, PACK2B);
-    public static final Sale SALE_2B70 = new Sale(null, new Date(70), SALE_2B70_AMOUNT, PRODUCT_B_PRICE, PACK2B);
 }

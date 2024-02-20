@@ -1,10 +1,10 @@
 package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.error.NotValidAmountException;
-import com.i8ai.training.storeapi.util.DateTimeUtils;
 import com.i8ai.training.storeapi.model.Sale;
 import com.i8ai.training.storeapi.repository.SaleRepository;
 import com.i8ai.training.storeapi.service.SaleService;
+import com.i8ai.training.storeapi.util.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +23,8 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public List<Sale> getSales(Date start, Date end, Long productId, Long shopId) {
-        if (start == null) start = new Date(0);
-        if (end == null) end = new Date();
+        start = DateTimeUtils.dateOrMin(start);
+        end = DateTimeUtils.dateOrMax(end);
 
         if (productId == null) {
             if (shopId == null) {
@@ -42,7 +42,7 @@ public class SaleServiceImpl implements SaleService {
     }
 
     private Double getCurrentPackAmount(Long packId) {
-        return saleRepository.getRemainingAmountByPackId(packId).orElse(0.0);
+        return saleRepository.getRemainingAmountByPackId(packId);
     }
 
     @Override
@@ -60,77 +60,58 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public Double getSoldAmountByProductAndShop(Long productId, Long shopId) {
-        return saleRepository.getSoldAmountByProductIdAndShopId(productId, shopId).orElse(0.0);
+        return saleRepository.getSoldAmountByProductIdAndShopId(productId, shopId);
     }
 
     @Override
     public Double getNetSalesIncome(Date start, Date end) {
-        return saleRepository.getNetSalesIncome(
-                DateTimeUtils.dateOrMin(start),
-                DateTimeUtils.dateOrMax(end)
-        ).orElse(0.0);
+        return saleRepository.getNetSalesIncome(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end));
     }
 
     @Override
     public Double getSalesIncomeByProduct(Long productId, Date start, Date end) {
         return saleRepository.getIncomeByProductId(
-                productId,
-                DateTimeUtils.dateOrMin(start),
-                DateTimeUtils.dateOrMax(end)
-        ).orElse(0.0);
+                productId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+        );
     }
 
     @Override
     public Double getSalesIncomeByShop(Long shopId, Date start, Date end) {
         return saleRepository.getIncomeByShopId(
-                shopId,
-                DateTimeUtils.dateOrMin(start),
-                DateTimeUtils.dateOrMax(end)
-        ).orElse(0.0);
+                shopId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+        );
     }
 
     @Override
     public Double getSalesIncomeByProductAndShop(Long productId, Long shopId, Date start, Date end) {
         return saleRepository.getIncomeByProductIdAndShopId(
-                productId, shopId,
-                DateTimeUtils.dateOrMin(start),
-                DateTimeUtils.dateOrMax(end)
-        ).orElse(0.0);
+                productId, shopId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+        );
     }
 
     @Override
     public Double getNetSalesExpenses(Date start, Date end) {
-        return saleRepository.getNetSalesExpenses(
-                DateTimeUtils.dateOrMin(start),
-                DateTimeUtils.dateOrMax(end)
-        ).orElse(0.0);
+        return saleRepository.getNetSalesExpenses(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end));
     }
 
     @Override
     public Double getSalesExpensesByProduct(Long productId, Date start, Date end) {
         return saleRepository.getSaleExpensesByProductId(
-                productId,
-                DateTimeUtils.dateOrMin(start),
-                DateTimeUtils.dateOrMax(end)
-        ).orElse(0.0);
+                productId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+        );
     }
 
     @Override
     public Double getSalesExpensesByShop(Long shopId, Date start, Date end) {
         return saleRepository.getSaleExpensesByShopId(
-                shopId,
-                DateTimeUtils.dateOrMin(start),
-                DateTimeUtils.dateOrMax(end)
-        ).orElse(0.0);
+                shopId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+        );
     }
 
     @Override
     public Double getSalesExpensesByProductAndShop(Long productId, Long shopId, Date start, Date end) {
         return saleRepository.getSaleExpensesByProductIdAndShopId(
-                productId,
-                shopId,
-                DateTimeUtils.dateOrMin(start),
-                DateTimeUtils.dateOrMax(end)
-        ).orElse(0.0);
+                productId, shopId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+        );
     }
 }

@@ -1,7 +1,5 @@
 package com.i8ai.training.storeapi.repository;
 
-import com.i8ai.training.storeapi.util.DateTimeUtils;
-import static com.i8ai.training.storeapi.util.TestUtils.*;
 import com.i8ai.training.storeapi.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +9,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Date;
 
+import static com.i8ai.training.storeapi.util.DateTimeUtils.dateOrMax;
+import static com.i8ai.training.storeapi.util.DateTimeUtils.dateOrMin;
+import static com.i8ai.training.storeapi.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
@@ -106,7 +107,8 @@ class RepositoryTest {
 
     @Test
     void getNetIncome() {
-        Double result = saleRepository.getNetSalesIncome(DateTimeUtils.DATE_MIN, DateTimeUtils.DATE_MAX).orElse(0.0);
+        Double result = saleRepository.getNetSalesIncome(dateOrMin(null), dateOrMax(null));
+
         assertEquals(NET_SALES_INCOME, result);
     }
 

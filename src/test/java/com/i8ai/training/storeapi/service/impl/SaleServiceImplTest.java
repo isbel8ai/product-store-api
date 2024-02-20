@@ -2,146 +2,132 @@ package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.error.NotValidAmountException;
 import com.i8ai.training.storeapi.model.*;
-import com.i8ai.training.storeapi.repository.*;
-import com.i8ai.training.storeapi.service.SaleService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.i8ai.training.storeapi.repository.SaleRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 import java.util.List;
 
+import static com.i8ai.training.storeapi.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class SaleServiceImplTest {
-    private static final String PRODUCT_A_CODE = "a_product_code";
-    private static final String PRODUCT_B_CODE = "b_product_code";
-    private static final String PRODUCT_A_NAME = "a_product_name";
-    private static final String PRODUCT_B_NAME = "b_product_name";
-    private static final String PRODUCT_A_MEASURE = "a_product_measure";
-    private static final String PRODUCT_B_MEASURE = "b_product_measure";
-    private static final String SHOP1_NAME = "name of shop 1";
-    private static final String SHOP2_NAME = "name of shop 2";
-    private static final String SHOP1_ADDRESS = "address of shop 1";
-    private static final String SHOP2_ADDRESS = "address of shop 2";
 
-    @Autowired
-    private ProductRepository productRepository;
+    private static final Product PRODUCT_A = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
+    private static final Product PRODUCT_B = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
 
-    @Autowired
-    private LotRepository lotRepository;
+    private static final Shop SHOP1 = new Shop(SHOP1_ID, SHOP1_NAME, SHOP1_ADDRESS, null);
+    private static final Shop SHOP2 = new Shop(SHOP2_ID, SHOP2_NAME, SHOP2_ADDRESS, null);
 
-    @Autowired
-    private ShopRepository shopRepository;
+    private static final Lot LOT_A = new Lot(LOT_A_ID, new Date(5), LOT_A_AMOUNT, PRODUCT_A_COST, PRODUCT_A);
+    private static final Lot LOT_B = new Lot(LOT_B_ID, new Date(10), LOT_B_AMOUNT, PRODUCT_B_COST, PRODUCT_B);
 
-    @Autowired
-    private PackRepository packRepository;
+    private static final Pack PACK1A = new Pack(PACK1A_ID, new Date(15), PACK1A_AMOUNT, LOT_A, SHOP1);
+    private static final Pack PACK1B = new Pack(PACK1B_ID, new Date(20), PACK1B_AMOUNT, LOT_B, SHOP1);
+    private static final Pack PACK2A = new Pack(PACK2A_ID, new Date(25), PACK2A_AMOUNT, LOT_A, SHOP2);
+    private static final Pack PACK2B = new Pack(PACK2B_ID, new Date(30), PACK2B_AMOUNT, LOT_B, SHOP2);
 
-    @Autowired
-    private SaleRepository saleRepository;
+    private static final Sale SALE_1A35 = new Sale(0x1A35L, new Date(35), SALE_1A35_AMOUNT, PRODUCT_A_PRICE, PACK1A);
+    private static final Sale SALE_1A40 = new Sale(0x1A40L, new Date(40), SALE_1A40_AMOUNT, PRODUCT_A_PRICE, PACK1A);
+    private static final Sale SALE_1B45 = new Sale(0x1B45L, new Date(45), SALE_1B45_AMOUNT, PRODUCT_B_PRICE, PACK1B);
+    private static final Sale SALE_1B50 = new Sale(0x1B50L, new Date(50), SALE_1B50_AMOUNT, PRODUCT_B_PRICE, PACK1B);
+    private static final Sale SALE_2A55 = new Sale(0x2A55L, new Date(55), SALE_2A55_AMOUNT, PRODUCT_A_PRICE, PACK2A);
+    private static final Sale SALE_2A60 = new Sale(0x2A60L, new Date(60), SALE_2A60_AMOUNT, PRODUCT_A_PRICE, PACK2A);
+    private static final Sale SALE_2B65 = new Sale(0x2B65L, new Date(65), SALE_2B65_AMOUNT, PRODUCT_B_PRICE, PACK2B);
+    private static final Sale SALE_2B70 = new Sale(0x2B70L, new Date(70), SALE_2B70_AMOUNT, PRODUCT_B_PRICE, PACK2B);
 
-    @Autowired
-    private SaleService saleService;
+    @Mock
+    private SaleRepository saleRepositoryMock;
 
-    private Product productA;
-    private Product productB;
-
-    private Shop shop1;
-    private Shop shop2;
-
-    private Pack packA1;
-
-    private Sale removableSale;
-
-    @BeforeEach
-    void setUp() {
-        productA = productRepository.save(new Product(null, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null));
-        productB = productRepository.save(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
-
-        Lot lotA = lotRepository.save(new Lot(null, new Date(1), 500.0, 5.5, productA));
-        Lot lotB = lotRepository.save(new Lot(null, new Date(2), 800.0, 8.0, productB));
-
-        shop1 = shopRepository.save(new Shop(null, SHOP1_NAME, SHOP1_ADDRESS, null));
-        shop2 = shopRepository.save(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
-
-        packA1 = packRepository.save(new Pack(null, new Date(3), 200.0, lotA, shop1));
-        Pack packA2 = packRepository.save(new Pack(null, new Date(4), 150.0, lotA, shop2));
-        Pack packB1 = packRepository.save(new Pack(null, new Date(5), 200.0, lotB, shop1));
-        Pack packB2 = packRepository.save(new Pack(null, new Date(6), 300.0, lotB, shop2));
-
-        saleRepository.save(new Sale(null, new Date(3), 5.0, 8.0, packA1));
-        saleRepository.save(new Sale(null, new Date(5), 1.0, 9.0, packA2));
-        saleRepository.save(new Sale(null, new Date(7), 3.0, 15.0, packB1));
-        saleRepository.save(new Sale(null, new Date(9), 9.0, 12.0, packB2));
-        removableSale = saleRepository.save(new Sale(null, new Date(15), 2.0, 8.0, packA1));
-    }
-
-    @AfterEach
-    void tearDown() {
-        saleRepository.deleteAll();
-        packRepository.deleteAll();
-        lotRepository.deleteAll();
-        productRepository.deleteAll();
-        shopRepository.deleteAll();
-    }
+    @InjectMocks
+    private SaleServiceImpl saleService;
 
     @Test
     void getSalesWithAllFilters() {
-        List<Sale> sales = saleService.getSales(new Date(2), new Date(7), productA.getId(), shop1.getId());
-        assertEquals(1, sales.size());
+        when(saleRepositoryMock.findAllByRegisteredBetweenAndPackLotProductIdAndPackShopId(
+                new Date(35), new Date(40), PRODUCT_A_ID, SHOP1_ID)
+        ).thenReturn(List.of(SALE_1A35, SALE_1A40));
+
+        List<Sale> sales = saleService.getSales(new Date(35), new Date(40), PRODUCT_A_ID, SHOP1_ID);
+
+        assertEquals(2, sales.size());
     }
 
     @Test
     void getSalesWithTimeFilter() {
-        List<Sale> sales = saleService.getSales(new Date(4), new Date(14), null, null);
-        assertEquals(3, sales.size());
+        when(saleRepositoryMock.findAllByRegisteredBetween(new Date(45), new Date(50)))
+                .thenReturn(List.of(SALE_1A35, SALE_1A40));
+
+        List<Sale> sales = saleService.getSales(new Date(45), new Date(50), null, null);
+
+        assertEquals(2, sales.size());
     }
 
     @Test
     void getSalesWithShopFilter() {
-        List<Sale> sales = saleService.getSales(null, null, null, shop2.getId());
-        assertEquals(2, sales.size());
+        when(saleRepositoryMock.findAllByRegisteredBetweenAndPackShopId(any(), any(), eq(SHOP2_ID)))
+                .thenReturn(List.of(SALE_2A55, SALE_2A60, SALE_2B65, SALE_2B70));
+
+        List<Sale> sales = saleService.getSales(null, null, null, SHOP2_ID);
+
+        assertEquals(4, sales.size());
     }
 
     @Test
     void getSalesWithProductFilter() {
-        List<Sale> sales = saleService.getSales(null, null, productB.getId(), null);
-        assertEquals(2, sales.size());
+        when(saleRepositoryMock.findAllByRegisteredBetweenAndPackLotProductId(any(), any(), eq(PRODUCT_B_ID)))
+                .thenReturn(List.of(SALE_1B45, SALE_1B50, SALE_2B65, SALE_2B70));
+
+        List<Sale> sales = saleService.getSales(null, null, PRODUCT_B_ID, null);
+
+        assertEquals(4, sales.size());
     }
 
     @Test
     void getAllSales() {
+        when(saleRepositoryMock.findAllByRegisteredBetween(any(), any())).thenReturn(
+                List.of(SALE_1A35, SALE_1A40, SALE_1B45, SALE_1B50, SALE_2A55, SALE_2A60, SALE_2B65, SALE_2B70)
+        );
+
         List<Sale> sales = saleService.getSales(null, null, null, null);
-        assertEquals(5, sales.size());
+
+        assertEquals(8, sales.size());
     }
 
     @Test
     void registerSaleWithNoValidAmount() {
-        Sale sale = new Sale(null, new Date(20), 500.0, 8.0, packA1);
-        Exception e = assertThrows(NotValidAmountException.class, () ->
-                saleService.registerSale(sale)
-        );
+        when(saleRepositoryMock.getRemainingAmountByPackId(PACK1A_ID)).thenReturn(PACK1A_AMOUNT);
+
+        Sale sale = new Sale(null, new Date(20), PACK1A_AMOUNT + 10, 8.0, PACK1A);
+
+        assertThrows(NotValidAmountException.class, () -> saleService.registerSale(sale));
     }
 
     @Test
     void registerSale() {
-        assertDoesNotThrow(() ->
-                saleService.registerSale(new Sale(null, new Date(20), 2.0, 8.0, packA1))
-        );
+        when(saleRepositoryMock.getRemainingAmountByPackId(PACK1B_ID)).thenReturn(PACK1B_AMOUNT);
+
+        assertDoesNotThrow(() -> saleService.registerSale(SALE_1B45));
     }
 
     @Test
     void deleteSale() {
-        assertDoesNotThrow(() ->
-                saleService.deleteSale(removableSale.getId())
-        );
+        assertDoesNotThrow(() -> saleService.deleteSale(SALE_1A35.getId()));
     }
 
     @Test
     void getProductSoldInShopAmount() {
-        assertEquals(7, saleService.getSoldAmountByProductAndShop(productA.getId(), shop1.getId()));
+        double total = SALE_2B65_AMOUNT + SALE_2B70_AMOUNT;
+
+        when(saleRepositoryMock.getSoldAmountByProductIdAndShopId(PRODUCT_B_ID, SHOP2_ID)).thenReturn(total);
+
+        assertEquals(total, saleService.getSoldAmountByProductAndShop(PRODUCT_B_ID, SHOP2_ID));
     }
 }

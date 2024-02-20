@@ -3,90 +3,89 @@ package com.i8ai.training.storeapi.service.impl;
 import com.i8ai.training.storeapi.error.NotValidElementDataException;
 import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.repository.ProductRepository;
-import com.i8ai.training.storeapi.service.ProductService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
+import static com.i8ai.training.storeapi.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
-    private static final String PRODUCT_A_CODE = "a_product_code";
-    private static final String PRODUCT_B_CODE = "b_product_code";
-    private static final String PRODUCT_C_CODE = "c_product_code";
-    private static final String PRODUCT_A_NAME = "a_product_name";
-    private static final String PRODUCT_B_NAME = "b_product_name";
-    private static final String PRODUCT_C_NAME = "c_product_name";
-    private static final String PRODUCT_A_MEASURE = "a_product_measure";
-    private static final String PRODUCT_B_MEASURE = "b_product_measure";
-    private static final String PRODUCT_C_MEASURE = "c_product_measure";
 
-    @Autowired
-    private ProductRepository productRepository;
+    private static final Product PRODUCT_A = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
+    private static final Product PRODUCT_B = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
 
-    @Autowired
-    private ProductService productService;
+    @Mock
+    private ProductRepository productRepositoryMock;
 
-    private Product productA;
-    private Product productB;
-
-    @BeforeEach
-    void setUp() {
-        productA = productRepository.save(new Product(null, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null));
-        productB = productRepository.save(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
-    }
-
-    @AfterEach
-    void tearDown() {
-        productRepository.deleteAll();
-    }
+    @InjectMocks
+    private ProductServiceImpl productService;
 
     @Test
     void getAllProducts() {
+        when(productRepositoryMock.findAll()).thenReturn(List.of(PRODUCT_A, PRODUCT_B));
+
         List<Product> products = productService.getAllProducts();
+
         assertEquals(2, products.size());
     }
 
     @Test
     void addProductWithExistingCode() {
-        Product product = new Product(null, PRODUCT_A_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
-        assertThrows(NotValidElementDataException.class, () -> productService.addProduct(product));
+        when(productRepositoryMock.save(any())).thenThrow(DataIntegrityViolationException.class);
 
+        assertThrows(NotValidElementDataException.class, () -> productService.addProduct(PRODUCT_A));
     }
 
     @Test
     void addProduct() {
-        assertDoesNotThrow(() ->
-                productService.addProduct(new Product(null, PRODUCT_C_CODE, PRODUCT_C_NAME, PRODUCT_C_MEASURE, null))
-        );
+        assertDoesNotThrow(() -> productService.addProduct(PRODUCT_B));
     }
 
     @Test
     void getProduct() {
-        assertDoesNotThrow(() -> productService.getProduct(productA.getId()));
+        when(productRepositoryMock.findById(PRODUCT_A_ID)).thenReturn(Optional.of(PRODUCT_A));
+
+        Product product = productService.getProduct(PRODUCT_A_ID);
+
+        assertEquals(PRODUCT_A_NAME, product.getName());
+    }
+
+    @Test
+    void replaceNotExistingProduct() {
+        when(productRepositoryMock.findById(PRODUCT_A_ID)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> productService.replaceProduct(PRODUCT_A_ID, PRODUCT_B));
     }
 
     @Test
     void replaceProductWithExistingCode() {
-        Product product = new Product(null, PRODUCT_B_CODE, PRODUCT_C_NAME, PRODUCT_C_MEASURE, null);
-        Long productId = productA.getId();
-        assertThrows(NotValidElementDataException.class, () -> productService.replaceProduct(productId, product));
+        when(productRepositoryMock.findById(PRODUCT_A_ID)).thenReturn(Optional.of(mock(Product.class)));
+        when(productRepositoryMock.save(any())).thenThrow(DataIntegrityViolationException.class);
+
+        assertThrows(NotValidElementDataException.class, () -> productService.replaceProduct(PRODUCT_A_ID, PRODUCT_B));
     }
 
     @Test
     void replaceProduct() {
-        assertDoesNotThrow(() ->
-                productService.replaceProduct(productA.getId(), new Product(null, PRODUCT_C_CODE, PRODUCT_C_NAME, PRODUCT_C_MEASURE, null))
-        );
+        when(productRepositoryMock.findById(PRODUCT_A_ID)).thenReturn(Optional.of(mock(Product.class)));
+
+        assertDoesNotThrow(() -> productService.replaceProduct(PRODUCT_A_ID, PRODUCT_B));
     }
 
     @Test
     void deleteProduct() {
-        assertDoesNotThrow(() -> productService.deleteProduct(productB.getId()));
+        assertDoesNotThrow(() -> productService.deleteProduct(PRODUCT_B_ID));
     }
 }

@@ -1,11 +1,12 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.model.Pack;
 import com.i8ai.training.storeapi.error.ElementNotFoundException;
 import com.i8ai.training.storeapi.error.NotValidAmountException;
+import com.i8ai.training.storeapi.model.Pack;
 import com.i8ai.training.storeapi.repository.PackRepository;
 import com.i8ai.training.storeapi.service.LotService;
 import com.i8ai.training.storeapi.service.PackService;
+import com.i8ai.training.storeapi.util.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,8 @@ public class PackServiceImpl implements PackService {
 
     @Override
     public List<Pack> getPacks(Date start, Date end, Long productId, Long shopId) {
-        if (start == null) start = new Date(0);
-        if (end == null) end = new Date();
+        start = DateTimeUtils.dateOrMin(start);
+        end = DateTimeUtils.dateOrMax(end);
 
         if (productId == null) {
             if (shopId == null) {
