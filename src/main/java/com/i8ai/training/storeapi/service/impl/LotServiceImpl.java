@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Service
 public class LotServiceImpl implements LotService {
+
     private final LotRepository lotRepository;
 
     @Autowired

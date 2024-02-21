@@ -1,5 +1,6 @@
 package com.i8ai.training.storeapi.service.impl;
 
+import com.i8ai.training.storeapi.error.ElementNotFoundException;
 import com.i8ai.training.storeapi.model.Lot;
 import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.repository.LotRepository;
@@ -11,9 +12,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.i8ai.training.storeapi.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.verify;
@@ -86,6 +89,22 @@ class LotServiceImplTest {
         List<Lot> lots = lotService.getLots(null, null, null);
 
         assertEquals(2, lots.size());
+    }
+
+    @Test
+    void getNotExistingLot() {
+        when(lotRepositoryMock.findById(LOT_B_ID)).thenReturn(Optional.empty());
+
+        assertThrows(ElementNotFoundException.class, () -> lotService.getLot(LOT_B_ID));
+    }
+
+    @Test
+    void getLot() {
+        when(lotRepositoryMock.findById(LOT_B_ID)).thenReturn(Optional.of(LOT_B));
+
+        Lot lot = lotService.getLot(LOT_B_ID);
+
+        assertEquals(LOT_B_ID, lot.getId());
     }
 
     @Test

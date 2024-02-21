@@ -46,5 +46,4 @@ public class ShopServiceImpl implements ShopService {
     public void deleteShop(Long shopId) {
         shopRepository.deleteById(shopId);
     }
-
 }

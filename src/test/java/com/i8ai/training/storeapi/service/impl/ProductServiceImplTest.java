@@ -1,5 +1,6 @@
 package com.i8ai.training.storeapi.service.impl;
 
+import com.i8ai.training.storeapi.error.ElementNotFoundException;
 import com.i8ai.training.storeapi.error.NotValidElementDataException;
 import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.repository.ProductRepository;
@@ -11,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.i8ai.training.storeapi.util.TestUtils.*;
@@ -66,7 +66,7 @@ class ProductServiceImplTest {
     void replaceNotExistingProduct() {
         when(productRepositoryMock.findById(PRODUCT_A_ID)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> productService.replaceProduct(PRODUCT_A_ID, PRODUCT_B));
+        assertThrows(ElementNotFoundException.class, () -> productService.replaceProduct(PRODUCT_A_ID, PRODUCT_B));
     }
 
     @Test

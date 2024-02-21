@@ -41,13 +41,10 @@ public class SaleServiceImpl implements SaleService {
         }
     }
 
-    private Double getCurrentPackAmount(Long packId) {
-        return saleRepository.getRemainingAmountByPackId(packId);
-    }
-
     @Override
     public Sale registerSale(Sale newSale) {
-        if (newSale.getAmount() <= 0.0 || newSale.getAmount() > getCurrentPackAmount(newSale.getPack().getId())) {
+        Double soldAmount = saleRepository.getSoldAmountByPackId(newSale.getPack().getId());
+        if (newSale.getAmount() <= 0.0 || newSale.getAmount() > newSale.getPack().getAmount() - soldAmount) {
             throw new NotValidAmountException();
         }
         return saleRepository.save(newSale);

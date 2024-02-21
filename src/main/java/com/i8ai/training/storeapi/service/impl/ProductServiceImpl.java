@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product replaceProduct(Long productId, Product modifiedProduct) {
-        Product product = productRepository.findById(productId).orElseThrow();
+        Product product = productRepository.findById(productId).orElseThrow(ElementNotFoundException::new);
         product.setCode(modifiedProduct.getCode());
         product.setName(modifiedProduct.getName());
         product.setMeasure(modifiedProduct.getMeasure());
@@ -59,5 +59,4 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
     }
-
 }

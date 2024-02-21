@@ -102,17 +102,24 @@ class SaleServiceImplTest {
     }
 
     @Test
-    void registerSaleWithNoValidAmount() {
-        when(saleRepositoryMock.getRemainingAmountByPackId(PACK1A_ID)).thenReturn(PACK1A_AMOUNT);
+    void registerSaleWithNotValidAmount() {
+        when(saleRepositoryMock.getSoldAmountByPackId(PACK1A_ID)).thenReturn(0.0);
 
-        Sale sale = new Sale(null, new Date(20), PACK1A_AMOUNT + 10, 8.0, PACK1A);
+        Sale sale = new Sale(null, new Date(20), -10.0, 8.0, PACK1A);
 
         assertThrows(NotValidAmountException.class, () -> saleService.registerSale(sale));
     }
 
     @Test
+    void registerSaleWithNotAvailableAmount() {
+        when(saleRepositoryMock.getSoldAmountByPackId(PACK1A_ID)).thenReturn(PACK1A_AMOUNT);
+
+        assertThrows(NotValidAmountException.class, () -> saleService.registerSale(SALE_1A40));
+    }
+
+    @Test
     void registerSale() {
-        when(saleRepositoryMock.getRemainingAmountByPackId(PACK1B_ID)).thenReturn(PACK1B_AMOUNT);
+        when(saleRepositoryMock.getSoldAmountByPackId(PACK1B_ID)).thenReturn(0.0);
 
         assertDoesNotThrow(() -> saleService.registerSale(SALE_1B45));
     }

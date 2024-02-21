@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 public class ExistenceServiceImpl implements ExistenceService {
+
     private final ProductService productService;
     private final ShopService shopService;
     private final LotService lotService;

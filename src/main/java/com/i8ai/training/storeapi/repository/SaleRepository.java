@@ -18,8 +18,8 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     List<Sale> findAllByRegisteredBetweenAndPackLotProductIdAndPackShopId(Date start, Date end, Long productId, Long shopId);
 
-    @Query("select s.pack.amount - sum(s.amount) from Sale s where s.pack.id = :packId")
-    Double getRemainingAmountByPackId(Long packId);
+    @Query("select sum(s.amount) from Sale s where s.pack.id = :packId")
+    Double getSoldAmountByPackId(Long packId);
 
     @Query("select sum(s.amount) from Sale s where s.pack.lot.product.id = :productId and s.pack.shop.id = :shopId")
     Double getSoldAmountByProductIdAndShopId(Long productId, Long shopId);

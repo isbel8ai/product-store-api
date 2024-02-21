@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 public class BalanceServiceImpl implements BalanceService {
+
     private final ShopService shopService;
     private final ProductService productService;
     private final SaleService saleService;
