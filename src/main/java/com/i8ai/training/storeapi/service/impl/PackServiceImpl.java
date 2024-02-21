@@ -28,7 +28,7 @@ public class PackServiceImpl implements PackService {
     }
 
     @Override
-    public List<Pack> getPacks(Date start, Date end, Long productId, Long shopId) {
+    public List<Pack> getPacks(Long productId, Long shopId, Date start, Date end) {
         start = DateTimeUtils.dateOrMin(start);
         end = DateTimeUtils.dateOrMax(end);
 

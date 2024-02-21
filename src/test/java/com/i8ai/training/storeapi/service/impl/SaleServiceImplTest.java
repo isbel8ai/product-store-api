@@ -3,6 +3,7 @@ package com.i8ai.training.storeapi.service.impl;
 import com.i8ai.training.storeapi.error.NotValidAmountException;
 import com.i8ai.training.storeapi.model.*;
 import com.i8ai.training.storeapi.repository.SaleRepository;
+import com.i8ai.training.storeapi.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class SaleServiceImplTest {
 
-    private static final Product PRODUCT_A = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
+    private static final Product PRODUCT_A = new Product(TestUtils.PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
     private static final Product PRODUCT_B = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
 
     private static final Shop SHOP1 = new Shop(SHOP1_ID, SHOP1_NAME, SHOP1_ADDRESS, null);
@@ -130,11 +131,90 @@ class SaleServiceImplTest {
     }
 
     @Test
-    void getProductSoldInShopAmount() {
-        double total = SALE_2B65_AMOUNT + SALE_2B70_AMOUNT;
+    void getSoldAmountByProductAndShop() {
+        when(saleRepositoryMock.getSoldAmountByProductIdAndShopId(PRODUCT_B_ID, SHOP2_ID))
+                .thenReturn(PACK2B_SALES_AMOUNT);
 
-        when(saleRepositoryMock.getSoldAmountByProductIdAndShopId(PRODUCT_B_ID, SHOP2_ID)).thenReturn(total);
+        Double amount = saleService.getSoldAmountByProductAndShop(PRODUCT_B_ID, SHOP2_ID);
 
-        assertEquals(total, saleService.getSoldAmountByProductAndShop(PRODUCT_B_ID, SHOP2_ID));
+        assertEquals(PACK2B_SALES_AMOUNT, amount);
+    }
+
+
+    @Test
+    void getNetSalesIncome() {
+        when(saleRepositoryMock.getNetSalesIncome(any(), any())).thenReturn(NET_SALES_INCOME)
+                .thenReturn(NET_SALES_INCOME);
+
+        Double income = saleService.getNetSalesIncome(null, null);
+
+        assertEquals(NET_SALES_INCOME, income);
+    }
+
+    @Test
+    void getSalesIncomeByProduct() {
+        when(saleRepositoryMock.getIncomeByProductId(eq(PRODUCT_A_ID), any(), any())).thenReturn(PRODUCT_A_INCOME);
+
+        Double income = saleService.getSalesIncomeByProduct(PRODUCT_A_ID, null, null);
+
+        assertEquals(PRODUCT_A_INCOME, income);
+    }
+
+    @Test
+    void getSalesIncomeByShop() {
+        when(saleRepositoryMock.getIncomeByShopId(eq(SHOP2_ID), any(), any())).thenReturn(SHOP2_INCOME);
+
+        Double income = saleService.getSalesIncomeByShop(SHOP2_ID, null, null);
+
+        assertEquals(SHOP2_INCOME, income);
+    }
+
+    @Test
+    void getSalesIncomeByProductAndShop() {
+        when(saleRepositoryMock.getIncomeByProductIdAndShopId(eq(PRODUCT_B_ID), eq(SHOP1_ID), any(), any()))
+                .thenReturn(PACK1B_SALES_INCOME);
+
+        Double income = saleService.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null);
+
+        assertEquals(PACK1B_SALES_INCOME, income);
+    }
+
+    @Test
+    void getNetSalesExpenses() {
+        when(saleRepositoryMock.getNetSalesExpenses(any(), any())).thenReturn(NET_SALES_EXPENSES);
+
+        Double expenses = saleService.getNetSalesExpenses(null, null);
+
+        assertEquals(NET_SALES_EXPENSES, expenses);
+    }
+
+    @Test
+    void getSalesExpensesByProduct() {
+        when(saleRepositoryMock.getSaleExpensesByProductId(eq(PRODUCT_A_ID), any(), any()))
+                .thenReturn(PRODUCT_A_EXPENSES);
+
+        Double expenses = saleService.getSalesExpensesByProduct(PRODUCT_A_ID, null, null);
+
+        assertEquals(PRODUCT_A_EXPENSES, expenses);
+
+    }
+
+    @Test
+    void getSalesExpensesByShop() {
+        when(saleRepositoryMock.getSaleExpensesByShopId(eq(SHOP2_ID), any(), any())).thenReturn(SHOP2_EXPENSES);
+
+        Double expenses = saleService.getSalesExpensesByShop(SHOP2_ID, null, null);
+
+        assertEquals(SHOP2_EXPENSES, expenses);
+    }
+
+    @Test
+    void getSalesExpensesByProductAndShop() {
+        when(saleRepositoryMock.getSaleExpensesByProductIdAndShopId(eq(PRODUCT_B_ID), eq(SHOP1_ID), any(), any()))
+                .thenReturn(PACK1B_SALES_EXPENSES);
+
+        Double expenses = saleService.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null);
+
+        assertEquals(PACK1B_SALES_EXPENSES, expenses);
     }
 }

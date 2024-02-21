@@ -20,11 +20,11 @@ public class PackController {
     }
 
     @GetMapping
-    public List<Pack> getPacks(@RequestParam(required = false) Date startDate,
-                               @RequestParam(required = false) Date endDate,
-                               @RequestParam(required = false) Long productId,
-                               @RequestParam(required = false) Long shopId) {
-        return packService.getPacks(startDate, endDate, productId, shopId);
+    public List<Pack> getPacks(@RequestParam(required = false) Long productId,
+                               @RequestParam(required = false) Long shopId,
+                               @RequestParam(required = false) Date startDate,
+                               @RequestParam(required = false) Date endDate) {
+        return packService.getPacks(productId, shopId, startDate, endDate);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

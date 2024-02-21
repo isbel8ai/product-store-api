@@ -56,7 +56,7 @@ class PackServiceImplTest {
                 )
         ).thenReturn(List.of(PACK2A));
 
-        List<Pack> pack = packService.getPacks(new Date(3), new Date(6), PRODUCT_A_ID, SHOP2_ID);
+        List<Pack> pack = packService.getPacks(PRODUCT_A_ID, SHOP2_ID, new Date(3), new Date(6));
 
         assertEquals(1, pack.size());
     }
@@ -66,7 +66,7 @@ class PackServiceImplTest {
         when(packRepositoryMock.findAllByDeliveredBetweenAndShopId(any(), any(), eq((SHOP1_ID))))
                 .thenReturn(List.of(PACK1A, PACK1B));
 
-        List<Pack> pack = packService.getPacks(null, null, null, SHOP1_ID);
+        List<Pack> pack = packService.getPacks(null, SHOP1_ID, null, null);
 
         assertEquals(2, pack.size());
     }
@@ -76,7 +76,7 @@ class PackServiceImplTest {
         when(packRepositoryMock.findAllByDeliveredBetweenAndLotProductId(any(), any(), eq(PRODUCT_B_ID)))
                 .thenReturn(List.of(PACK1B, PACK2B));
 
-        List<Pack> pack = packService.getPacks(null, null, PRODUCT_B_ID, null);
+        List<Pack> pack = packService.getPacks(PRODUCT_B_ID, null, null, null);
 
         assertEquals(2, pack.size());
     }
@@ -118,7 +118,7 @@ class PackServiceImplTest {
     void registerPackWithNotAvailableAmount() {
         when(lotServiceMock.getLot(LOT_A_ID)).thenReturn(LOT_A);
 
-        Pack pack = new Pack(null, new Date(), LOT_A_AMOUNT + 1000, LOT_A, SHOP1);
+        Pack pack = new Pack(null, new Date(), LOT_A_AMOUNT + 10, LOT_A, SHOP1);
 
         assertThrows(NotValidAmountException.class, () -> packService.registerPack(pack));
     }

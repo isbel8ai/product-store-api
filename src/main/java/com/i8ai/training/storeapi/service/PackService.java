@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface PackService {
-    List<Pack> getPacks(Date start, Date end, Long productId, Long shopId);
+    List<Pack> getPacks(Long productId, Long shopId, Date start, Date end);
 
     Pack registerPack(Pack newPack);
 
