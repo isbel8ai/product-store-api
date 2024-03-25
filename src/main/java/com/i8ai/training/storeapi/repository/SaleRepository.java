@@ -29,28 +29,28 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     @Query("select sum(s.amount * s.price) from Sale s where s.pack.lot.product.id = :productId " +
             "and s.registered between :start and :end")
-    Double getIncomeByProductId(Long productId, Date start, Date end);
+    Double getIncomeByProductId(Date start, Date end, Long productId);
 
     @Query("select sum(s.amount * s.price) from Sale s where s.pack.shop.id = :shopId " +
             "and s.registered between :start and :end")
-    Double getIncomeByShopId(Long shopId, Date start, Date end);
+    Double getIncomeByShopId(Date start, Date end, Long shopId);
 
     @Query("select sum(s.amount * s.price) from Sale s where s.pack.lot.product.id = :productId " +
             "and s.pack.shop.id = :shopId and s.registered between :start and :end")
-    Double getIncomeByProductIdAndShopId(Long productId, Long shopId, Date start, Date end);
+    Double getIncomeByProductIdAndShopId(Date start, Date end, Long productId, Long shopId);
 
     @Query("select sum(s.amount * s.pack.lot.cost) from Sale s where s.registered between :start and :end")
     Double getNetSalesExpenses(Date start, Date end);
 
     @Query("select sum(s.amount * s.pack.lot.cost) from Sale s where s.pack.lot.product.id = :productId " +
             "and s.registered between :start and :end")
-    Double getSaleExpensesByProductId(Long productId, Date start, Date end);
+    Double getSaleExpensesByProductId(Date start, Date end, Long productId);
 
     @Query("select sum(s.amount * s.pack.lot.cost) from Sale s where s.pack.shop.id = :shopId " +
             "and s.registered between :start and :end")
-    Double getSaleExpensesByShopId(Long shopId, Date start, Date end);
+    Double getSaleExpensesByShopId(Date start, Date end, Long shopId);
 
     @Query("select sum(s.amount * s.pack.lot.cost) from Sale s where s.pack.lot.product.id = :productId " +
             "and s.pack.shop.id = :shopId and s.registered between :start and :end")
-    Double getSaleExpensesByProductIdAndShopId(Long productId, Long shopId, Date start, Date end);
+    Double getSaleExpensesByProductIdAndShopId(Date start, Date end, Long productId, Long shopId);
 }

@@ -26,10 +26,10 @@ public class LotServiceImpl implements LotService {
     public List<Lot> getLots(Long productId, Date start, Date end) {
         return productId == null ?
                 lotRepository.findAllByReceivedBetween(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)) :
-                lotRepository.findAllByProductIdAndReceivedBetween(
-                        productId,
+                lotRepository.findAllByReceivedBetweenAndProductId(
                         DateTimeUtils.dateOrMin(start),
-                        DateTimeUtils.dateOrMax(end)
+                        DateTimeUtils.dateOrMax(end),
+                        productId
                 );
     }
 

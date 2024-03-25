@@ -68,21 +68,21 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public Double getSalesIncomeByProduct(Long productId, Date start, Date end) {
         return saleRepository.getIncomeByProductId(
-                productId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end), productId
         );
     }
 
     @Override
     public Double getSalesIncomeByShop(Long shopId, Date start, Date end) {
         return saleRepository.getIncomeByShopId(
-                shopId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end), shopId
         );
     }
 
     @Override
     public Double getSalesIncomeByProductAndShop(Long productId, Long shopId, Date start, Date end) {
         return saleRepository.getIncomeByProductIdAndShopId(
-                productId, shopId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end), productId, shopId
         );
     }
 
@@ -94,21 +94,21 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public Double getSalesExpensesByProduct(Long productId, Date start, Date end) {
         return saleRepository.getSaleExpensesByProductId(
-                productId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end), productId
         );
     }
 
     @Override
     public Double getSalesExpensesByShop(Long shopId, Date start, Date end) {
         return saleRepository.getSaleExpensesByShopId(
-                shopId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end), shopId
         );
     }
 
     @Override
     public Double getSalesExpensesByProductAndShop(Long productId, Long shopId, Date start, Date end) {
         return saleRepository.getSaleExpensesByProductIdAndShopId(
-                productId, shopId, DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)
+                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end), productId, shopId
         );
     }
 }

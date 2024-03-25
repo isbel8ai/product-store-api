@@ -153,7 +153,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesIncomeByProduct() {
-        when(saleRepositoryMock.getIncomeByProductId(eq(PRODUCT_A_ID), any(), any())).thenReturn(PRODUCT_A_INCOME);
+        when(saleRepositoryMock.getIncomeByProductId(any(), any(), eq(PRODUCT_A_ID))).thenReturn(PRODUCT_A_INCOME);
 
         Double income = saleService.getSalesIncomeByProduct(PRODUCT_A_ID, null, null);
 
@@ -162,7 +162,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesIncomeByShop() {
-        when(saleRepositoryMock.getIncomeByShopId(eq(SHOP2_ID), any(), any())).thenReturn(SHOP2_INCOME);
+        when(saleRepositoryMock.getIncomeByShopId(any(), any(), eq(SHOP2_ID))).thenReturn(SHOP2_INCOME);
 
         Double income = saleService.getSalesIncomeByShop(SHOP2_ID, null, null);
 
@@ -171,7 +171,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesIncomeByProductAndShop() {
-        when(saleRepositoryMock.getIncomeByProductIdAndShopId(eq(PRODUCT_B_ID), eq(SHOP1_ID), any(), any()))
+        when(saleRepositoryMock.getIncomeByProductIdAndShopId(any(), any(), eq(PRODUCT_B_ID), eq(SHOP1_ID)))
                 .thenReturn(PACK1B_SALES_INCOME);
 
         Double income = saleService.getSalesIncomeByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null);
@@ -190,7 +190,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesExpensesByProduct() {
-        when(saleRepositoryMock.getSaleExpensesByProductId(eq(PRODUCT_A_ID), any(), any()))
+        when(saleRepositoryMock.getSaleExpensesByProductId(any(), any(), eq(PRODUCT_A_ID)))
                 .thenReturn(PRODUCT_A_EXPENSES);
 
         Double expenses = saleService.getSalesExpensesByProduct(PRODUCT_A_ID, null, null);
@@ -201,7 +201,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesExpensesByShop() {
-        when(saleRepositoryMock.getSaleExpensesByShopId(eq(SHOP2_ID), any(), any())).thenReturn(SHOP2_EXPENSES);
+        when(saleRepositoryMock.getSaleExpensesByShopId(any(), any(), eq(SHOP2_ID))).thenReturn(SHOP2_EXPENSES);
 
         Double expenses = saleService.getSalesExpensesByShop(SHOP2_ID, null, null);
 
@@ -210,7 +210,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesExpensesByProductAndShop() {
-        when(saleRepositoryMock.getSaleExpensesByProductIdAndShopId(eq(PRODUCT_B_ID), eq(SHOP1_ID), any(), any()))
+        when(saleRepositoryMock.getSaleExpensesByProductIdAndShopId(any(), any(), eq(PRODUCT_B_ID), eq(SHOP1_ID)))
                 .thenReturn(PACK1B_SALES_EXPENSES);
 
         Double expenses = saleService.getSalesExpensesByProductAndShop(PRODUCT_B_ID, SHOP1_ID, null, null);
