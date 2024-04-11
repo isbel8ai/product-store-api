@@ -63,13 +63,13 @@ public class ExistenceServiceImpl implements ExistenceService {
         Double amount = lotService.getProductReceivedAmount(product.getId()) -
                 packService.getProductDeliveredAmount(product.getId());
 
-        return new Existence(amount, product, null);
+        return Existence.builder().amount(amount).product(product).build();
     }
 
     private Existence getExistenceByProductAndShop(Product product, Shop shop) {
         Double amount = packService.getProductDeliveredToShopAmount(product.getId(), shop.getId()) -
                 saleService.getSoldAmountByProductAndShop(product.getId(), shop.getId());
 
-        return new Existence(amount, product, shop);
+        return Existence.builder().amount(amount).product(product).shop(shop).build();
     }
 }

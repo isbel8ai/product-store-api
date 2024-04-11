@@ -44,34 +44,95 @@ class RepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Product productA = productRepository.save(new Product(null, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null));
-        Product productB = productRepository.save(new Product(null, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null));
+        Product productA = productRepository.save(
+                Product.builder().code(PRODUCT_A_CODE).name(PRODUCT_A_NAME).measure(PRODUCT_A_MEASURE).build()
+        );
+        Product productB = productRepository.save(
+                Product.builder().code(PRODUCT_B_CODE).name(PRODUCT_B_NAME).measure(PRODUCT_B_MEASURE).build()
+        );
         idProductA = productA.getId();
         idProductB = productB.getId();
 
-        Shop shop1 = shopRepository.save(new Shop(null, SHOP1_NAME, SHOP1_ADDRESS, null));
-        Shop shop2 = shopRepository.save(new Shop(null, SHOP2_NAME, SHOP2_ADDRESS, null));
+        Shop shop1 = shopRepository.save(Shop.builder().name(SHOP1_NAME).address(SHOP1_ADDRESS).build());
+        Shop shop2 = shopRepository.save(Shop.builder().name(SHOP2_NAME).address(SHOP2_ADDRESS).build());
         idShop1 = shop1.getId();
         idShop2 = shop2.getId();
 
-        Lot lotA = lotRepository.save(new Lot(null, new Date(5), LOT_A_AMOUNT, PRODUCT_A_COST, productA));
-        Lot lotB = lotRepository.save(new Lot(null, new Date(10), LOT_B_AMOUNT, PRODUCT_B_COST, productB));
+        Lot lotA = lotRepository.save(
+                Lot.builder().received(new Date(5)).amount(LOT_A_AMOUNT).cost(PRODUCT_A_COST).product(productA).build()
+        );
+        Lot lotB = lotRepository.save(
+                Lot.builder().received(new Date(10)).amount(LOT_B_AMOUNT).cost(PRODUCT_B_COST).product(productB).build()
+        );
         idLotA = lotA.getId();
 
-        Pack pack1A = packRepository.save(new Pack(null, new Date(15), PACK1A_AMOUNT, lotA, shop1));
-        Pack pack1B = packRepository.save(new Pack(null, new Date(25), PACK1B_AMOUNT, lotB, shop1));
-        Pack pack2A = packRepository.save(new Pack(null, new Date(20), PACK2A_AMOUNT, lotA, shop2));
-        Pack pack2B = packRepository.save(new Pack(null, new Date(30), PACK2B_AMOUNT, lotB, shop2));
+        Pack pack1A = packRepository.save(
+                Pack.builder().delivered(new Date(15)).amount(PACK1A_AMOUNT).lot(lotA).shop(shop1).build());
+        Pack pack1B = packRepository.save(
+                Pack.builder().delivered(new Date(20)).amount(PACK1B_AMOUNT).lot(lotB).shop(shop1).build());
+        Pack pack2A = packRepository.save(
+                Pack.builder().delivered(new Date(25)).amount(PACK2A_AMOUNT).lot(lotA).shop(shop2).build());
+        Pack pack2B = packRepository.save(
+                Pack.builder().delivered(new Date(30)).amount(PACK2B_AMOUNT).lot(lotB).shop(shop2).build());
         idPack2B = pack2B.getId();
 
-        saleRepository.save(new Sale(null, new Date(35), SALE_1A35_AMOUNT, PRODUCT_A_PRICE, pack1A));
-        saleRepository.save(new Sale(null, new Date(40), SALE_1A40_AMOUNT, PRODUCT_A_PRICE, pack1A));
-        saleRepository.save(new Sale(null, new Date(45), SALE_1B45_AMOUNT, PRODUCT_B_PRICE, pack1B));
-        saleRepository.save(new Sale(null, new Date(50), SALE_1B50_AMOUNT, PRODUCT_B_PRICE, pack1B));
-        saleRepository.save(new Sale(null, new Date(55), SALE_2A55_AMOUNT, PRODUCT_A_PRICE, pack2A));
-        saleRepository.save(new Sale(null, new Date(60), SALE_2A60_AMOUNT, PRODUCT_A_PRICE, pack2A));
-        saleRepository.save(new Sale(null, new Date(65), SALE_2B65_AMOUNT, PRODUCT_B_PRICE, pack2B));
-        saleRepository.save(new Sale(null, new Date(70), SALE_2B70_AMOUNT, PRODUCT_B_PRICE, pack2B));
+        saleRepository.save(
+                Sale.builder()
+                        .registered(new Date(35))
+                        .amount(SALE_1A35_AMOUNT)
+                        .price(PRODUCT_A_PRICE)
+                        .pack(pack1A)
+                        .build()
+        );
+        saleRepository.save(
+                Sale.builder()
+                        .registered(new Date(40))
+                        .amount(SALE_1A40_AMOUNT)
+                        .price(PRODUCT_A_PRICE)
+                        .pack(pack1A)
+                        .build()
+        );
+        saleRepository.save(
+                Sale.builder()
+                        .registered(new Date(45))
+                        .amount(SALE_1B45_AMOUNT)
+                        .price(PRODUCT_B_PRICE)
+                        .pack(pack1B)
+                        .build()
+        );
+        saleRepository.save(Sale.builder()
+                .registered(new Date(50)).amount(SALE_1B50_AMOUNT).price(PRODUCT_B_PRICE).pack(pack1B).build());
+        saleRepository.save(
+                Sale.builder()
+                        .registered(new Date(55))
+                        .amount(SALE_2A55_AMOUNT)
+                        .price(PRODUCT_A_PRICE)
+                        .pack(pack2A)
+                        .build());
+        saleRepository.save(
+                Sale.builder()
+                        .registered(new Date(60))
+                        .amount(SALE_2A60_AMOUNT)
+                        .price(PRODUCT_A_PRICE)
+                        .pack(pack2A)
+                        .build()
+        );
+        saleRepository.save(
+                Sale.builder()
+                        .registered(new Date(65))
+                        .amount(SALE_2B65_AMOUNT)
+                        .price(PRODUCT_B_PRICE)
+                        .pack(pack2B)
+                        .build()
+        );
+        saleRepository.save(
+                Sale.builder()
+                        .registered(new Date(70))
+                        .amount(SALE_2B70_AMOUNT)
+                        .price(PRODUCT_B_PRICE)
+                        .pack(pack2B)
+                        .build()
+        );
     }
 
     @AfterEach
@@ -129,7 +190,8 @@ class RepositoryTest {
     @Test
     void findAllPacksByDeliveredBetweenAndLotProductIdAndShopId() {
         List<Pack> packs = packRepository.findAllByDeliveredBetweenAndLotProductIdAndShopId(
-                new Date(0), new Date(), idProductB, idShop2);
+                new Date(0), new Date(), idProductB, idShop2
+        );
 
         assertEquals(1, packs.size());
     }
@@ -179,7 +241,8 @@ class RepositoryTest {
     @Test
     void findAllSalesByRegisteredBetweenAndPackLotProductIdAndPackShopId() {
         List<Sale> sales = saleRepository.findAllByRegisteredBetweenAndPackLotProductIdAndPackShopId(
-                new Date(0), new Date(), idProductA, idShop1);
+                new Date(0), new Date(), idProductA, idShop1
+        );
 
         assertEquals(2, sales.size());
     }
@@ -249,8 +312,9 @@ class RepositoryTest {
 
     @Test
     void getSaleExpensesByProductIdAndShopId() {
-        Double expenses =
-                saleRepository.getSaleExpensesByProductIdAndShopId(new Date(0), new Date(), idProductA, idShop1);
+        Double expenses = saleRepository.getSaleExpensesByProductIdAndShopId(
+                new Date(0), new Date(), idProductA, idShop1
+        );
 
         assertEquals(PACK1A_SALES_EXPENSES, expenses);
     }
