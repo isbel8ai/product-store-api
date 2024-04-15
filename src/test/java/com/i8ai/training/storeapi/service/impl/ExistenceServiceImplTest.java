@@ -1,7 +1,5 @@
 package com.i8ai.training.storeapi.service.impl;
 
-import com.i8ai.training.storeapi.model.Product;
-import com.i8ai.training.storeapi.model.Shop;
 import com.i8ai.training.storeapi.service.*;
 import com.i8ai.training.storeapi.service.data.Existence;
 import org.junit.jupiter.api.Test;
@@ -19,12 +17,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ExistenceServiceImplTest {
-
-    private static final Product PRODUCT_A = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
-    private static final Product PRODUCT_B = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
-
-    private static final Shop SHOP1 = new Shop(SHOP1_ID, SHOP1_NAME, SHOP1_ADDRESS, null);
-    private static final Shop SHOP2 = new Shop(SHOP2_ID, SHOP2_NAME, SHOP2_ADDRESS, null);
 
     @Mock
     ProductService productServiceMock;

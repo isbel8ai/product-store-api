@@ -1,8 +1,5 @@
 package com.i8ai.training.storeapi.rest;
 
-import com.i8ai.training.storeapi.model.Lot;
-import com.i8ai.training.storeapi.model.Product;
-import com.i8ai.training.storeapi.model.Shop;
 import com.i8ai.training.storeapi.service.BalanceService;
 import com.i8ai.training.storeapi.service.data.Balance;
 import org.junit.jupiter.api.Test;
@@ -11,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Date;
 import java.util.List;
 
 import static com.i8ai.training.storeapi.util.TestUtils.*;
@@ -23,15 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BalanceController.class)
 class BalanceControllerTest {
-
-    private static final Product PRODUCT_A = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
-    private static final Product PRODUCT_B = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
-
-    private static final Shop SHOP1 = new Shop(SHOP1_ID, SHOP1_NAME, SHOP1_ADDRESS, null);
-    private static final Shop SHOP2 = new Shop(SHOP2_ID, SHOP2_NAME, SHOP2_ADDRESS, null);
-
-    private static final Lot LOT_A = new Lot(LOT_A_ID, new Date(5), LOT_A_AMOUNT, PRODUCT_A_COST, PRODUCT_A);
-    private static final Lot LOT_B = new Lot(LOT_B_ID, new Date(10), LOT_B_AMOUNT, PRODUCT_B_COST, PRODUCT_B);
 
     @MockBean
     BalanceService balanceService;

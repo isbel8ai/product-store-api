@@ -2,10 +2,7 @@ package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.error.ElementNotFoundException;
 import com.i8ai.training.storeapi.error.NotValidAmountException;
-import com.i8ai.training.storeapi.model.Lot;
 import com.i8ai.training.storeapi.model.Pack;
-import com.i8ai.training.storeapi.model.Product;
-import com.i8ai.training.storeapi.model.Shop;
 import com.i8ai.training.storeapi.repository.PackRepository;
 import com.i8ai.training.storeapi.service.LotService;
 import org.junit.jupiter.api.Test;
@@ -26,20 +23,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PackServiceImplTest {
-
-    private static final Product PRODUCT_A = new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
-    private static final Product PRODUCT_B = new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
-
-    private static final Shop SHOP1 = new Shop(SHOP1_ID, SHOP1_NAME, SHOP1_ADDRESS, null);
-    private static final Shop SHOP2 = new Shop(SHOP2_ID, SHOP2_NAME, SHOP2_ADDRESS, null);
-
-    private static final Lot LOT_A = new Lot(LOT_A_ID, new Date(10), LOT_A_AMOUNT, PRODUCT_A_COST, PRODUCT_A);
-    private static final Lot LOT_B = new Lot(LOT_B_ID, new Date(10), LOT_B_AMOUNT, PRODUCT_B_COST, PRODUCT_B);
-
-    private static final Pack PACK1A = new Pack(PACK1A_ID, new Date(15), PACK1A_AMOUNT, LOT_A, SHOP1);
-    private static final Pack PACK1B = new Pack(PACK1B_ID, new Date(20), PACK1B_AMOUNT, LOT_B, SHOP1);
-    private static final Pack PACK2A = new Pack(PACK2A_ID, new Date(25), PACK2A_AMOUNT, LOT_A, SHOP2);
-    private static final Pack PACK2B = new Pack(PACK2B_ID, new Date(30), PACK2B_AMOUNT, LOT_B, SHOP2);
 
     @Mock
     private PackRepository packRepositoryMock;

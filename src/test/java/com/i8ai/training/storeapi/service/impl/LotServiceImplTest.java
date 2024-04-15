@@ -2,7 +2,6 @@ package com.i8ai.training.storeapi.service.impl;
 
 import com.i8ai.training.storeapi.error.ElementNotFoundException;
 import com.i8ai.training.storeapi.model.Lot;
-import com.i8ai.training.storeapi.model.Product;
 import com.i8ai.training.storeapi.repository.LotRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,14 +23,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LotServiceImplTest {
-
-    private static final Product PRODUCT_A =
-            new Product(PRODUCT_A_ID, PRODUCT_A_CODE, PRODUCT_A_NAME, PRODUCT_A_MEASURE, null);
-    private static final Product PRODUCT_B =
-            new Product(PRODUCT_B_ID, PRODUCT_B_CODE, PRODUCT_B_NAME, PRODUCT_B_MEASURE, null);
-
-    private static final Lot LOT_A = new Lot(LOT_A_ID, new Date(5), LOT_A_AMOUNT, PRODUCT_A_COST, PRODUCT_A);
-    private static final Lot LOT_B = new Lot(LOT_B_ID, new Date(10), LOT_B_AMOUNT, PRODUCT_B_COST, PRODUCT_B);
 
     @Mock
     private LotRepository lotRepositoryMock;
