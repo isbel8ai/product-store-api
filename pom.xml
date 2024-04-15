@@ -103,6 +103,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/model/*</exclude>
+                        <exclude>**/data/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
