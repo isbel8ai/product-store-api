@@ -45,5 +45,4 @@ public class ShopController {
     public void deleteShop(@PathVariable Long shopId) {
         shopService.deleteShop(shopId);
     }
-
 }

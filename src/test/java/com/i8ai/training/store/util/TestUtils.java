@@ -1,5 +1,6 @@
 package com.i8ai.training.store.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.i8ai.training.store.model.*;
 
 import java.util.Date;
@@ -118,4 +119,13 @@ public class TestUtils {
             .id(0x1A35L).registered(new Date(65)).amount(SALE_2B65_AMOUNT).price(PRODUCT_B_PRICE).pack(PACK2B).build();
     public static final Sale SALE_2B70 = Sale.builder()
             .id(0x1A35L).registered(new Date(70)).amount(SALE_2B70_AMOUNT).price(PRODUCT_B_PRICE).pack(PACK2B).build();
+
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

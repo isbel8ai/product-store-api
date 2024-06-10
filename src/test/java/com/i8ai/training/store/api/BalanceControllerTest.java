@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static com.i8ai.training.store.util.TestUtils.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,15 +20,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BalanceController.class)
 class BalanceControllerTest {
 
-    @MockBean
-    BalanceService balanceService;
-
     @Autowired
     MockMvc mockMvc;
 
+    @MockBean
+    BalanceService balanceService;
+
     @Test
     void getNetBalance() throws Exception {
-        when(balanceService.getNetBalance(null, null)).thenReturn(
+        given(balanceService.getNetBalance(null, null)).willReturn(
                 Balance.builder().spent(NET_SALES_EXPENSES).income(NET_SALES_INCOME).build()
         );
 
@@ -40,7 +40,7 @@ class BalanceControllerTest {
 
     @Test
     void getBalancesPerProduct() throws Exception {
-        when(balanceService.getBalancesPerProduct(null, null)).thenReturn(List.of(
+        given(balanceService.getBalancesPerProduct(null, null)).willReturn(List.of(
                 Balance.builder().spent(PRODUCT_A_EXPENSES).income(PRODUCT_A_INCOME).product(PRODUCT_A).build(),
                 Balance.builder().spent(PRODUCT_B_EXPENSES).income(PRODUCT_B_INCOME).product(PRODUCT_B).build()
         ));
@@ -57,7 +57,7 @@ class BalanceControllerTest {
 
     @Test
     void getBalanceByProduct() throws Exception {
-        when(balanceService.getBalanceByProduct(PRODUCT_A.getId(), null, null)).thenReturn(
+        given(balanceService.getBalanceByProduct(PRODUCT_A.getId(), null, null)).willReturn(
                 Balance.builder().spent(PRODUCT_A_EXPENSES).income(PRODUCT_A_INCOME).product(PRODUCT_A).build()
         );
 
@@ -70,7 +70,7 @@ class BalanceControllerTest {
 
     @Test
     void getBalancesByProductPerShop() throws Exception {
-        when(balanceService.getBalancesByProductPerShop(PRODUCT_B.getId(), null, null)).thenReturn(List.of(
+        given(balanceService.getBalancesByProductPerShop(PRODUCT_B.getId(), null, null)).willReturn(List.of(
                 Balance.builder().spent(PACK1A_SALES_EXPENSES).income(PACK1A_SALES_INCOME).product(PRODUCT_A).shop(SHOP1).build(),
                 Balance.builder().spent(PACK2B_SALES_EXPENSES).income(PACK2B_SALES_INCOME).product(PRODUCT_B).shop(SHOP2).build()
         ));
@@ -89,7 +89,7 @@ class BalanceControllerTest {
 
     @Test
     void getBalancesPerShop() throws Exception {
-        when(balanceService.getBalancesPerShop(null, null)).thenReturn(List.of(
+        given(balanceService.getBalancesPerShop(null, null)).willReturn(List.of(
                 Balance.builder().spent(SHOP1_EXPENSES).income(SHOP1_INCOME).shop(SHOP1).build(),
                 Balance.builder().spent(SHOP2_EXPENSES).income(SHOP2_INCOME).shop(SHOP2).build()
         ));
@@ -106,8 +106,8 @@ class BalanceControllerTest {
 
     @Test
     void getBalanceByShop() throws Exception {
-        when(balanceService.getBalanceByShop(SHOP1.getId(), null, null))
-                .thenReturn(Balance.builder().spent(SHOP1_EXPENSES).income(SHOP1_INCOME).shop(SHOP1).build());
+        given(balanceService.getBalanceByShop(SHOP1.getId(), null, null))
+                .willReturn(Balance.builder().spent(SHOP1_EXPENSES).income(SHOP1_INCOME).shop(SHOP1).build());
 
         mockMvc.perform(get("/balance/shop/" + SHOP1.getId()))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ class BalanceControllerTest {
 
     @Test
     void getBalancesByShopPerProduct() throws Exception {
-        when(balanceService.getBalancesByShopPerProduct(SHOP2.getId(), null, null)).thenReturn(
+        given(balanceService.getBalancesByShopPerProduct(SHOP2.getId(), null, null)).willReturn(
                 List.of(
                         Balance.builder()
                                 .spent(PACK2A_SALES_EXPENSES)
@@ -149,8 +149,8 @@ class BalanceControllerTest {
 
     @Test
     void getBalanceByProductAndShop() throws Exception {
-        when(balanceService.getBalanceByProductAndShop(PRODUCT_B.getId(), SHOP2.getId(), null, null))
-                .thenReturn(
+        given(balanceService.getBalanceByProductAndShop(PRODUCT_B.getId(), SHOP2.getId(), null, null))
+                .willReturn(
                         Balance.builder()
                                 .spent(PACK2B_SALES_EXPENSES)
                                 .income(PACK2B_SALES_INCOME)
@@ -169,7 +169,7 @@ class BalanceControllerTest {
 
     @Test
     void getBalancesPerProductPerShop() throws Exception {
-        when(balanceService.getBalancesPerProductPerShop(null, null)).thenReturn(
+        given(balanceService.getBalancesPerProductPerShop(null, null)).willReturn(
                 List.of(
                         Balance.builder()
                                 .spent(PACK1A_SALES_EXPENSES)
