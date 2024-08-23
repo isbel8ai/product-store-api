@@ -1,11 +1,6 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://${PSA_POSTGRES_HOST}:${PSA_POSTGRES_PORT}/${PSA_POSTGRES_DB}
-    username: ${PSA_POSTGRES_USER}
-    password: ${PSA_POSTGRES_PASS}
+  profiles:
+    active: prod
 
-  jpa:
-    generate-ddl: true
-    hibernate.ddl-auto: update
-    properties:
-      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yml
