@@ -1,17 +1,17 @@
 package com.i8ai.training.store.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Date;
 
+@UtilityClass
 public class DateTimeUtils {
 
-    private DateTimeUtils() {
-    }
-
-    public static Date dateOrMin(Date start) {
+    public Date dateOrMin(Date start) {
         return start != null ? start : new Date(0);
     }
 
-    public static Date dateOrMax(Date end) {
+    public Date dateOrMax(Date end) {
         return end != null ? end : new Date();
     }
 }

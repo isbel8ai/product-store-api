@@ -1,7 +1,7 @@
-package com.i8ai.training.store.api;
+package com.i8ai.training.store.rest;
 
-import com.i8ai.training.store.model.Pack;
-import com.i8ai.training.store.service.PackService;
+import com.i8ai.training.store.model.Lot;
+import com.i8ai.training.store.service.LotService;
 import com.i8ai.training.store.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +20,22 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(PackController.class)
-class PackControllerTest {
+@WebMvcTest(LotController.class)
+class LotControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private PackService packService;
+    private LotService lotService;
 
     @Test
-    void testGetPacks() throws Exception {
-        List<Pack> packs = Arrays.asList(Pack.builder().build(), Pack.builder().build());
-        given(packService.getPacks(null, null, null, null)).willReturn(packs);
+    void testGetLots() throws Exception {
+        List<Lot> lots = Arrays.asList(Lot.builder().build(), Lot.builder().build());
 
-        mockMvc.perform(get("/pack"))
+        given(lotService.getLots(null, null, null)).willReturn(lots);
+
+        mockMvc.perform(get("/lot"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
@@ -43,24 +44,24 @@ class PackControllerTest {
     }
 
     @Test
-    void testRegisterPack() throws Exception {
-        Pack newPack = Pack.builder().build();
-        Pack savedPack = Pack.builder().build();
-        given(packService.registerPack(any(Pack.class))).willReturn(savedPack);
+    void testRegisterLot() throws Exception {
+        Lot newLot = Lot.builder().build();
+        Lot savedLot = Lot.builder().build();
+        given(lotService.registerLot(any(Lot.class))).willReturn(savedLot);
 
-        mockMvc.perform(post("/pack")
+        mockMvc.perform(post("/lot")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(newPack)))
+                        .content(TestUtils.asJsonString(newLot)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists());
     }
 
     @Test
-    void testDeletePack() throws Exception {
-        doNothing().when(packService).deletePack(anyLong());
+    void testDeleteLot() throws Exception {
+        doNothing().when(lotService).deleteLot(anyLong());
 
-        mockMvc.perform(delete("/pack/1"))
+        mockMvc.perform(delete("/lot/1"))
                 .andExpect(status().isOk());
     }
 }

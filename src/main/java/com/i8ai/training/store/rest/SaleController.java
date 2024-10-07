@@ -1,4 +1,4 @@
-package com.i8ai.training.store.api;
+package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.model.Sale;
 import com.i8ai.training.store.service.SaleService;

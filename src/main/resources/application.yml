@@ -1,6 +1,11 @@
 spring:
-  profiles:
-    active: prod
+  application:
+    name: product-store-api
 
   liquibase:
-    change-log: classpath:/db/changelog/db.changelog-master.yml
+    change-log: classpath:/db/changelog-master.xml
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
+  profiles:
+    active: prod

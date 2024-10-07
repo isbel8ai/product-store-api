@@ -1,7 +1,7 @@
-package com.i8ai.training.store.api;
+package com.i8ai.training.store.rest;
 
-import com.i8ai.training.store.model.Lot;
-import com.i8ai.training.store.service.LotService;
+import com.i8ai.training.store.model.Sale;
+import com.i8ai.training.store.service.SaleService;
 import com.i8ai.training.store.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,48 +20,47 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(LotController.class)
-class LotControllerTest {
+@WebMvcTest(SaleController.class)
+class SaleControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private LotService lotService;
+    private SaleService saleService;
 
     @Test
-    void testGetLots() throws Exception {
-        List<Lot> lots = Arrays.asList(Lot.builder().build(), Lot.builder().build());
+    void testGetSales() throws Exception {
+        List<Sale> sales = Arrays.asList(Sale.builder().build(), Sale.builder().build());
+        given(saleService.getSales(null, null, null, null)).willReturn(sales);
 
-        given(lotService.getLots(null, null, null)).willReturn(lots);
-
-        mockMvc.perform(get("/lot"))
+        mockMvc.perform(get("/sale"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0]").exists())
                 .andExpect(jsonPath("$[1]").exists());
     }
 
     @Test
-    void testRegisterLot() throws Exception {
-        Lot newLot = Lot.builder().build();
-        Lot savedLot = Lot.builder().build();
-        given(lotService.registerLot(any(Lot.class))).willReturn(savedLot);
+    void testRegisterSale() throws Exception {
+        Sale newSale = Sale.builder().build();
+        Sale savedSale = Sale.builder().build();
+        given(saleService.registerSale(any(Sale.class))).willReturn(savedSale);
 
-        mockMvc.perform(post("/lot")
+        mockMvc.perform(post("/sale")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(newLot)))
+                        .content(TestUtils.asJsonString(newSale)))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());
     }
 
     @Test
-    void testDeleteLot() throws Exception {
-        doNothing().when(lotService).deleteLot(anyLong());
+    void testDeleteSale() throws Exception {
+        doNothing().when(saleService).deleteSale(anyLong());
 
-        mockMvc.perform(delete("/lot/1"))
+        mockMvc.perform(delete("/sale/1"))
                 .andExpect(status().isOk());
     }
 }

@@ -1,7 +1,7 @@
-package com.i8ai.training.store.api;
+package com.i8ai.training.store.rest;
 
-import com.i8ai.training.store.model.Sale;
-import com.i8ai.training.store.service.SaleService;
+import com.i8ai.training.store.model.Pack;
+import com.i8ai.training.store.service.PackService;
 import com.i8ai.training.store.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,47 +20,47 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(SaleController.class)
-class SaleControllerTest {
+@WebMvcTest(PackController.class)
+class PackControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private SaleService saleService;
+    private PackService packService;
 
     @Test
-    void testGetSales() throws Exception {
-        List<Sale> sales = Arrays.asList(Sale.builder().build(), Sale.builder().build());
-        given(saleService.getSales(null, null, null, null)).willReturn(sales);
+    void testGetPacks() throws Exception {
+        List<Pack> packs = Arrays.asList(Pack.builder().build(), Pack.builder().build());
+        given(packService.getPacks(null, null, null, null)).willReturn(packs);
 
-        mockMvc.perform(get("/sale"))
+        mockMvc.perform(get("/pack"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0]").exists())
                 .andExpect(jsonPath("$[1]").exists());
     }
 
     @Test
-    void testRegisterSale() throws Exception {
-        Sale newSale = Sale.builder().build();
-        Sale savedSale = Sale.builder().build();
-        given(saleService.registerSale(any(Sale.class))).willReturn(savedSale);
+    void testRegisterPack() throws Exception {
+        Pack newPack = Pack.builder().build();
+        Pack savedPack = Pack.builder().build();
+        given(packService.registerPack(any(Pack.class))).willReturn(savedPack);
 
-        mockMvc.perform(post("/sale")
+        mockMvc.perform(post("/pack")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(newSale)))
+                        .content(TestUtils.asJsonString(newPack)))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists());
     }
 
     @Test
-    void testDeleteSale() throws Exception {
-        doNothing().when(saleService).deleteSale(anyLong());
+    void testDeletePack() throws Exception {
+        doNothing().when(packService).deletePack(anyLong());
 
-        mockMvc.perform(delete("/sale/1"))
+        mockMvc.perform(delete("/pack/1"))
                 .andExpect(status().isOk());
     }
 }
