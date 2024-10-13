@@ -1,0 +1,29 @@
+services:
+  db:
+    image: gvenzl/oracle-xe
+    restart: unless-stopped
+    environment:
+      ORACLE_DATABASE : ${PSA_ORACLE_DB}
+      ORACLE_PASSWORD: ${PSA_ORACLE_PASS}
+    ports:
+      - ${PSA_ORACLE_PORT}:1521
+    volumes:
+      - psa-oracle-data:/opt/oracle/oradata
+
+  app:
+    build:
+      context: .
+    restart: unless-stopped
+    ports:
+      - ${PSA_APP_PORT}:8080
+    depends_on:
+      - db
+    environment:
+      PSA_ORACLE_HOST: db
+      PSA_ORACLE_PORT: 1521
+      PSA_ORACLE_DB: ${PSA_ORACLE_DB}
+      PSA_ORACLE_USER: ${PSA_ORACLE_USER}
+      PSA_ORACLE_PASS: ${PSA_ORACLE_PASS}
+
+volumes:
+  psa-oracle-data:

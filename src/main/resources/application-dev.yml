@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:./${spring.application.name};MODE=PostgreSQL;
+    url: jdbc:h2:./${spring.application.name};MODE=Oracle
     username: sa
     password:
 

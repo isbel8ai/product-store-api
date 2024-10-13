@@ -9,6 +9,6 @@ RUN mvn package -DskipTests
 # Create the runtime image
 FROM openjdk:17-ea-alpine
 WORKDIR /app
-COPY --from=builder /app/target/product-store-api-*.jar ./app.jar
+COPY --from=builder /app/target/*.jar ./app.jar
 EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]

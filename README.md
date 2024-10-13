@@ -56,10 +56,10 @@ Management system for a local shop business. It helps owners to supervise and co
 - Create a .env file with the required environment variables
 
       # Port to map the database server out of docker network
-      PSA_POSTGRES_PORT=5432
-      PSA_POSTGRES_DB=<database_name>
-      PSA_POSTGRES_USER=<username>
-      PSA_POSTGRES_PASS=<password>
+      PSA_ORACLE_PORT=1521
+      PSA_ORACLE_DB=<database_name>
+      PSA_ORACLE_USER=<username>
+      PSA_ORACLE_PASS=<password>
       # Port to map the application out of docker network
       PSA_APP_PORT=8080
 
