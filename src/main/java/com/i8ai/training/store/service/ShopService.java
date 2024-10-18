@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface ShopService {
 
-    List<Shop> getAllShops();
-
-    Shop addShop(Shop newShop);
+    Shop createShop(Shop newShop);
 
     Shop getShop(Long shopId);
+
+    List<Shop> getAllShops();
 
     Shop replaceShop(Long shopId, Shop modifiedShop);
 

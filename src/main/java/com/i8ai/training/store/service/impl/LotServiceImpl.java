@@ -5,7 +5,7 @@ import com.i8ai.training.store.model.Lot;
 import com.i8ai.training.store.repository.LotRepository;
 import com.i8ai.training.store.service.LotService;
 import com.i8ai.training.store.util.DateTimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -13,22 +13,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class LotServiceImpl implements LotService {
 
     private final LotRepository lotRepository;
 
-    @Autowired
-    public LotServiceImpl(LotRepository lotRepository) {
-        this.lotRepository = lotRepository;
-    }
-
     @Override
     public List<Lot> getLots(Long productId, Date start, Date end) {
         return productId == null ?
-                lotRepository.findAllByReceivedBetween(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrMax(end)) :
-                lotRepository.findAllByReceivedBetweenAndProductId(
+                lotRepository.findAllByReceivedAtBetween(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end)) :
+                lotRepository.findAllByReceivedAtBetweenAndProductId(
                         DateTimeUtils.dateOrMin(start),
-                        DateTimeUtils.dateOrMax(end),
+                        DateTimeUtils.dateOrNow(end),
                         productId
                 );
     }
@@ -51,5 +47,10 @@ public class LotServiceImpl implements LotService {
     @Override
     public Double getProductReceivedAmount(Long productId) {
         return Optional.ofNullable(lotRepository.getAmountArrivedByProductId(productId)).orElse(0.0);
+    }
+
+    @Override
+    public void updateDeliveredAmount(Long lotId) {
+        lotRepository.updateDeliveredAmountById(lotId);
     }
 }

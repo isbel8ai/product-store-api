@@ -1,16 +1,16 @@
 package com.i8ai.training.store.service;
 
 import com.i8ai.training.store.model.Sale;
+import com.i8ai.training.store.rest.dto.SaleDto;
 
 import java.util.Date;
 import java.util.List;
 
 public interface SaleService {
+
+    Sale registerSale(SaleDto saleData);
+
     List<Sale> getSales(Date start, Date end, Long productId, Long shopId);
-
-    Sale registerSale(Sale newSale);
-
-    void deleteSale(Long saleId);
 
     Double getSoldAmountByProductAndShop(Long productId, Long shopId);
 

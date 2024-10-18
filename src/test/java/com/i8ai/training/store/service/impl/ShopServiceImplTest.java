@@ -36,8 +36,8 @@ class ShopServiceImplTest {
     }
 
     @Test
-    void addShop() {
-        assertDoesNotThrow(() -> shopService.addShop(SHOP1));
+    void createShop() {
+        assertDoesNotThrow(() -> shopService.createShop(SHOP1));
     }
 
     @Test

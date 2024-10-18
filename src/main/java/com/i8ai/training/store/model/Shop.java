@@ -24,6 +24,6 @@ public class Shop {
     @Column(nullable = false)
     private String address;
 
+    @Column
     private String description;
-
 }

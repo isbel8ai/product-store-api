@@ -12,7 +12,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Lot {
+public class Offer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,25 +20,17 @@ public class Lot {
 
     @NotNull
     @Column(nullable = false)
-    private Double amount;
+    private Double price;
+
 
     @NotNull
     @Column(nullable = false)
-    private Double cost;
-
-    @NotNull
-    @Column(nullable = false)
-    private Date receivedAt;
+    private Date createdAt;
 
     @Column
-    private Double deliveredAmount;
+    private Double discount;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Product product;
-
-    public Double getCurrentAmount() {
-        if (deliveredAmount == null) return amount;
-        return amount - deliveredAmount;
-    }
+    private Pack pack;
 }

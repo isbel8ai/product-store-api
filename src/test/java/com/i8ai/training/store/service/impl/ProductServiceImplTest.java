@@ -39,15 +39,15 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void addProductWithExistingCode() {
+    void createProductWithExistingCode() {
         when(productRepositoryMock.save(any())).thenThrow(DataIntegrityViolationException.class);
 
-        assertThrows(NotValidElementDataException.class, () -> productService.addProduct(PRODUCT_A));
+        assertThrows(NotValidElementDataException.class, () -> productService.createProduct(PRODUCT_A));
     }
 
     @Test
-    void addProduct() {
-        assertDoesNotThrow(() -> productService.addProduct(PRODUCT_B));
+    void createProduct() {
+        assertDoesNotThrow(() -> productService.createProduct(PRODUCT_B));
     }
 
     @Test

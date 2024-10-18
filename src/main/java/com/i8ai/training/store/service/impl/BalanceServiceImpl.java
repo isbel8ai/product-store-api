@@ -7,25 +7,21 @@ import com.i8ai.training.store.service.ProductService;
 import com.i8ai.training.store.service.SaleService;
 import com.i8ai.training.store.service.ShopService;
 import com.i8ai.training.store.service.data.Balance;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BalanceServiceImpl implements BalanceService {
 
     private final ShopService shopService;
-    private final ProductService productService;
-    private final SaleService saleService;
 
-    @Autowired
-    public BalanceServiceImpl(ShopService shopService, ProductService productService, SaleService saleService) {
-        this.shopService = shopService;
-        this.productService = productService;
-        this.saleService = saleService;
-    }
+    private final ProductService productService;
+
+    private final SaleService saleService;
 
     @Override
     public Balance getNetBalance(Date start, Date end) {

@@ -5,7 +5,8 @@ import com.i8ai.training.store.service.PackService;
 import com.i8ai.training.store.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,7 +21,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(PackController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class PackControllerTest {
 
     @Autowired
@@ -34,7 +36,7 @@ class PackControllerTest {
         List<Pack> packs = Arrays.asList(Pack.builder().build(), Pack.builder().build());
         given(packService.getPacks(null, null, null, null)).willReturn(packs);
 
-        mockMvc.perform(get("/pack"))
+        mockMvc.perform(get("/packs"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
@@ -48,7 +50,7 @@ class PackControllerTest {
         Pack savedPack = Pack.builder().build();
         given(packService.registerPack(any(Pack.class))).willReturn(savedPack);
 
-        mockMvc.perform(post("/pack")
+        mockMvc.perform(post("/packs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(newPack)))
                 .andExpect(status().isOk())
@@ -60,7 +62,7 @@ class PackControllerTest {
     void testDeletePack() throws Exception {
         doNothing().when(packService).deletePack(anyLong());
 
-        mockMvc.perform(delete("/pack/1"))
+        mockMvc.perform(delete("/packs/1"))
                 .andExpect(status().isOk());
     }
 }

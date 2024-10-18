@@ -5,21 +5,17 @@ import com.i8ai.training.store.error.NotValidElementDataException;
 import com.i8ai.training.store.model.Product;
 import com.i8ai.training.store.repository.ProductRepository;
 import com.i8ai.training.store.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
-    @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @Override
     public List<Product> getAllProducts() {
@@ -27,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addProduct(Product newProduct) {
+    public Product createProduct(Product newProduct) {
         try {
             return productRepository.save(newProduct);
         } catch (DataIntegrityViolationException e) {

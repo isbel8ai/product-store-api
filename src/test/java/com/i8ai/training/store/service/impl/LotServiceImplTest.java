@@ -32,7 +32,7 @@ class LotServiceImplTest {
 
     @Test
     void getLotsWithAllFilters() {
-        when(lotRepositoryMock.findAllByReceivedBetweenAndProductId(notNull(), notNull(), eq(PRODUCT_A_ID)))
+        when(lotRepositoryMock.findAllByReceivedAtBetweenAndProductId(notNull(), notNull(), eq(PRODUCT_A_ID)))
                 .thenReturn(List.of(LOT_A));
 
         List<Lot> lots = lotService.getLots(PRODUCT_A_ID, new Date(10), new Date(20));
@@ -42,7 +42,7 @@ class LotServiceImplTest {
 
     @Test
     void getLotsWithProductId() {
-        when(lotRepositoryMock.findAllByReceivedBetweenAndProductId(notNull(), notNull(), eq(PRODUCT_B_ID)))
+        when(lotRepositoryMock.findAllByReceivedAtBetweenAndProductId(notNull(), notNull(), eq(PRODUCT_B_ID)))
                 .thenReturn(List.of(LOT_B));
 
         List<Lot> lots = lotService.getLots(PRODUCT_B_ID, null, null);
@@ -52,7 +52,7 @@ class LotServiceImplTest {
 
     @Test
     void getLotsWithStartDateAndEndDate() {
-        when(lotRepositoryMock.findAllByReceivedBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
+        when(lotRepositoryMock.findAllByReceivedAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
 
         List<Lot> lots = lotService.getLots(null, new Date(10), new Date(25));
 
@@ -61,7 +61,7 @@ class LotServiceImplTest {
 
     @Test
     void getLotsWithEndDate() {
-        when(lotRepositoryMock.findAllByReceivedBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
+        when(lotRepositoryMock.findAllByReceivedAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
 
         List<Lot> lots = lotService.getLots(null, null, new Date(10));
 
@@ -70,7 +70,7 @@ class LotServiceImplTest {
 
     @Test
     void getLotsWithStartDate() {
-        when(lotRepositoryMock.findAllByReceivedBetween(notNull(), notNull())).thenReturn(List.of(LOT_B));
+        when(lotRepositoryMock.findAllByReceivedAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_B));
 
         List<Lot> lots = lotService.getLots(null, new Date(5), null);
 
@@ -79,7 +79,7 @@ class LotServiceImplTest {
 
     @Test
     void getAllLots() {
-        when(lotRepositoryMock.findAllByReceivedBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
+        when(lotRepositoryMock.findAllByReceivedAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
 
         List<Lot> lots = lotService.getLots(null, null, null);
 

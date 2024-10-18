@@ -3,6 +3,8 @@ package com.i8ai.training.store.service.impl;
 import com.i8ai.training.store.error.NotValidAmountException;
 import com.i8ai.training.store.model.Sale;
 import com.i8ai.training.store.repository.SaleRepository;
+import com.i8ai.training.store.rest.dto.SaleDto;
+import com.i8ai.training.store.service.OfferService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +24,9 @@ import static org.mockito.Mockito.when;
 class SaleServiceImplTest {
 
     @Mock
+    private OfferService offerServiceMock;
+
+    @Mock
     private SaleRepository saleRepositoryMock;
 
     @InjectMocks
@@ -29,7 +34,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesWithAllFilters() {
-        when(saleRepositoryMock.findAllByRegisteredBetweenAndPackLotProductIdAndPackShopId(
+        when(saleRepositoryMock.findAllByRegisteredAtBetweenAndOfferPackLotProductIdAndOfferPackShopId(
                 new Date(35), new Date(40), PRODUCT_A_ID, SHOP1_ID)
         ).thenReturn(List.of(SALE_1A35, SALE_1A40));
 
@@ -40,7 +45,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesWithTimeFilter() {
-        when(saleRepositoryMock.findAllByRegisteredBetween(new Date(45), new Date(50)))
+        when(saleRepositoryMock.findAllByRegisteredAtBetween(new Date(45), new Date(50)))
                 .thenReturn(List.of(SALE_1A35, SALE_1A40));
 
         List<Sale> sales = saleService.getSales(new Date(45), new Date(50), null, null);
@@ -50,7 +55,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesWithShopFilter() {
-        when(saleRepositoryMock.findAllByRegisteredBetweenAndPackShopId(any(), any(), eq(SHOP2_ID)))
+        when(saleRepositoryMock.findAllByRegisteredAtBetweenAndOfferPackShopId(any(), any(), eq(SHOP2_ID)))
                 .thenReturn(List.of(SALE_2A55, SALE_2A60, SALE_2B65, SALE_2B70));
 
         List<Sale> sales = saleService.getSales(null, null, null, SHOP2_ID);
@@ -60,7 +65,7 @@ class SaleServiceImplTest {
 
     @Test
     void getSalesWithProductFilter() {
-        when(saleRepositoryMock.findAllByRegisteredBetweenAndPackLotProductId(any(), any(), eq(PRODUCT_B_ID)))
+        when(saleRepositoryMock.findAllByRegisteredAtBetweenAndOfferPackLotProductId(any(), any(), eq(PRODUCT_B_ID)))
                 .thenReturn(List.of(SALE_1B45, SALE_1B50, SALE_2B65, SALE_2B70));
 
         List<Sale> sales = saleService.getSales(null, null, PRODUCT_B_ID, null);
@@ -70,7 +75,7 @@ class SaleServiceImplTest {
 
     @Test
     void getAllSales() {
-        when(saleRepositoryMock.findAllByRegisteredBetween(any(), any())).thenReturn(
+        when(saleRepositoryMock.findAllByRegisteredAtBetween(any(), any())).thenReturn(
                 List.of(SALE_1A35, SALE_1A40, SALE_1B45, SALE_1B50, SALE_2A55, SALE_2A60, SALE_2B65, SALE_2B70)
         );
 
@@ -81,31 +86,27 @@ class SaleServiceImplTest {
 
     @Test
     void registerSaleWithNotValidAmount() {
-        when(saleRepositoryMock.getSoldAmountByPackId(PACK1A_ID)).thenReturn(0.0);
+        SaleDto saleDto = new SaleDto(null, OFFER1A_ID, -10.0, null);
 
-        Sale sale = new Sale(null, new Date(20), -10.0, 8.0, PACK1A);
-
-        assertThrows(NotValidAmountException.class, () -> saleService.registerSale(sale));
+        assertThrows(NotValidAmountException.class, () -> saleService.registerSale(saleDto));
     }
 
     @Test
     void registerSaleWithNotAvailableAmount() {
-        when(saleRepositoryMock.getSoldAmountByPackId(PACK1A_ID)).thenReturn(PACK1A_AMOUNT);
+        when(offerServiceMock.getOffer(OFFER1A_ID)).thenReturn(OFFER1A);
+        SaleDto saleDto = new SaleDto(null, OFFER1A_ID, PACK1A_AMOUNT + 1, null);
 
-        assertThrows(NotValidAmountException.class, () -> saleService.registerSale(SALE_1A40));
+        assertThrows(NotValidAmountException.class, () -> saleService.registerSale(saleDto));
     }
 
     @Test
     void registerSale() {
-        when(saleRepositoryMock.getSoldAmountByPackId(PACK1B_ID)).thenReturn(0.0);
+        when(offerServiceMock.getOffer(OFFER1A_ID)).thenReturn(OFFER1A);
+        SaleDto saleDto = new SaleDto(null, OFFER1A_ID, SALE_1A40_AMOUNT, null);
 
-        assertDoesNotThrow(() -> saleService.registerSale(SALE_1B45));
+        assertDoesNotThrow(() -> saleService.registerSale(saleDto));
     }
 
-    @Test
-    void deleteSale() {
-        assertDoesNotThrow(() -> saleService.deleteSale(SALE_1A35.getId()));
-    }
 
     @Test
     void getSoldAmountByProductAndShop() {

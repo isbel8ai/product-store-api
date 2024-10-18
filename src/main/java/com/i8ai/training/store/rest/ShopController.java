@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/shop")
+@RequestMapping("shops")
 public class ShopController {
 
     private final ShopService shopService;
@@ -28,20 +28,20 @@ public class ShopController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Shop addShop(@Valid @RequestBody Shop newShop) {
-        return shopService.addShop(newShop);
+        return shopService.createShop(newShop);
     }
 
-    @GetMapping("/{shopId}")
+    @GetMapping("{shopId}")
     public Shop getShop(@PathVariable Long shopId) {
         return shopService.getShop(shopId);
     }
 
-    @PutMapping(value = "/{shopId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "{shopId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Shop replaceShop(@PathVariable Long shopId, @Valid @RequestBody Shop modifiedShop) {
         return shopService.replaceShop(shopId, modifiedShop);
     }
 
-    @DeleteMapping("/{shopId}")
+    @DeleteMapping("{shopId}")
     public void deleteShop(@PathVariable Long shopId) {
         shopService.deleteShop(shopId);
     }

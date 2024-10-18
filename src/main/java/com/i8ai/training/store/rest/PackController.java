@@ -2,7 +2,7 @@ package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.model.Pack;
 import com.i8ai.training.store.service.PackService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,21 +10,17 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pack")
+@RequiredArgsConstructor
+@RequestMapping("packs")
 public class PackController {
     private final PackService packService;
-
-    @Autowired
-    public PackController(PackService packService) {
-        this.packService = packService;
-    }
 
     @GetMapping
     public List<Pack> getPacks(@RequestParam(required = false) Long productId,
                                @RequestParam(required = false) Long shopId,
-                               @RequestParam(required = false) Date startDate,
-                               @RequestParam(required = false) Date endDate) {
-        return packService.getPacks(productId, shopId, startDate, endDate);
+                               @RequestParam(required = false) Date start,
+                               @RequestParam(required = false) Date end) {
+        return packService.getPacks(productId, shopId, start, end);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -32,7 +28,7 @@ public class PackController {
         return packService.registerPack(newPack);
     }
 
-    @DeleteMapping(value = "/{packId}")
+    @DeleteMapping(value = "{packId}")
     public void deletePack(@PathVariable Long packId) {
         packService.deletePack(packId);
     }

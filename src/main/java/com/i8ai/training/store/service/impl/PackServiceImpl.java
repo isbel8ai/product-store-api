@@ -7,7 +7,7 @@ import com.i8ai.training.store.repository.PackRepository;
 import com.i8ai.training.store.service.LotService;
 import com.i8ai.training.store.service.PackService;
 import com.i8ai.training.store.util.DateTimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,49 +15,58 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PackServiceImpl implements PackService {
 
     private final LotService lotService;
 
     private final PackRepository packRepository;
 
-    @Autowired
-    public PackServiceImpl(PackRepository packRepository, LotService lotService) {
-        this.packRepository = packRepository;
-        this.lotService = lotService;
-    }
-
-    @Override
-    public List<Pack> getPacks(Long productId, Long shopId, Date start, Date end) {
-        start = DateTimeUtils.dateOrMin(start);
-        end = DateTimeUtils.dateOrMax(end);
-
-        if (productId == null) {
-            if (shopId == null) {
-                return packRepository.findAllByDeliveredBetween(start, end);
-            } else {
-                return packRepository.findAllByDeliveredBetweenAndShopId(start, end, shopId);
-            }
-        }
-
-        if (shopId == null) {
-            return packRepository.findAllByDeliveredBetweenAndLotProductId(start, end, productId);
-        } else {
-            return packRepository.findAllByDeliveredBetweenAndLotProductIdAndShopId(start, end, productId, shopId);
-        }
-    }
-
     @Override
     public Pack registerPack(Pack newPack) {
-        if (newPack.getAmount() <= 0.0 || newPack.getAmount() > getCurrentLotAmount(newPack.getLot().getId())) {
+        if (newPack.getAmount() <= 0.0 || newPack.getAmount() > newPack.getLot().getCurrentAmount()) {
             throw new NotValidAmountException();
         }
+
+        lotService.updateDeliveredAmount(newPack.getLot().getId());
+
         return packRepository.save(newPack);
     }
 
     @Override
     public Pack getPack(Long packId) {
         return packRepository.findById(packId).orElseThrow(ElementNotFoundException::new);
+    }
+
+    @Override
+    public Pack getActivePack(Long shopId, Long productId) {
+        return packRepository.findAvailableByShopIdAndProductId(shopId, productId)
+                .orElseThrow(ElementNotFoundException::new);
+    }
+
+    @Override
+    public List<Pack> getPacks(Long productId, Long shopId, Date start, Date end) {
+        start = DateTimeUtils.dateOrMin(start);
+        end = DateTimeUtils.dateOrNow(end);
+
+        if (productId == null) {
+            if (shopId == null) {
+                return packRepository.findAllByDeliveredAtBetween(start, end);
+            } else {
+                return packRepository.findAllByDeliveredAtBetweenAndShopId(start, end, shopId);
+            }
+        }
+
+        if (shopId == null) {
+            return packRepository.findAllByDeliveredAtBetweenAndLotProductId(start, end, productId);
+        } else {
+            return packRepository.findAllByDeliveredAtBetweenAndLotProductIdAndShopId(start, end, productId, shopId);
+        }
+    }
+
+    @Override
+    public void updateSoldAmount(Long packId) {
+        packRepository.updateSoldAmountById(packId);
     }
 
     @Override
@@ -73,15 +82,5 @@ public class PackServiceImpl implements PackService {
     @Override
     public Double getProductDeliveredToShopAmount(Long productId, Long shopId) {
         return Optional.ofNullable(packRepository.getDeliveredAmountByProductIdAndShopId(productId, shopId)).orElse(0.0);
-    }
-
-    private Double getCurrentLotAmount(Long lotId) {
-        Double initLotAmount = lotService.getLot(lotId).getAmount();
-        Double alreadyDeliveredLotAmount = getProductDeliveredAmountFromLot(lotId);
-        return initLotAmount - alreadyDeliveredLotAmount;
-    }
-
-    private Double getProductDeliveredAmountFromLot(Long lotId) {
-        return Optional.ofNullable(packRepository.getDeliveredAmountByLotId(lotId)).orElse(0.0);
     }
 }

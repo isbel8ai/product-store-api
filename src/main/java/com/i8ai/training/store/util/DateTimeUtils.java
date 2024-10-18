@@ -7,11 +7,11 @@ import java.util.Date;
 @UtilityClass
 public class DateTimeUtils {
 
-    public Date dateOrMin(Date start) {
-        return start != null ? start : new Date(0);
+    public Date dateOrMin(Date date) {
+        return date != null ? date : new Date(0);
     }
 
-    public Date dateOrMax(Date end) {
-        return end != null ? end : new Date();
+    public Date dateOrNow(Date date) {
+        return date != null ? date : new Date();
     }
 }

@@ -4,33 +4,24 @@ import com.i8ai.training.store.model.Product;
 import com.i8ai.training.store.model.Shop;
 import com.i8ai.training.store.service.*;
 import com.i8ai.training.store.service.data.Existence;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ExistenceServiceImpl implements ExistenceService {
 
     private final ProductService productService;
-    private final ShopService shopService;
-    private final LotService lotService;
-    private final PackService packService;
-    private final SaleService saleService;
 
-    @Autowired
-    public ExistenceServiceImpl(
-            ProductService productService,
-            ShopService shopService,
-            LotService lotService,
-            PackService packService,
-            SaleService saleService) {
-        this.productService = productService;
-        this.shopService = shopService;
-        this.lotService = lotService;
-        this.packService = packService;
-        this.saleService = saleService;
-    }
+    private final ShopService shopService;
+
+    private final LotService lotService;
+
+    private final PackService packService;
+
+    private final SaleService saleService;
 
     @Override
     public List<Existence> getAllProductsExistenceInMain() {

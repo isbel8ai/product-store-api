@@ -5,7 +5,8 @@ import com.i8ai.training.store.service.ShopService;
 import com.i8ai.training.store.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,7 +21,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ShopController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class ShopControllerTest {
 
     @Autowired
@@ -34,7 +36,7 @@ class ShopControllerTest {
         List<Shop> shops = Arrays.asList(Shop.builder().build(), Shop.builder().build());
         given(shopService.getAllShops()).willReturn(shops);
 
-        mockMvc.perform(get("/shop"))
+        mockMvc.perform(get("/shops"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").isArray())
@@ -46,9 +48,9 @@ class ShopControllerTest {
     void testAddShop() throws Exception {
         Shop newShop = Shop.builder().build();
         Shop savedShop = Shop.builder().build();
-        given(shopService.addShop(any(Shop.class))).willReturn(savedShop);
+        given(shopService.createShop(any(Shop.class))).willReturn(savedShop);
 
-        mockMvc.perform(post("/shop")
+        mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(newShop)))
                 .andExpect(status().isOk())
@@ -61,7 +63,7 @@ class ShopControllerTest {
         Shop shop = Shop.builder().build();
         given(shopService.getShop(anyLong())).willReturn(shop);
 
-        mockMvc.perform(get("/shop/1"))
+        mockMvc.perform(get("/shops/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());
@@ -72,7 +74,7 @@ class ShopControllerTest {
         Shop modifiedShop = Shop.builder().build();
         given(shopService.replaceShop(anyLong(), any(Shop.class))).willReturn(modifiedShop);
 
-        mockMvc.perform(put("/shop/1")
+        mockMvc.perform(put("/shops/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(modifiedShop)))
                 .andExpect(status().isOk())
@@ -84,7 +86,7 @@ class ShopControllerTest {
     void testDeleteShop() throws Exception {
         doNothing().when(shopService).deleteShop(anyLong());
 
-        mockMvc.perform(delete("/shop/1"))
+        mockMvc.perform(delete("/shops/1"))
                 .andExpect(status().isOk());
     }
 }

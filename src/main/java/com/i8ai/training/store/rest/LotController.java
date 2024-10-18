@@ -2,7 +2,7 @@ package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.model.Lot;
 import com.i8ai.training.store.service.LotService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,15 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/lot")
+@RequiredArgsConstructor
+@RequestMapping(value = "lots")
 public class LotController {
 
     private final LotService lotService;
-
-    @Autowired
-    public LotController(LotService lotService) {
-        this.lotService = lotService;
-    }
 
     @GetMapping
     public List<Lot> getLots(@RequestParam(required = false) Long productId,
@@ -32,7 +28,7 @@ public class LotController {
         return lotService.registerLot(newLot);
     }
 
-    @DeleteMapping("/{lotId}")
+    @DeleteMapping("{lotId}")
     public void deleteLot(@PathVariable Long lotId) {
         lotService.deleteLot(lotId);
     }

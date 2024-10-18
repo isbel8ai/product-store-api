@@ -28,6 +28,6 @@ public class Product {
     @Column(nullable = false)
     private String measure;
 
+    @Column
     private String description;
-
 }

@@ -13,17 +13,21 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pack {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     @Column(nullable = false)
-    private Date delivered;
+    private Double amount;
 
     @NotNull
     @Column(nullable = false)
-    private Double amount;
+    private Date deliveredAt;
+
+    @Column
+    private Double soldAmount;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
@@ -32,4 +36,9 @@ public class Pack {
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     private Shop shop;
+
+    public Double getCurrentAmount() {
+        if (soldAmount == null) return amount;
+        return amount - soldAmount;
+    }
 }

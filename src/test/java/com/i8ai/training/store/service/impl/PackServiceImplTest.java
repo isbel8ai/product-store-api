@@ -4,7 +4,6 @@ import com.i8ai.training.store.error.ElementNotFoundException;
 import com.i8ai.training.store.error.NotValidAmountException;
 import com.i8ai.training.store.model.Pack;
 import com.i8ai.training.store.repository.PackRepository;
-import com.i8ai.training.store.service.LotService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,15 +25,13 @@ class PackServiceImplTest {
 
     @Mock
     private PackRepository packRepositoryMock;
-    @Mock
-    private LotService lotServiceMock;
 
     @InjectMocks
     private PackServiceImpl packService;
 
     @Test
     void getPacksWithAllFilters() {
-        when(packRepositoryMock.findAllByDeliveredBetweenAndLotProductIdAndShopId(
+        when(packRepositoryMock.findAllByDeliveredAtBetweenAndLotProductIdAndShopId(
                         new Date(3), new Date(6), PRODUCT_A_ID, SHOP2_ID
                 )
         ).thenReturn(List.of(PACK2A));
@@ -46,7 +43,7 @@ class PackServiceImplTest {
 
     @Test
     void getPacksWithShopFilter() {
-        when(packRepositoryMock.findAllByDeliveredBetweenAndShopId(any(), any(), eq((SHOP1_ID))))
+        when(packRepositoryMock.findAllByDeliveredAtBetweenAndShopId(any(), any(), eq((SHOP1_ID))))
                 .thenReturn(List.of(PACK1A, PACK1B));
 
         List<Pack> pack = packService.getPacks(null, SHOP1_ID, null, null);
@@ -56,7 +53,7 @@ class PackServiceImplTest {
 
     @Test
     void getPackWithProductFilter() {
-        when(packRepositoryMock.findAllByDeliveredBetweenAndLotProductId(any(), any(), eq(PRODUCT_B_ID)))
+        when(packRepositoryMock.findAllByDeliveredAtBetweenAndLotProductId(any(), any(), eq(PRODUCT_B_ID)))
                 .thenReturn(List.of(PACK1B, PACK2B));
 
         List<Pack> pack = packService.getPacks(PRODUCT_B_ID, null, null, null);
@@ -66,7 +63,7 @@ class PackServiceImplTest {
 
     @Test
     void getAllPack() {
-        when(packRepositoryMock.findAllByDeliveredBetween(any(), any()))
+        when(packRepositoryMock.findAllByDeliveredAtBetween(any(), any()))
                 .thenReturn(List.of(PACK1A, PACK1B, PACK2A, PACK2B));
 
         List<Pack> pack = packService.getPacks(null, null, null, null);
@@ -92,24 +89,20 @@ class PackServiceImplTest {
 
     @Test
     void registerPackWithNotValidAmount() {
-        Pack pack = new Pack(null, new Date(), -10.0, LOT_A, SHOP1);
+        Pack pack = Pack.builder().deliveredAt(new Date()).amount(-10.0).lot(LOT_A).shop(SHOP1).build();
 
         assertThrows(NotValidAmountException.class, () -> packService.registerPack(pack));
     }
 
     @Test
     void registerPackWithNotAvailableAmount() {
-        when(lotServiceMock.getLot(LOT_A_ID)).thenReturn(LOT_A);
-
-        Pack pack = new Pack(null, new Date(), LOT_A_AMOUNT + 10, LOT_A, SHOP1);
+        Pack pack = Pack.builder().deliveredAt(new Date()).amount(LOT_A_AMOUNT + 10).lot(LOT_A).shop(SHOP1).build();
 
         assertThrows(NotValidAmountException.class, () -> packService.registerPack(pack));
     }
 
     @Test
     void registerPack() {
-        when(lotServiceMock.getLot(LOT_B_ID)).thenReturn(LOT_B);
-
         assertDoesNotThrow(() -> packService.registerPack(PACK2B));
     }
 

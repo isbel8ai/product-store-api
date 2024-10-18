@@ -3,20 +3,16 @@ package com.i8ai.training.store.service.impl;
 import com.i8ai.training.store.model.Shop;
 import com.i8ai.training.store.repository.ShopRepository;
 import com.i8ai.training.store.service.ShopService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ShopServiceImpl implements ShopService {
 
     private final ShopRepository shopRepository;
-
-    @Autowired
-    public ShopServiceImpl(ShopRepository shopRepository) {
-        this.shopRepository = shopRepository;
-    }
 
     @Override
     public List<Shop> getAllShops() {
@@ -24,7 +20,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Shop addShop(Shop newShop) {
+    public Shop createShop(Shop newShop) {
         return shopRepository.save(newShop);
     }
 

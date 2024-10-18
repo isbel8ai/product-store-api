@@ -5,7 +5,8 @@ import com.i8ai.training.store.service.LotService;
 import com.i8ai.training.store.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,7 +21,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(LotController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class LotControllerTest {
 
     @Autowired
@@ -35,7 +37,7 @@ class LotControllerTest {
 
         given(lotService.getLots(null, null, null)).willReturn(lots);
 
-        mockMvc.perform(get("/lot"))
+        mockMvc.perform(get("/lots"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
@@ -49,7 +51,7 @@ class LotControllerTest {
         Lot savedLot = Lot.builder().build();
         given(lotService.registerLot(any(Lot.class))).willReturn(savedLot);
 
-        mockMvc.perform(post("/lot")
+        mockMvc.perform(post("/lots")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(newLot)))
                 .andExpect(status().isOk())
@@ -61,7 +63,7 @@ class LotControllerTest {
     void testDeleteLot() throws Exception {
         doNothing().when(lotService).deleteLot(anyLong());
 
-        mockMvc.perform(delete("/lot/1"))
+        mockMvc.perform(delete("/lots/1"))
                 .andExpect(status().isOk());
     }
 }

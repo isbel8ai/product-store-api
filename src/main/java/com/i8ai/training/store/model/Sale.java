@@ -13,13 +13,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Sale {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    @Column(nullable = false)
-    private Date registered;
 
     @NotNull
     @Column(nullable = false)
@@ -27,9 +24,9 @@ public class Sale {
 
     @NotNull
     @Column(nullable = false)
-    private Double price;
+    private Date registeredAt;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Pack pack;
+    private Offer offer;
 }
