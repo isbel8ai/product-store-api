@@ -26,7 +26,7 @@ public class Product {
 
     @NotBlank
     @Column(nullable = false)
-    private String measure;
+    private String measureUnit;
 
     @Column
     private String description;

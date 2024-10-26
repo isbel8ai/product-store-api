@@ -1,68 +1,88 @@
 package com.i8ai.training.store.rest;
 
+import com.i8ai.training.store.model.Lot;
 import com.i8ai.training.store.model.Pack;
-import com.i8ai.training.store.service.PackService;
-import com.i8ai.training.store.util.TestUtils;
+import com.i8ai.training.store.model.Shop;
+import com.i8ai.training.store.rest.dto.PackDto;
+import com.i8ai.training.store.util.TestConstants;
+import com.i8ai.training.store.util.TestHelper;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class PackControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    @MockBean
-    private PackService packService;
+    private final TestHelper helper;
 
-    @Test
-    void testGetPacks() throws Exception {
-        List<Pack> packs = Arrays.asList(Pack.builder().build(), Pack.builder().build());
-        given(packService.getPacks(null, null, null, null)).willReturn(packs);
+    private Shop shop1;
+    private Shop shop2;
+    private Lot lotA;
+    private Lot lotB;
 
-        mockMvc.perform(get("/packs"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0]").exists())
-                .andExpect(jsonPath("$[1]").exists());
+    @BeforeEach
+    void setUp() {
+        shop1 = helper.createShop1();
+        shop2 = helper.createShop2();
+        lotA = helper.createLotA(helper.createProductA());
+        lotB = helper.createLotB(helper.createProductB());
+    }
+
+    @AfterEach
+    void tearDown() {
+        helper.deleteAllPacks();
+        helper.deleteAllShops();
+        helper.deleteAllLots();
+        helper.deleteAllProducts();
     }
 
     @Test
     void testRegisterPack() throws Exception {
-        Pack newPack = Pack.builder().build();
-        Pack savedPack = Pack.builder().build();
-        given(packService.registerPack(any(Pack.class))).willReturn(savedPack);
+        Pack pack = Pack.builder().lot(lotA).shop(shop1).receivedAmount(TestConstants.PACK1A_AMOUNT).build();
 
         mockMvc.perform(post("/packs")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(newPack)))
+                        .content(helper.asJsonString(new PackDto(pack))))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists());
     }
 
     @Test
-    void testDeletePack() throws Exception {
-        doNothing().when(packService).deletePack(anyLong());
+    void testGetPacks() throws Exception {
+        helper.createPack1A(lotA, shop1);
+        helper.createPack1B(lotB, shop1);
+        helper.createPack2A(lotA, shop2);
+        helper.createPack2B(lotB, shop2);
 
-        mockMvc.perform(delete("/packs/1"))
+        mockMvc.perform(get("/packs"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0]").exists())
+                .andExpect(jsonPath("$[1]").exists())
+                .andExpect(jsonPath("$[2]").exists())
+                .andExpect(jsonPath("$[3]").exists());
+    }
+
+    @Test
+    void testDeletePack() throws Exception {
+        Pack pack = helper.createPack2B(lotB, shop2);
+
+        mockMvc.perform(delete("/packs/{packId}", pack.getId()))
                 .andExpect(status().isOk());
     }
 }

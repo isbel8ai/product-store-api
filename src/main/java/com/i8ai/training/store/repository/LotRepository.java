@@ -15,10 +15,11 @@ public interface LotRepository extends JpaRepository<Lot, Long> {
 
     List<Lot> findAllByReceivedAtBetweenAndProductId(Date start, Date end, Long productId);
 
-    @Query("select sum(l.amount) from Lot l where l.product.id = :productId")
+    @Query("select sum(l.acquiredAmount) from Lot l where l.product.id = :productId")
     Double getAmountArrivedByProductId(Long productId);
 
     @Modifying
-    @Query("update Lot o set o.deliveredAmount = (select sum(p.amount) from Pack p where p.lot.id = :lotId)")
+    @Query("update Lot o set o.deliveredAmount = (select sum(p.receivedAmount) from Pack p where p.lot.id = :lotId) " +
+            "where o.id = :lotId")
     void updateDeliveredAmountById(Long lotId);
 }

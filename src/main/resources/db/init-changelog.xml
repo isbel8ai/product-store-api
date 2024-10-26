@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1729251087452-1" author="Isbel">
+    <changeSet id="1729282690096-1" author="Isbel">
         <createTable tableName="lot">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_lot"/>
             </column>
-            <column name="amount" type="DOUBLE">
+            <column name="acquired_amount" type="DOUBLE">
                 <constraints nullable="false"/>
             </column>
-            <column name="cost" type="DOUBLE">
+            <column name="cost_per_unit" type="DOUBLE">
                 <constraints nullable="false"/>
             </column>
             <column name="received_at" type="DATETIME">
@@ -25,7 +25,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1729251087452-2" author="Isbel">
+    <changeSet id="1729282690096-2" author="Isbel">
         <createTable tableName="offer">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_offer"/>
@@ -42,12 +42,12 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1729251087452-3" author="Isbel">
+    <changeSet id="1729282690096-3" author="Isbel">
         <createTable tableName="pack">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_pack"/>
             </column>
-            <column name="amount" type="DOUBLE">
+            <column name="received_amount" type="DOUBLE">
                 <constraints nullable="false"/>
             </column>
             <column name="delivered_at" type="DATETIME">
@@ -62,7 +62,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1729251087452-4" author="Isbel">
+    <changeSet id="1729282690096-4" author="Isbel">
         <createTable tableName="product">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_product"/>
@@ -73,13 +73,13 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="measure" type="VARCHAR(255)">
+            <column name="measure_unit" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1729251087452-5" author="Isbel">
+    <changeSet id="1729282690096-5" author="Isbel">
         <createTable tableName="sale">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sale"/>
@@ -95,7 +95,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1729251087452-6" author="Isbel">
+    <changeSet id="1729282690096-6" author="Isbel">
         <createTable tableName="shop">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_shop"/>
@@ -109,26 +109,26 @@
             <column name="description" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1729251087452-7" author="Isbel">
+    <changeSet id="1729282690096-7" author="Isbel">
         <addUniqueConstraint columnNames="code" constraintName="uc_product_code" tableName="product"/>
     </changeSet>
-    <changeSet id="1729251087452-8" author="Isbel">
+    <changeSet id="1729282690096-8" author="Isbel">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="lot" constraintName="FK_LOT_ON_PRODUCT"
                                  referencedColumnNames="id" referencedTableName="product"/>
     </changeSet>
-    <changeSet id="1729251087452-9" author="Isbel">
+    <changeSet id="1729282690096-9" author="Isbel">
         <addForeignKeyConstraint baseColumnNames="pack_id" baseTableName="offer" constraintName="FK_OFFER_ON_PACK"
                                  referencedColumnNames="id" referencedTableName="pack"/>
     </changeSet>
-    <changeSet id="1729251087452-10" author="Isbel">
+    <changeSet id="1729282690096-10" author="Isbel">
         <addForeignKeyConstraint baseColumnNames="lot_id" baseTableName="pack" constraintName="FK_PACK_ON_LOT"
                                  referencedColumnNames="id" referencedTableName="lot"/>
     </changeSet>
-    <changeSet id="1729251087452-11" author="Isbel">
+    <changeSet id="1729282690096-11" author="Isbel">
         <addForeignKeyConstraint baseColumnNames="shop_id" baseTableName="pack" constraintName="FK_PACK_ON_SHOP"
                                  referencedColumnNames="id" referencedTableName="shop"/>
     </changeSet>
-    <changeSet id="1729251087452-12" author="Isbel">
+    <changeSet id="1729282690096-12" author="Isbel">
         <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="sale" constraintName="FK_SALE_ON_OFFER"
                                  referencedColumnNames="id" referencedTableName="offer"/>
     </changeSet>

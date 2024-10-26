@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productId).orElseThrow(ElementNotFoundException::new);
         product.setCode(modifiedProduct.getCode());
         product.setName(modifiedProduct.getName());
-        product.setMeasure(modifiedProduct.getMeasure());
+        product.setMeasureUnit(modifiedProduct.getMeasureUnit());
         product.setDescription(modifiedProduct.getDescription());
         try {
             productRepository.save(product);

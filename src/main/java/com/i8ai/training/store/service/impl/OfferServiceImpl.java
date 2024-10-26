@@ -33,7 +33,7 @@ public class OfferServiceImpl implements OfferService {
                 .pack(pack)
                 .price(offerDto.price())
                 .discount(offerDto.discount())
-                .createdAt(DateTimeUtils.dateOrNow(offerDto.created())).build();
+                .createdAt(DateTimeUtils.dateOrNow(offerDto.createdAt())).build();
 
         return offerRepository.save(offer);
     }

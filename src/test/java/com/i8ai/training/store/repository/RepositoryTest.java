@@ -1,41 +1,40 @@
 package com.i8ai.training.store.repository;
 
 import com.i8ai.training.store.model.*;
+import com.i8ai.training.store.util.TestHelper;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import java.util.Date;
 import java.util.List;
 
-import static com.i8ai.training.store.util.TestUtils.*;
+import static com.i8ai.training.store.util.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
+@Import(TestHelper.class)
 @DataJpaTest(showSql = false)
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class RepositoryTest {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ShopRepository shopRepository;
+    private final ShopRepository shopRepository;
 
-    @Autowired
-    private LotRepository lotRepository;
+    private final LotRepository lotRepository;
 
-    @Autowired
-    private PackRepository packRepository;
+    private final PackRepository packRepository;
 
-    @Autowired
-    private OfferRepository offerRepository;
+    private final OfferRepository offerRepository;
 
-    @Autowired
-    private SaleRepository saleRepository;
+    private final SaleRepository saleRepository;
+
+    private final TestHelper helper;
 
     private Long idProductA;
     private Long idProductB;
@@ -49,55 +48,43 @@ class RepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Product productA = productRepository.save(
-                Product.builder().code(PRODUCT_A_CODE).name(PRODUCT_A_NAME).measure(PRODUCT_A_MEASURE).build()
-        );
-        Product productB = productRepository.save(
-                Product.builder().code(PRODUCT_B_CODE).name(PRODUCT_B_NAME).measure(PRODUCT_B_MEASURE).build()
-        );
+        Product productA = helper.createProductA();
+        Product productB = helper.createProductB();
         idProductA = productA.getId();
         idProductB = productB.getId();
 
-        Shop shop1 = shopRepository.save(Shop.builder().name(SHOP1_NAME).address(SHOP1_ADDRESS).build());
-        Shop shop2 = shopRepository.save(Shop.builder().name(SHOP2_NAME).address(SHOP2_ADDRESS).build());
+        Shop shop1 = helper.createShop1();
+        Shop shop2 = helper.createShop2();
         idShop1 = shop1.getId();
         idShop2 = shop2.getId();
 
-        Lot lotA = lotRepository.save(
-                Lot.builder().receivedAt(new Date(5)).amount(LOT_A_AMOUNT).cost(PRODUCT_A_COST).product(productA).build()
-        );
-        Lot lotB = lotRepository.save(
-                Lot.builder().receivedAt(new Date(10)).amount(LOT_B_AMOUNT).cost(PRODUCT_B_COST).product(productB).build()
-        );
+        Lot lotA = helper.createLotA(productA);
+        Lot lotB = helper.createLotB(productB);
         idLotA = lotA.getId();
 
-        Pack pack1A = packRepository.save(
-                Pack.builder().deliveredAt(new Date(15)).amount(PACK1A_AMOUNT).lot(lotA).shop(shop1).build());
-        Pack pack1B = packRepository.save(
-                Pack.builder().deliveredAt(new Date(20)).amount(PACK1B_AMOUNT).lot(lotB).shop(shop1).build());
-        Pack pack2A = packRepository.save(
-                Pack.builder().deliveredAt(new Date(25)).amount(PACK2A_AMOUNT).lot(lotA).shop(shop2).build());
-        Pack pack2B = packRepository.save(
-                Pack.builder().deliveredAt(new Date(30)).amount(PACK2B_AMOUNT).lot(lotB).shop(shop2).build());
+        Pack pack1A = helper.createPack1A(lotA, shop1);
+        Pack pack1B = helper.createPack1B(lotB, shop1);
+        Pack pack2A = helper.createPack2A(lotA, shop2);
+        Pack pack2B = helper.createPack2B(lotB, shop2);
         idPack2B = pack2B.getId();
 
-        offerRepository.save(Offer.builder().createdAt(new Date(10)).price(PRODUCT_A_PRICE + 10).pack(pack1A).build());
-        Offer offer1A = offerRepository.save(Offer.builder().createdAt(new Date(15)).price(PRODUCT_A_PRICE).pack(pack1A).build());
-        offerRepository.save(Offer.builder().createdAt(new Date(15)).price(PRODUCT_B_PRICE + 10).pack(pack1B).build());
-        Offer offer1B = offerRepository.save(Offer.builder().createdAt(new Date(20)).price(PRODUCT_B_PRICE).pack(pack1B).build());
-        offerRepository.save(Offer.builder().createdAt(new Date(20)).price(PRODUCT_A_PRICE + 10).pack(pack2A).build());
-        Offer offer2A = offerRepository.save(Offer.builder().createdAt(new Date(25)).price(PRODUCT_A_PRICE).pack(pack2A).build());
-        offerRepository.save(Offer.builder().createdAt(new Date(25)).price(PRODUCT_B_PRICE + 10).pack(pack2B).build());
-        Offer offer2B = offerRepository.save(Offer.builder().createdAt(new Date(30)).price(PRODUCT_B_PRICE).pack(pack2B).build());
+        helper.createOffer(pack1A, PRODUCT_A_PRICE + 10);
+        Offer offer1A = helper.createOffer(pack1A, PRODUCT_A_PRICE);
+        helper.createOffer(pack1B, PRODUCT_B_PRICE + 10);
+        Offer offer1B = helper.createOffer(pack1B, PRODUCT_B_PRICE);
+        helper.createOffer(pack2A, PRODUCT_A_PRICE + 10);
+        Offer offer2A = helper.createOffer(pack2A, PRODUCT_A_PRICE);
+        helper.createOffer(pack2B, PRODUCT_B_PRICE + 10);
+        Offer offer2B = helper.createOffer(pack2B, PRODUCT_B_PRICE);
 
-        saleRepository.save(Sale.builder().registeredAt(new Date(35)).amount(SALE_1A35_AMOUNT).offer(offer1A).build());
-        saleRepository.save(Sale.builder().registeredAt(new Date(40)).amount(SALE_1A40_AMOUNT).offer(offer1A).build());
-        saleRepository.save(Sale.builder().registeredAt(new Date(45)).amount(SALE_1B45_AMOUNT).offer(offer1B).build());
-        saleRepository.save(Sale.builder().registeredAt(new Date(50)).amount(SALE_1B50_AMOUNT).offer(offer1B).build());
-        saleRepository.save(Sale.builder().registeredAt(new Date(55)).amount(SALE_2A55_AMOUNT).offer(offer2A).build());
-        saleRepository.save(Sale.builder().registeredAt(new Date(60)).amount(SALE_2A60_AMOUNT).offer(offer2A).build());
-        saleRepository.save(Sale.builder().registeredAt(new Date(65)).amount(SALE_2B65_AMOUNT).offer(offer2B).build());
-        saleRepository.save(Sale.builder().registeredAt(new Date(70)).amount(SALE_2B70_AMOUNT).offer(offer2B).build());
+        helper.createSale(offer1A, SALE_1A35_AMOUNT);
+        helper.createSale(offer1A, SALE_1A40_AMOUNT);
+        helper.createSale(offer1B, SALE_1B45_AMOUNT);
+        helper.createSale(offer1B, SALE_1B50_AMOUNT);
+        helper.createSale(offer2A, SALE_2A55_AMOUNT);
+        helper.createSale(offer2A, SALE_2A60_AMOUNT);
+        helper.createSale(offer2B, SALE_2B65_AMOUNT);
+        helper.createSale(offer2B, SALE_2B70_AMOUNT);
     }
 
     @AfterEach
@@ -108,7 +95,6 @@ class RepositoryTest {
         productRepository.deleteAll();
         shopRepository.deleteAll();
     }
-
 
     @Test
     void findAllLotsByReceivedBetween() {

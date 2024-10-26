@@ -1,13 +1,14 @@
 package com.i8ai.training.store.service;
 
 import com.i8ai.training.store.model.Pack;
+import com.i8ai.training.store.rest.dto.PackDto;
 
 import java.util.Date;
 import java.util.List;
 
 public interface PackService {
 
-    Pack registerPack(Pack newPack);
+    Pack registerPack(PackDto packDto);
 
     Pack getPack(Long packId);
 

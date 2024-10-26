@@ -29,4 +29,6 @@ public interface SaleService {
     Double getSalesExpensesByShop(Long shopId, Date start, Date end);
 
     Double getSalesExpensesByProductAndShop(Long productId, Long shopId, Date start, Date end);
+
+    void deleteSale(Long saleId);
 }

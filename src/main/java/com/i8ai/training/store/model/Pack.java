@@ -20,7 +20,7 @@ public class Pack {
 
     @NotNull
     @Column(nullable = false)
-    private Double amount;
+    private Double receivedAmount;
 
     @NotNull
     @Column(nullable = false)
@@ -38,7 +38,7 @@ public class Pack {
     private Shop shop;
 
     public Double getCurrentAmount() {
-        if (soldAmount == null) return amount;
-        return amount - soldAmount;
+        if (soldAmount == null) return receivedAmount;
+        return receivedAmount - soldAmount;
     }
 }

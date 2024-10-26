@@ -20,11 +20,11 @@ public class Lot {
 
     @NotNull
     @Column(nullable = false)
-    private Double amount;
+    private Double acquiredAmount;
 
     @NotNull
     @Column(nullable = false)
-    private Double cost;
+    private Double costPerUnit;
 
     @NotNull
     @Column(nullable = false)
@@ -38,7 +38,7 @@ public class Lot {
     private Product product;
 
     public Double getCurrentAmount() {
-        if (deliveredAmount == null) return amount;
-        return amount - deliveredAmount;
+        if (deliveredAmount == null) return acquiredAmount;
+        return acquiredAmount - deliveredAmount;
     }
 }

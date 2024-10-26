@@ -1,40 +1,42 @@
 package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.model.Shop;
-import com.i8ai.training.store.service.ShopService;
-import com.i8ai.training.store.util.TestUtils;
+import com.i8ai.training.store.util.TestConstants;
+import com.i8ai.training.store.util.TestHelper;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class ShopControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    @MockBean
-    private ShopService shopService;
+    private final TestHelper helper;
+
+    @Test
+    void testCreateShop() throws Exception {
+        mockMvc.perform(post("/shops")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(helper.asJsonString(TestConstants.SHOP1)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$").exists());
+    }
 
     @Test
     void testGetAllShops() throws Exception {
-        List<Shop> shops = Arrays.asList(Shop.builder().build(), Shop.builder().build());
-        given(shopService.getAllShops()).willReturn(shops);
+        helper.createShop1();
+        helper.createShop2();
 
         mockMvc.perform(get("/shops"))
                 .andExpect(status().isOk())
@@ -45,25 +47,10 @@ class ShopControllerTest {
     }
 
     @Test
-    void testAddShop() throws Exception {
-        Shop newShop = Shop.builder().build();
-        Shop savedShop = Shop.builder().build();
-        given(shopService.createShop(any(Shop.class))).willReturn(savedShop);
-
-        mockMvc.perform(post("/shops")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(newShop)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$").exists());
-    }
-
-    @Test
     void testGetShop() throws Exception {
-        Shop shop = Shop.builder().build();
-        given(shopService.getShop(anyLong())).willReturn(shop);
+        Shop shop1 = helper.createShop1();
 
-        mockMvc.perform(get("/shops/1"))
+        mockMvc.perform(get("/shops/{shopId}", shop1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());
@@ -71,12 +58,12 @@ class ShopControllerTest {
 
     @Test
     void testReplaceShop() throws Exception {
-        Shop modifiedShop = Shop.builder().build();
-        given(shopService.replaceShop(anyLong(), any(Shop.class))).willReturn(modifiedShop);
+        Shop shop2 = helper.createShop2();
+        shop2.setDescription("New description for shop 2");
 
-        mockMvc.perform(put("/shops/1")
+        mockMvc.perform(put("/shops/{shopId}", shop2.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(modifiedShop)))
+                        .content(helper.asJsonString(shop2)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());
@@ -84,9 +71,9 @@ class ShopControllerTest {
 
     @Test
     void testDeleteShop() throws Exception {
-        doNothing().when(shopService).deleteShop(anyLong());
+        Shop shop1 = helper.createShop1();
 
-        mockMvc.perform(delete("/shops/1"))
+        mockMvc.perform(delete("/shops/{shopId}", shop1.getId()))
                 .andExpect(status().isOk());
     }
 }

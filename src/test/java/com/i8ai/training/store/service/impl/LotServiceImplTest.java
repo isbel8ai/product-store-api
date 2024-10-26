@@ -3,6 +3,8 @@ package com.i8ai.training.store.service.impl;
 import com.i8ai.training.store.error.ElementNotFoundException;
 import com.i8ai.training.store.model.Lot;
 import com.i8ai.training.store.repository.LotRepository;
+import com.i8ai.training.store.rest.dto.LotDto;
+import com.i8ai.training.store.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,11 +15,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.i8ai.training.store.util.TestUtils.*;
+import static com.i8ai.training.store.util.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +27,9 @@ class LotServiceImplTest {
 
     @Mock
     private LotRepository lotRepositoryMock;
+
+    @Mock
+    private ProductService productServiceMock;
 
     @InjectMocks
     private LotServiceImpl lotService;
@@ -104,9 +108,11 @@ class LotServiceImplTest {
 
     @Test
     void registerLot() {
-        lotService.registerLot(LOT_A);
+        when(productServiceMock.getProduct(PRODUCT_A_ID)).thenReturn(PRODUCT_A);
 
-        verify(lotRepositoryMock).save(LOT_A);
+        lotService.registerLot(new LotDto(LOT_A));
+
+        verify(lotRepositoryMock).save(argThat(lot -> lot.getProduct().getId().equals(PRODUCT_A_ID)));
     }
 
     @Test

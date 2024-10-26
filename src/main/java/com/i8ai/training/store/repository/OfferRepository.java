@@ -11,19 +11,19 @@ import java.util.List;
 @Repository
 public interface OfferRepository extends JpaRepository<Offer, Long> {
 
-    @Query("select o from Offer o where o.pack.soldAmount = null or o.pack.amount - o.pack.soldAmount > 0 " +
+    @Query("select o from Offer o where (o.pack.soldAmount is null or o.pack.receivedAmount - o.pack.soldAmount > 0) " +
             "order by o.createdAt desc")
     List<Offer> findAllAvailable();
 
-    @Query("select o from Offer o where (o.pack.soldAmount = null or o.pack.amount - o.pack.soldAmount > 0) " +
+    @Query("select o from Offer o where (o.pack.soldAmount is null or o.pack.receivedAmount - o.pack.soldAmount > 0) " +
             "and o.pack.shop.id = :shopId order by o.createdAt desc")
     List<Offer> findAllAvailableByShopId(Long shopId);
 
-    @Query("select o from Offer o where (o.pack.soldAmount = null or o.pack.amount - o.pack.soldAmount > 0) " +
+    @Query("select o from Offer o where (o.pack.soldAmount is null or o.pack.receivedAmount - o.pack.soldAmount > 0) " +
             "and o.pack.lot.product.id = :productId order by o.createdAt desc")
     List<Offer> findAllAvailableByProductId(Long productId);
 
-    @Query("select o from Offer o where (o.pack.soldAmount = null or o.pack.amount - o.pack.soldAmount > 0) " +
+    @Query("select o from Offer o where (o.pack.soldAmount is null or o.pack.receivedAmount - o.pack.soldAmount > 0) " +
             "and o.pack.shop.id = :shopId and o.pack.lot.product.id = :productId order by o.createdAt desc")
     List<Offer> findAllAvailableByShopIdAndProductId(Long shopId, Long productId);
 

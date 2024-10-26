@@ -16,14 +16,14 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Product createProduct(@Valid @RequestBody Product newProduct) {
+        return productService.createProduct(newProduct);
+    }
+
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Product addProduct(@Valid @RequestBody Product newProduct) {
-        return productService.createProduct(newProduct);
     }
 
     @GetMapping("{productId}")

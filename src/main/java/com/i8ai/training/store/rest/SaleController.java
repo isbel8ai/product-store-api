@@ -1,6 +1,5 @@
 package com.i8ai.training.store.rest;
 
-import com.i8ai.training.store.model.Sale;
 import com.i8ai.training.store.rest.dto.SaleDto;
 import com.i8ai.training.store.service.SaleService;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +16,20 @@ public class SaleController {
     private final SaleService saleService;
 
     @PostMapping
-    public Sale registerSale(@RequestBody SaleDto saleDto) {
-        return saleService.registerSale(saleDto);
+    public SaleDto registerSale(@RequestBody SaleDto saleDto) {
+        return new SaleDto(saleService.registerSale(saleDto));
     }
 
     @GetMapping
-    public List<Sale> getSales(@RequestParam(required = false) Date start,
+    public List<SaleDto> getSales(@RequestParam(required = false) Date start,
                                @RequestParam(required = false) Date end,
                                @RequestParam(required = false) Long productId,
                                @RequestParam(required = false) Long shopId) {
-        return saleService.getSales(start, end, productId, shopId);
+        return saleService.getSales(start, end, productId, shopId).stream().map(SaleDto::new).toList();
+    }
+
+    @DeleteMapping("{saleId}")
+    public void deleteSale(@PathVariable Long saleId) {
+        saleService.deleteSale(saleId);
     }
 }

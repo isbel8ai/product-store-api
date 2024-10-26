@@ -1,11 +1,10 @@
 package com.i8ai.training.store.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.i8ai.training.store.model.*;
 
 import java.util.Date;
 
-public class TestUtils {
+public class TestConstants {
 
     public static final Long PRODUCT_A_ID = 0x0AL;
     public static final String PRODUCT_A_CODE = "a_product_code";
@@ -83,16 +82,24 @@ public class TestUtils {
     public static final Double NET_SALES_INCOME = PRODUCT_A_INCOME + PRODUCT_B_INCOME;
     public static final Double SHOP2_INCOME = PACK2A_SALES_INCOME + PACK2B_SALES_INCOME;
     public static final Product PRODUCT_A = Product.builder()
-            .id(PRODUCT_A_ID).code(PRODUCT_A_CODE).name(PRODUCT_A_NAME).measure(PRODUCT_A_MEASURE).build();
+            .id(PRODUCT_A_ID).code(PRODUCT_A_CODE).name(PRODUCT_A_NAME).measureUnit(PRODUCT_A_MEASURE).build();
     public static final Lot LOT_A = Lot.builder()
-            .id(LOT_A_ID).receivedAt(new Date(5)).amount(LOT_A_AMOUNT).cost(PRODUCT_A_COST).product(PRODUCT_A).build();
+            .id(LOT_A_ID).receivedAt(new Date(5))
+            .acquiredAmount(LOT_A_AMOUNT)
+            .costPerUnit(PRODUCT_A_COST)
+            .product(PRODUCT_A)
+            .build();
     public static final Product PRODUCT_B = Product.builder()
-            .id(PRODUCT_B_ID).code(PRODUCT_B_CODE).name(PRODUCT_B_NAME).measure(PRODUCT_B_MEASURE).build();
+            .id(PRODUCT_B_ID).code(PRODUCT_B_CODE).name(PRODUCT_B_NAME).measureUnit(PRODUCT_B_MEASURE).build();
     public static final Lot LOT_B = Lot.builder()
-            .id(LOT_B_ID).receivedAt(new Date(10)).amount(LOT_B_AMOUNT).cost(PRODUCT_B_COST).product(PRODUCT_B).build();
+            .id(LOT_B_ID).receivedAt(new Date(10))
+            .acquiredAmount(LOT_B_AMOUNT)
+            .costPerUnit(PRODUCT_B_COST)
+            .product(PRODUCT_B)
+            .build();
     public static final Shop SHOP1 = Shop.builder().id(SHOP1_ID).name(SHOP1_NAME).address(SHOP1_ADDRESS).build();
     public static final Pack PACK1A = Pack.builder()
-            .id(PACK1A_ID).deliveredAt(new Date(15)).amount(PACK1A_AMOUNT).lot(LOT_A).shop(SHOP1).build();
+            .id(PACK1A_ID).deliveredAt(new Date(15)).receivedAmount(PACK1A_AMOUNT).lot(LOT_A).shop(SHOP1).build();
     public static final Offer OFFER1A = Offer.builder()
             .id(OFFER1A_ID).price(PRODUCT_A_PRICE).createdAt(new Date(15)).pack(PACK1A).build();
     public static final Sale SALE_1A35 = Sale.builder()
@@ -100,7 +107,7 @@ public class TestUtils {
     public static final Sale SALE_1A40 = Sale.builder()
             .id(0x1A35L).registeredAt(new Date(40)).amount(SALE_1A40_AMOUNT).offer(OFFER1A).build();
     public static final Pack PACK1B = Pack.builder()
-            .id(PACK1B_ID).deliveredAt(new Date(20)).amount(PACK1B_AMOUNT).lot(LOT_B).shop(SHOP1).build();
+            .id(PACK1B_ID).deliveredAt(new Date(20)).receivedAmount(PACK1B_AMOUNT).lot(LOT_B).shop(SHOP1).build();
     public static final Offer OFFER1B = Offer.builder()
             .id(OFFER1B_ID).price(PRODUCT_B_PRICE).createdAt(new Date(20)).pack(PACK1B).build();
     public static final Sale SALE_1B45 = Sale.builder()
@@ -109,7 +116,7 @@ public class TestUtils {
             .id(0x1A35L).registeredAt(new Date(50)).amount(SALE_1B50_AMOUNT).offer(OFFER1B).build();
     public static final Shop SHOP2 = Shop.builder().id(SHOP2_ID).name(SHOP2_NAME).address(SHOP2_ADDRESS).build();
     public static final Pack PACK2A = Pack.builder()
-            .id(PACK2A_ID).deliveredAt(new Date(25)).amount(PACK2A_AMOUNT).lot(LOT_A).shop(SHOP2).build();
+            .id(PACK2A_ID).deliveredAt(new Date(25)).receivedAmount(PACK2A_AMOUNT).lot(LOT_A).shop(SHOP2).build();
     public static final Offer OFFER2A = Offer.builder()
             .id(OFFER2A_ID).price(PRODUCT_A_PRICE).createdAt(new Date(25)).pack(PACK2A).build();
     public static final Sale SALE_2A55 = Sale.builder()
@@ -117,20 +124,11 @@ public class TestUtils {
     public static final Sale SALE_2A60 = Sale.builder()
             .id(0x1A35L).registeredAt(new Date(60)).amount(SALE_2A60_AMOUNT).offer(OFFER2A).build();
     public static final Pack PACK2B = Pack.builder()
-            .id(PACK2B_ID).deliveredAt(new Date(30)).amount(PACK2B_AMOUNT).lot(LOT_B).shop(SHOP2).build();
+            .id(PACK2B_ID).deliveredAt(new Date(30)).receivedAmount(PACK2B_AMOUNT).lot(LOT_B).shop(SHOP2).build();
     public static final Offer OFFER2B = Offer.builder()
             .id(OFFER2B_ID).price(PRODUCT_B_PRICE).createdAt(new Date(30)).pack(PACK2B).build();
     public static final Sale SALE_2B65 = Sale.builder()
             .id(0x1A35L).registeredAt(new Date(65)).amount(SALE_2B65_AMOUNT).offer(OFFER2B).build();
     public static final Sale SALE_2B70 = Sale.builder()
             .id(0x1A35L).registeredAt(new Date(70)).amount(SALE_2B70_AMOUNT).offer(OFFER2B).build();
-
-
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

@@ -4,6 +4,9 @@ import com.i8ai.training.store.error.ElementNotFoundException;
 import com.i8ai.training.store.error.NotValidAmountException;
 import com.i8ai.training.store.model.Pack;
 import com.i8ai.training.store.repository.PackRepository;
+import com.i8ai.training.store.rest.dto.PackDto;
+import com.i8ai.training.store.service.LotService;
+import com.i8ai.training.store.service.ShopService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.i8ai.training.store.util.TestUtils.*;
+import static com.i8ai.training.store.util.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -25,6 +28,12 @@ class PackServiceImplTest {
 
     @Mock
     private PackRepository packRepositoryMock;
+
+    @Mock
+    private LotService lotServiceMock;
+
+    @Mock
+    private ShopService shopServiceMock;
 
     @InjectMocks
     private PackServiceImpl packService;
@@ -89,21 +98,29 @@ class PackServiceImplTest {
 
     @Test
     void registerPackWithNotValidAmount() {
-        Pack pack = Pack.builder().deliveredAt(new Date()).amount(-10.0).lot(LOT_A).shop(SHOP1).build();
+        when(lotServiceMock.getLot(LOT_A_ID)).thenReturn(LOT_A);
+        Pack pack = Pack.builder().deliveredAt(new Date()).receivedAmount(-10.0).lot(LOT_A).shop(SHOP1).build();
+        PackDto packDto = new PackDto(pack);
 
-        assertThrows(NotValidAmountException.class, () -> packService.registerPack(pack));
+        assertThrows(NotValidAmountException.class, () -> packService.registerPack(packDto));
     }
 
     @Test
     void registerPackWithNotAvailableAmount() {
-        Pack pack = Pack.builder().deliveredAt(new Date()).amount(LOT_A_AMOUNT + 10).lot(LOT_A).shop(SHOP1).build();
+        when(lotServiceMock.getLot(LOT_A_ID)).thenReturn(LOT_A);
+        Pack pack = Pack.builder().deliveredAt(new Date()).receivedAmount(LOT_A_AMOUNT + 10).lot(LOT_A).shop(SHOP1).build();
+        PackDto packDto = new PackDto(pack);
 
-        assertThrows(NotValidAmountException.class, () -> packService.registerPack(pack));
+        assertThrows(NotValidAmountException.class, () -> packService.registerPack(packDto));
     }
 
     @Test
     void registerPack() {
-        assertDoesNotThrow(() -> packService.registerPack(PACK2B));
+        when(lotServiceMock.getLot(LOT_B_ID)).thenReturn(LOT_B);
+        when(shopServiceMock.getShop(SHOP2_ID)).thenReturn(SHOP2);
+        PackDto packDto = new PackDto(PACK2B);
+
+        assertDoesNotThrow(() -> packService.registerPack(packDto));
     }
 
     @Test

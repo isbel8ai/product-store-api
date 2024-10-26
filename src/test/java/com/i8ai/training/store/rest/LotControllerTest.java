@@ -1,41 +1,60 @@
 package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.model.Lot;
-import com.i8ai.training.store.service.LotService;
-import com.i8ai.training.store.util.TestUtils;
+import com.i8ai.training.store.model.Product;
+import com.i8ai.training.store.rest.dto.LotDto;
+import com.i8ai.training.store.util.TestHelper;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class LotControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    @MockBean
-    private LotService lotService;
+    private final TestHelper helper;
+
+    private Product productA;
+    private Product productB;
+
+    @BeforeEach
+    void setUp() {
+        productA = helper.createProductA();
+        productB = helper.createProductB();
+    }
+
+    @AfterEach
+    void tearDown() {
+        helper.deleteAllLots();
+        helper.deleteAllProducts();
+    }
+
+    @Test
+    void testRegisterLot() throws Exception {
+        mockMvc.perform(post("/lots")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(helper.asJsonString(new LotDto(helper.createLotA(productA)))))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists());
+    }
 
     @Test
     void testGetLots() throws Exception {
-        List<Lot> lots = Arrays.asList(Lot.builder().build(), Lot.builder().build());
-
-        given(lotService.getLots(null, null, null)).willReturn(lots);
+        helper.createLotA(productA);
+        helper.createLotA(productB);
 
         mockMvc.perform(get("/lots"))
                 .andExpect(status().isOk())
@@ -46,24 +65,10 @@ class LotControllerTest {
     }
 
     @Test
-    void testRegisterLot() throws Exception {
-        Lot newLot = Lot.builder().build();
-        Lot savedLot = Lot.builder().build();
-        given(lotService.registerLot(any(Lot.class))).willReturn(savedLot);
-
-        mockMvc.perform(post("/lots")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(newLot)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").exists());
-    }
-
-    @Test
     void testDeleteLot() throws Exception {
-        doNothing().when(lotService).deleteLot(anyLong());
+        Lot lot = helper.createLotB(productB);
 
-        mockMvc.perform(delete("/lots/1"))
+        mockMvc.perform(delete("/lots/{lotId}", lot.getId()))
                 .andExpect(status().isOk());
     }
 }

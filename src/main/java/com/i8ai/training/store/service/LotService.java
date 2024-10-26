@@ -1,13 +1,14 @@
 package com.i8ai.training.store.service;
 
 import com.i8ai.training.store.model.Lot;
+import com.i8ai.training.store.rest.dto.LotDto;
 
 import java.util.Date;
 import java.util.List;
 
 public interface LotService {
 
-    Lot registerLot(Lot newLot);
+    Lot registerLot(LotDto newLot);
 
     Lot getLot(Long lotId);
 

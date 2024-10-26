@@ -41,18 +41,18 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             "and s.offer.pack.shop.id = :shopId and s.registeredAt between :start and :end")
     Double getIncomeByProductIdAndShopId(Date start, Date end, Long productId, Long shopId);
 
-    @Query("select sum(s.amount * s.offer.pack.lot.cost) from Sale s where s.registeredAt between :start and :end")
+    @Query("select sum(s.amount * s.offer.pack.lot.costPerUnit) from Sale s where s.registeredAt between :start and :end")
     Double getNetSalesExpenses(Date start, Date end);
 
-    @Query("select sum(s.amount * s.offer.pack.lot.cost) from Sale s where s.offer.pack.lot.product.id = :productId " +
+    @Query("select sum(s.amount * s.offer.pack.lot.costPerUnit) from Sale s where s.offer.pack.lot.product.id = :productId " +
             "and s.registeredAt between :start and :end")
     Double getSaleExpensesByProductId(Date start, Date end, Long productId);
 
-    @Query("select sum(s.amount * s.offer.pack.lot.cost) from Sale s where s.offer.pack.shop.id = :shopId " +
+    @Query("select sum(s.amount * s.offer.pack.lot.costPerUnit) from Sale s where s.offer.pack.shop.id = :shopId " +
             "and s.registeredAt between :start and :end")
     Double getSaleExpensesByShopId(Date start, Date end, Long shopId);
 
-    @Query("select sum(s.amount * s.offer.pack.lot.cost) from Sale s where s.offer.pack.lot.product.id = :productId " +
+    @Query("select sum(s.amount * s.offer.pack.lot.costPerUnit) from Sale s where s.offer.pack.lot.product.id = :productId " +
             "and s.offer.pack.shop.id = :shopId and s.registeredAt between :start and :end")
     Double getSaleExpensesByProductIdAndShopId(Date start, Date end, Long productId, Long shopId);
 }

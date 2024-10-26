@@ -1,8 +1,9 @@
 package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.model.Product;
+import com.i8ai.training.store.util.TestConstants;
 import com.i8ai.training.store.util.TestHelper;
-import com.i8ai.training.store.util.TestUtils;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class ProductControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    @Autowired
-    private TestHelper helper;
+    private final TestHelper helper;
 
     @AfterEach
     void tearDown() {
         helper.deleteAllProducts();
+    }
+
+    @Test
+    void testCreateProduct() throws Exception {
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(helper.asJsonString(TestConstants.PRODUCT_A)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$").exists());
     }
 
     @Test
@@ -43,18 +53,8 @@ class ProductControllerTest {
     }
 
     @Test
-    void testAddProduct() throws Exception {
-        mockMvc.perform(post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(helper.createProductB())))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$").exists());
-    }
-
-    @Test
     void testGetProduct() throws Exception {
-        Long productId = helper.createProductA().getId();
+        Long productId = helper.createProductB().getId();
 
         mockMvc.perform(get("/products/{productId}", productId))
                 .andExpect(status().isOk())
@@ -65,11 +65,11 @@ class ProductControllerTest {
     @Test
     void testReplaceProduct() throws Exception {
         Product product = helper.createProductA();
-        product.setName(TestUtils.PRODUCT_B_NAME);
+        product.setDescription("New description for product A");
 
         mockMvc.perform(put("/products/{productId}", product.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.asJsonString(product)))
+                        .content(helper.asJsonString(product)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());

@@ -2,11 +2,16 @@ package com.i8ai.training.store.service.impl;
 
 import com.i8ai.training.store.error.ElementNotFoundException;
 import com.i8ai.training.store.error.NotValidAmountException;
+import com.i8ai.training.store.model.Lot;
 import com.i8ai.training.store.model.Pack;
+import com.i8ai.training.store.model.Shop;
 import com.i8ai.training.store.repository.PackRepository;
+import com.i8ai.training.store.rest.dto.PackDto;
 import com.i8ai.training.store.service.LotService;
 import com.i8ai.training.store.service.PackService;
+import com.i8ai.training.store.service.ShopService;
 import com.i8ai.training.store.util.DateTimeUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +25,29 @@ public class PackServiceImpl implements PackService {
 
     private final LotService lotService;
 
+    private final ShopService shopService;
+
     private final PackRepository packRepository;
 
     @Override
-    public Pack registerPack(Pack newPack) {
-        if (newPack.getAmount() <= 0.0 || newPack.getAmount() > newPack.getLot().getCurrentAmount()) {
+    @Transactional
+    public Pack registerPack(PackDto packDto) {
+        Lot lot = lotService.getLot(packDto.lotId());
+        if (packDto.amount() <= 0.0 || packDto.amount() > lot.getCurrentAmount()) {
             throw new NotValidAmountException();
         }
 
-        lotService.updateDeliveredAmount(newPack.getLot().getId());
+        Shop shop = shopService.getShop(packDto.shopId());
+        Pack pack = Pack.builder()
+                .lot(lot)
+                .shop(shop)
+                .receivedAmount(packDto.amount())
+                .deliveredAt(DateTimeUtils.dateOrNow(packDto.deliveredAt()))
+                .build();
 
-        return packRepository.save(newPack);
+        packRepository.save(pack);
+        lotService.updateDeliveredAmount(lot.getId());
+        return pack;
     }
 
     @Override

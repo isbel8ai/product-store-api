@@ -4,31 +4,27 @@ package com.i8ai.training.store.rest;
 import com.i8ai.training.store.model.Shop;
 import com.i8ai.training.store.service.ShopService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("shops")
 public class ShopController {
 
     private final ShopService shopService;
 
-    @Autowired
-    public ShopController(ShopService shopService) {
-        this.shopService = shopService;
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Shop createShop(@Valid @RequestBody Shop newShop) {
+        return shopService.createShop(newShop);
     }
 
     @GetMapping
     public List<Shop> getAllShops() {
         return shopService.getAllShops();
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Shop addShop(@Valid @RequestBody Shop newShop) {
-        return shopService.createShop(newShop);
     }
 
     @GetMapping("{shopId}")

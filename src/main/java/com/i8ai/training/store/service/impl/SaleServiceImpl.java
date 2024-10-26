@@ -1,5 +1,6 @@
 package com.i8ai.training.store.service.impl;
 
+import com.i8ai.training.store.error.ElementNotFoundException;
 import com.i8ai.training.store.error.NotValidAmountException;
 import com.i8ai.training.store.model.Offer;
 import com.i8ai.training.store.model.Sale;
@@ -8,6 +9,7 @@ import com.i8ai.training.store.rest.dto.SaleDto;
 import com.i8ai.training.store.service.OfferService;
 import com.i8ai.training.store.service.SaleService;
 import com.i8ai.training.store.util.DateTimeUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ public class SaleServiceImpl implements SaleService {
     private final SaleRepository saleRepository;
 
     @Override
+    @Transactional
     public Sale registerSale(SaleDto saleDto) {
         Offer offer = offerService.getOffer(saleDto.offerId());
         if (saleDto.amount() <= 0.0 || saleDto.amount() > offer.getPack().getCurrentAmount()) {
@@ -35,8 +38,9 @@ public class SaleServiceImpl implements SaleService {
                 .registeredAt(DateTimeUtils.dateOrNow(saleDto.registeredAt()))
                 .build();
 
+        saleRepository.save(sale);
         offerService.updateOfferPack(offer.getPack().getId());
-        return saleRepository.save(sale);
+        return sale;
     }
 
     @Override
@@ -116,5 +120,10 @@ public class SaleServiceImpl implements SaleService {
         return saleRepository.getSaleExpensesByProductIdAndShopId(
                 DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end), productId, shopId
         );
+    }
+
+    @Override
+    public void deleteSale(Long saleId) {
+        saleRepository.delete(saleRepository.findById(saleId).orElseThrow(ElementNotFoundException::new));
     }
 }
