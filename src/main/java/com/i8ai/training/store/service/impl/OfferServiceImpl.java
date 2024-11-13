@@ -12,7 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +33,7 @@ public class OfferServiceImpl implements OfferService {
                 .pack(pack)
                 .price(offerDto.price())
                 .discount(offerDto.discount())
-                .createdAt(DateTimeUtils.dateOrNow(offerDto.createdAt())).build();
+                .createdAt(DateTimeUtils.dateTimeOrNow(offerDto.createdAt())).build();
 
         return offerRepository.save(offer);
     }
@@ -67,9 +67,9 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<Offer> getOffersHistory(Long shopId, Long productId, Date start, Date end) {
-        start = DateTimeUtils.dateOrMin(start);
-        end = DateTimeUtils.dateOrNow(end);
+    public List<Offer> getOffersHistory(Long shopId, Long productId, LocalDateTime start, LocalDateTime end) {
+        start = DateTimeUtils.dateTimeOrMin(start);
+        end = DateTimeUtils.dateTimeOrMax(end);
 
         if (productId == null) {
             if (shopId == null) {

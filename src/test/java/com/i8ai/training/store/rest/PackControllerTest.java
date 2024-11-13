@@ -16,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -51,7 +53,12 @@ class PackControllerTest {
 
     @Test
     void testRegisterPack() throws Exception {
-        Pack pack = Pack.builder().lot(lotA).shop(shop1).receivedAmount(TestConstants.PACK1A_AMOUNT).build();
+        Pack pack = Pack.builder()
+                .lot(lotA)
+                .shop(shop1)
+                .receivedAmount(TestConstants.PACK1A_AMOUNT)
+                .receivedAt(LocalDateTime.now())
+                .build();
 
         mockMvc.perform(post("/packs")
                         .contentType(MediaType.APPLICATION_JSON)

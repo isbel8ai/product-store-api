@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,19 +40,20 @@ class PackServiceImplTest {
 
     @Test
     void getPacksWithAllFilters() {
-        when(packRepositoryMock.findAllByDeliveredAtBetweenAndLotProductIdAndShopId(
-                        new Date(3), new Date(6), PRODUCT_A_ID, SHOP2_ID
-                )
-        ).thenReturn(List.of(PACK2A));
+        when(packRepositoryMock.findAllByReceivedAtBetweenAndLotProductIdAndShopId(
+                any(), any(), eq(PRODUCT_A_ID), eq(SHOP2_ID)
+        )).thenReturn(List.of(PACK2A));
 
-        List<Pack> pack = packService.getPacks(PRODUCT_A_ID, SHOP2_ID, new Date(3), new Date(6));
+        List<Pack> pack = packService.getPacks(
+                PRODUCT_A_ID, SHOP2_ID, LocalDateTime.now().plusMinutes(3), LocalDateTime.now().plusMinutes(6)
+        );
 
         assertEquals(1, pack.size());
     }
 
     @Test
     void getPacksWithShopFilter() {
-        when(packRepositoryMock.findAllByDeliveredAtBetweenAndShopId(any(), any(), eq((SHOP1_ID))))
+        when(packRepositoryMock.findAllByReceivedAtBetweenAndShopId(any(), any(), eq((SHOP1_ID))))
                 .thenReturn(List.of(PACK1A, PACK1B));
 
         List<Pack> pack = packService.getPacks(null, SHOP1_ID, null, null);
@@ -62,7 +63,7 @@ class PackServiceImplTest {
 
     @Test
     void getPackWithProductFilter() {
-        when(packRepositoryMock.findAllByDeliveredAtBetweenAndLotProductId(any(), any(), eq(PRODUCT_B_ID)))
+        when(packRepositoryMock.findAllByReceivedAtBetweenAndLotProductId(any(), any(), eq(PRODUCT_B_ID)))
                 .thenReturn(List.of(PACK1B, PACK2B));
 
         List<Pack> pack = packService.getPacks(PRODUCT_B_ID, null, null, null);
@@ -72,7 +73,7 @@ class PackServiceImplTest {
 
     @Test
     void getAllPack() {
-        when(packRepositoryMock.findAllByDeliveredAtBetween(any(), any()))
+        when(packRepositoryMock.findAllByReceivedAtBetween(any(), any()))
                 .thenReturn(List.of(PACK1A, PACK1B, PACK2A, PACK2B));
 
         List<Pack> pack = packService.getPacks(null, null, null, null);
@@ -99,8 +100,12 @@ class PackServiceImplTest {
     @Test
     void registerPackWithNotValidAmount() {
         when(lotServiceMock.getLot(LOT_A_ID)).thenReturn(LOT_A);
-        Pack pack = Pack.builder().deliveredAt(new Date()).receivedAmount(-10.0).lot(LOT_A).shop(SHOP1).build();
-        PackDto packDto = new PackDto(pack);
+
+        PackDto packDto = new PackDto(Pack.builder()
+                .receivedAt(LocalDateTime.now())
+                .receivedAmount(-10.0).lot(LOT_A)
+                .shop(SHOP1)
+                .build());
 
         assertThrows(NotValidAmountException.class, () -> packService.registerPack(packDto));
     }
@@ -108,8 +113,13 @@ class PackServiceImplTest {
     @Test
     void registerPackWithNotAvailableAmount() {
         when(lotServiceMock.getLot(LOT_A_ID)).thenReturn(LOT_A);
-        Pack pack = Pack.builder().deliveredAt(new Date()).receivedAmount(LOT_A_AMOUNT + 10).lot(LOT_A).shop(SHOP1).build();
-        PackDto packDto = new PackDto(pack);
+
+        PackDto packDto = new PackDto(Pack.builder()
+                .receivedAt(LocalDateTime.now())
+                .receivedAmount(LOT_A_AMOUNT + 10)
+                .lot(LOT_A)
+                .shop(SHOP1)
+                .build());
 
         assertThrows(NotValidAmountException.class, () -> packService.registerPack(packDto));
     }
@@ -130,14 +140,16 @@ class PackServiceImplTest {
 
     @Test
     void getProductDeliveredAmount() {
-        when(packRepositoryMock.getDeliveredAmountByProductId(PRODUCT_B_ID)).thenReturn(PACK1B_AMOUNT + PACK2B_AMOUNT);
+        when(packRepositoryMock.getDeliveredAmountByProductId(PRODUCT_B_ID))
+                .thenReturn(PACK1B_AMOUNT + PACK2B_AMOUNT);
 
         assertEquals(PACK1B_AMOUNT + PACK2B_AMOUNT, packService.getProductDeliveredAmount(PRODUCT_B_ID));
     }
 
     @Test
     void getProductDeliveredToShopAmount() {
-        when(packRepositoryMock.getDeliveredAmountByProductIdAndShopId(PRODUCT_A_ID, SHOP2_ID)).thenReturn(PACK2A_AMOUNT);
+        when(packRepositoryMock.getDeliveredAmountByProductIdAndShopId(PRODUCT_A_ID, SHOP2_ID))
+                .thenReturn(PACK2A_AMOUNT);
 
         assertEquals(PACK2A_AMOUNT, packService.getProductDeliveredToShopAmount(PRODUCT_A_ID, SHOP2_ID));
     }

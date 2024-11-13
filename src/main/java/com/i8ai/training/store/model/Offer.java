@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,7 +25,7 @@ public class Offer {
 
     @NotNull
     @Column(nullable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column
     private Double discount;

@@ -18,12 +18,12 @@ Management system for a local shop business. It helps owners to supervise and co
 | List all products                                    | /product                                   | GET    |                                  |
 | Add a product                                        | /product                                   | POST   | code, name, measure, description |
 | Get a product information                            | /product/{product_id}                      | GET    |                                  |
-| Update a product information                         | /product/{product_id}                      | PUT    | code, name, measure, description |
+| UpLocalDateTime a product information                | /product/{product_id}                      | PUT    | code, name, measure, description |
 | Delete a product                                     | /product/{product_id}                      | DELETE |                                  |
 | List all shops                                       | /shop                                      | GET    |                                  |
 | Add a shop                                           | /shop                                      | POST   | name, address, description       |
 | Get a shop information                               | /shop/{shop_id}                            | GET    |                                  |
-| Update a shop information                            | /shop/{shop_id}                            | PUT    | name, address, description       |
+| UpLocalDateTime a shop information                   | /shop/{shop_id}                            | PUT    | name, address, description       |
 | Delete a shop                                        | /shop/{shop_id}                            | DELETE |                                  |
 | History of receipts with filters                     | /lot                                       | GET    | start, end, product_id           |
 | Register a product receipt                           | /lot                                       | POST   | date, cost, amount, product_id   |

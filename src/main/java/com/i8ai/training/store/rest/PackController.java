@@ -2,11 +2,12 @@ package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.rest.dto.PackDto;
 import com.i8ai.training.store.service.PackService;
+import com.i8ai.training.store.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -22,10 +23,15 @@ public class PackController {
 
     @GetMapping
     public List<PackDto> getPacks(@RequestParam(required = false) Long productId,
-                               @RequestParam(required = false) Long shopId,
-                               @RequestParam(required = false) Date start,
-                               @RequestParam(required = false) Date end) {
-        return packService.getPacks(productId, shopId, start, end).stream().map(PackDto::new).toList();
+                                  @RequestParam(required = false) Long shopId,
+                                  @RequestParam(required = false) ZonedDateTime start,
+                                  @RequestParam(required = false) ZonedDateTime end) {
+        return packService.getPacks(
+                productId,
+                shopId,
+                DateTimeUtils.dateTimeOrMin(start),
+                DateTimeUtils.dateTimeOrMax(end)
+        ).stream().map(PackDto::new).toList();
     }
 
     @DeleteMapping(value = "{packId}")

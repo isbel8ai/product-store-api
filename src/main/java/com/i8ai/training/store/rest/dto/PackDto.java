@@ -1,8 +1,9 @@
 package com.i8ai.training.store.rest.dto;
 
 import com.i8ai.training.store.model.Pack;
+import com.i8ai.training.store.util.DateTimeUtils;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public record PackDto(
         Long id,
@@ -10,7 +11,7 @@ public record PackDto(
         Long shopId,
         Double amount,
         Double currentAmount,
-        Date deliveredAt
+        ZonedDateTime receivedAt
 ) {
     public PackDto(Pack pack) {
         this(
@@ -19,7 +20,7 @@ public record PackDto(
                 pack.getShop().getId(),
                 pack.getReceivedAmount(),
                 pack.getCurrentAmount(),
-                pack.getDeliveredAt()
+                DateTimeUtils.toUtcDateTime(pack.getReceivedAt())
         );
     }
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,7 +24,7 @@ public class Sale {
 
     @NotNull
     @Column(nullable = false)
-    private Date registeredAt;
+    private LocalDateTime registeredAt;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)

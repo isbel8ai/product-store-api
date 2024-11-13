@@ -2,10 +2,11 @@ package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.rest.dto.SaleDto;
 import com.i8ai.training.store.service.SaleService;
+import com.i8ai.training.store.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -21,11 +22,15 @@ public class SaleController {
     }
 
     @GetMapping
-    public List<SaleDto> getSales(@RequestParam(required = false) Date start,
-                               @RequestParam(required = false) Date end,
-                               @RequestParam(required = false) Long productId,
-                               @RequestParam(required = false) Long shopId) {
-        return saleService.getSales(start, end, productId, shopId).stream().map(SaleDto::new).toList();
+    public List<SaleDto> getSales(@RequestParam(required = false) ZonedDateTime start,
+                                  @RequestParam(required = false) ZonedDateTime end,
+                                  @RequestParam(required = false) Long productId,
+                                  @RequestParam(required = false) Long shopId) {
+        return saleService.getSales(
+                DateTimeUtils.dateTimeOrMin(start),
+                DateTimeUtils.dateTimeOrMax(end),
+                productId, shopId
+        ).stream().map(SaleDto::new).toList();
     }
 
     @DeleteMapping("{saleId}")

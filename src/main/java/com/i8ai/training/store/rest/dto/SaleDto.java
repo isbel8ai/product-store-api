@@ -1,21 +1,22 @@
 package com.i8ai.training.store.rest.dto;
 
 import com.i8ai.training.store.model.Sale;
+import com.i8ai.training.store.util.DateTimeUtils;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public record SaleDto(
         Long id,
         Long offerId,
         Double amount,
-        Date registeredAt
+        ZonedDateTime registeredAt
 ) {
     public SaleDto(Sale sale) {
         this(
                 sale.getId(),
                 sale.getOffer().getId(),
                 sale.getAmount(),
-                sale.getRegisteredAt()
+                DateTimeUtils.toUtcDateTime(sale.getRegisteredAt())
         );
     }
 }

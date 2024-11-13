@@ -1,12 +1,13 @@
 package com.i8ai.training.store.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.i8ai.training.store.model.*;
 import com.i8ai.training.store.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static com.i8ai.training.store.util.TestConstants.*;
 
@@ -51,14 +52,14 @@ public class TestHelper {
                 .product(productA)
                 .acquiredAmount(LOT_A_AMOUNT)
                 .costPerUnit(PRODUCT_A_COST)
-                .receivedAt(new Date(5))
+                .acquiredAt(LocalDateTime.now())
                 .build()
         );
     }
 
     public Lot createLotB(Product productB) {
         return lotRepository.save(Lot.builder()
-                .receivedAt(new Date(10))
+                .acquiredAt(LocalDateTime.now())
                 .acquiredAmount(LOT_B_AMOUNT)
                 .costPerUnit(PRODUCT_B_COST)
                 .product(productB)
@@ -67,32 +68,58 @@ public class TestHelper {
     }
 
     public Pack createPack1A(Lot lotA, Shop shop1) {
-        return packRepository.save(
-                Pack.builder().deliveredAt(new Date(15)).receivedAmount(PACK1A_AMOUNT).lot(lotA).shop(shop1).build());
+        return packRepository.save(Pack.builder()
+                .receivedAt(LocalDateTime.now())
+                .receivedAmount(PACK1A_AMOUNT)
+                .lot(lotA)
+                .shop(shop1)
+                .build()
+        );
     }
 
     public Pack createPack1B(Lot lotB, Shop shop1) {
-        return packRepository.save(
-                Pack.builder().deliveredAt(new Date(20)).receivedAmount(PACK1B_AMOUNT).lot(lotB).shop(shop1).build());
+        return packRepository.save(Pack.builder()
+                .receivedAt(LocalDateTime.now())
+                .receivedAmount(PACK1B_AMOUNT)
+                .lot(lotB).shop(shop1)
+                .build()
+        );
     }
 
     public Pack createPack2A(Lot lotA, Shop shop2) {
-        return packRepository.save(
-                Pack.builder().deliveredAt(new Date(25)).receivedAmount(PACK2A_AMOUNT).lot(lotA).shop(shop2).build());
+        return packRepository.save(Pack.builder()
+                .receivedAt(LocalDateTime.now())
+                .receivedAmount(PACK2A_AMOUNT)
+                .lot(lotA).shop(shop2)
+                .build()
+        );
     }
 
     public Pack createPack2B(Lot lotB, Shop shop2) {
-        return packRepository.save(
-                Pack.builder().deliveredAt(new Date(30)).receivedAmount(PACK2B_AMOUNT).lot(lotB).shop(shop2).build());
+        return packRepository.save(Pack.builder()
+                .receivedAt(LocalDateTime.now())
+                .receivedAmount(PACK2B_AMOUNT)
+                .lot(lotB)
+                .shop(shop2)
+                .build()
+        );
     }
 
-    public Offer createOffer(Pack pack1A, Double productAPrice) {
-        return offerRepository.save(Offer.builder().createdAt(new Date()).price(productAPrice).pack(pack1A).build());
+    public Offer createOffer(Pack pack, Double price) {
+        return offerRepository.save(Offer.builder()
+                .createdAt(LocalDateTime.now())
+                .price(price)
+                .pack(pack)
+                .build()
+        );
     }
 
-    public Sale createSale(Offer offer1A, Double sale1a35Amount) {
-        return saleRepository.save(
-                Sale.builder().registeredAt(new Date()).amount(sale1a35Amount).offer(offer1A).build()
+    public Sale createSale(Offer offer, Double amount) {
+        return saleRepository.save(Sale.builder()
+                .registeredAt(LocalDateTime.now())
+                .amount(amount)
+                .offer(offer)
+                .build()
         );
     }
 
@@ -122,7 +149,7 @@ public class TestHelper {
 
     public String asJsonString(final Object obj) {
         try {
-            return new ObjectMapper().writeValueAsString(obj);
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

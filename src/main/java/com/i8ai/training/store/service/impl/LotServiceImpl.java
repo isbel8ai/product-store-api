@@ -11,7 +11,7 @@ import com.i8ai.training.store.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +24,12 @@ public class LotServiceImpl implements LotService {
     private final LotRepository lotRepository;
 
     @Override
-    public List<Lot> getLots(Long productId, Date start, Date end) {
+    public List<Lot> getLots(Long productId, LocalDateTime start, LocalDateTime end) {
         return productId == null ?
-                lotRepository.findAllByReceivedAtBetween(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end)) :
-                lotRepository.findAllByReceivedAtBetweenAndProductId(
-                        DateTimeUtils.dateOrMin(start),
-                        DateTimeUtils.dateOrNow(end),
+                lotRepository.findAllByAcquiredAtBetween(DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end)) :
+                lotRepository.findAllByAcquiredAtBetweenAndProductId(
+                        DateTimeUtils.dateTimeOrMin(start),
+                        DateTimeUtils.dateTimeOrMax(end),
                         productId
                 );
     }
@@ -42,7 +42,7 @@ public class LotServiceImpl implements LotService {
                 .product(product)
                 .acquiredAmount(lotDto.acquiredAmount())
                 .costPerUnit(lotDto.costPerUnit())
-                .receivedAt(DateTimeUtils.dateOrNow(lotDto.receivedAt()))
+                .acquiredAt(DateTimeUtils.dateTimeOrNow(lotDto.acquiredAt()))
                 .build();
 
         return lotRepository.save(lot);

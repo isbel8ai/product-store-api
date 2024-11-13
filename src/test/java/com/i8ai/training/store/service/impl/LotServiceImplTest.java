@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,17 +36,18 @@ class LotServiceImplTest {
 
     @Test
     void getLotsWithAllFilters() {
-        when(lotRepositoryMock.findAllByReceivedAtBetweenAndProductId(notNull(), notNull(), eq(PRODUCT_A_ID)))
+        when(lotRepositoryMock.findAllByAcquiredAtBetweenAndProductId(notNull(), notNull(), eq(PRODUCT_A_ID)))
                 .thenReturn(List.of(LOT_A));
 
-        List<Lot> lots = lotService.getLots(PRODUCT_A_ID, new Date(10), new Date(20));
+        List<Lot> lots = lotService
+                .getLots(PRODUCT_A_ID, LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusMinutes(20));
 
         assertEquals(1, lots.size());
     }
 
     @Test
     void getLotsWithProductId() {
-        when(lotRepositoryMock.findAllByReceivedAtBetweenAndProductId(notNull(), notNull(), eq(PRODUCT_B_ID)))
+        when(lotRepositoryMock.findAllByAcquiredAtBetweenAndProductId(notNull(), notNull(), eq(PRODUCT_B_ID)))
                 .thenReturn(List.of(LOT_B));
 
         List<Lot> lots = lotService.getLots(PRODUCT_B_ID, null, null);
@@ -56,34 +57,35 @@ class LotServiceImplTest {
 
     @Test
     void getLotsWithStartDateAndEndDate() {
-        when(lotRepositoryMock.findAllByReceivedAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
+        when(lotRepositoryMock.findAllByAcquiredAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
 
-        List<Lot> lots = lotService.getLots(null, new Date(10), new Date(25));
+        List<Lot> lots = lotService
+                .getLots(null, LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusMinutes(25));
 
         assertEquals(2, lots.size());
     }
 
     @Test
     void getLotsWithEndDate() {
-        when(lotRepositoryMock.findAllByReceivedAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
+        when(lotRepositoryMock.findAllByAcquiredAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
 
-        List<Lot> lots = lotService.getLots(null, null, new Date(10));
+        List<Lot> lots = lotService.getLots(null, null, LocalDateTime.now().plusMinutes(10));
 
         assertEquals(2, lots.size());
     }
 
     @Test
     void getLotsWithStartDate() {
-        when(lotRepositoryMock.findAllByReceivedAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_B));
+        when(lotRepositoryMock.findAllByAcquiredAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_B));
 
-        List<Lot> lots = lotService.getLots(null, new Date(5), null);
+        List<Lot> lots = lotService.getLots(null, LocalDateTime.now().plusMinutes(5), null);
 
         assertEquals(1, lots.size());
     }
 
     @Test
     void getAllLots() {
-        when(lotRepositoryMock.findAllByReceivedAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
+        when(lotRepositoryMock.findAllByAcquiredAtBetween(notNull(), notNull())).thenReturn(List.of(LOT_A, LOT_B));
 
         List<Lot> lots = lotService.getLots(null, null, null);
 

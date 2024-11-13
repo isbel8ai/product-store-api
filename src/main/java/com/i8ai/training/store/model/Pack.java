@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,7 +24,7 @@ public class Pack {
 
     @NotNull
     @Column(nullable = false)
-    private Date deliveredAt;
+    private LocalDateTime receivedAt;
 
     @Column
     private Double soldAmount;

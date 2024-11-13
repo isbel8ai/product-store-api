@@ -1,8 +1,9 @@
 package com.i8ai.training.store.rest.dto;
 
 import com.i8ai.training.store.model.Offer;
+import com.i8ai.training.store.util.DateTimeUtils;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public record OfferDto(
         Long id,
@@ -10,7 +11,7 @@ public record OfferDto(
         Long productId,
         Double price,
         Double discount,
-        Date createdAt
+        ZonedDateTime createdAt
 ) {
     public OfferDto(Offer offer) {
         this(
@@ -19,7 +20,7 @@ public record OfferDto(
                 offer.getPack().getLot().getProduct().getId(),
                 offer.getPrice(),
                 offer.getDiscount(),
-                offer.getCreatedAt()
+                DateTimeUtils.toUtcDateTime(offer.getCreatedAt())
         );
     }
 }

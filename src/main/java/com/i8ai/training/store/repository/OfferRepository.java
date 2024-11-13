@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -27,14 +27,14 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
             "and o.pack.shop.id = :shopId and o.pack.lot.product.id = :productId order by o.createdAt desc")
     List<Offer> findAllAvailableByShopIdAndProductId(Long shopId, Long productId);
 
-    List<Offer> findAllByCreatedAtBetween(Date start, Date end);
+    List<Offer> findAllByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    List<Offer> findAllByCreatedAtBetweenAndPackShopId(Date start, Date end, Long shopId);
+    List<Offer> findAllByCreatedAtBetweenAndPackShopId(LocalDateTime start, LocalDateTime end, Long shopId);
 
-    List<Offer> findAllByCreatedAtBetweenAndPackLotProductId(Date start, Date end, Long productId);
+    List<Offer> findAllByCreatedAtBetweenAndPackLotProductId(LocalDateTime start, LocalDateTime end, Long productId);
 
     List<Offer> findAllByCreatedAtBetweenAndPackShopIdAndPackLotProductId(
-            Date start, Date end, Long shopId, Long productId
+            LocalDateTime start, LocalDateTime end, Long shopId, Long productId
     );
 }
 

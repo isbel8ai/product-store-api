@@ -6,14 +6,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface LotRepository extends JpaRepository<Lot, Long> {
-    List<Lot> findAllByReceivedAtBetween(Date start, Date end);
+    List<Lot> findAllByAcquiredAtBetween(LocalDateTime start, LocalDateTime end);
 
-    List<Lot> findAllByReceivedAtBetweenAndProductId(Date start, Date end, Long productId);
+    List<Lot> findAllByAcquiredAtBetweenAndProductId(LocalDateTime start, LocalDateTime end, Long productId);
 
     @Query("select sum(l.acquiredAmount) from Lot l where l.product.id = :productId")
     Double getAmountArrivedByProductId(Long productId);

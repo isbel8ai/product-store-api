@@ -5,8 +5,11 @@ import com.i8ai.training.store.service.data.Balance;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
+
+import static com.i8ai.training.store.util.DateTimeUtils.dateTimeOrMax;
+import static com.i8ai.training.store.util.DateTimeUtils.dateTimeOrMin;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,62 +19,62 @@ public class BalanceController {
     private final BalanceService balanceService;
 
     @GetMapping
-    public Balance getNetBalance(@RequestParam(required = false) Date start,
-                                 @RequestParam(required = false) Date end) {
-        return balanceService.getNetBalance(start, end);
+    public Balance getNetBalance(@RequestParam(required = false) ZonedDateTime start,
+                                 @RequestParam(required = false) ZonedDateTime end) {
+        return balanceService.getNetBalance(dateTimeOrMin(start), dateTimeOrMax(end));
     }
 
     @GetMapping("product")
-    public List<Balance> getBalancesPerProduct(@RequestParam(required = false) Date start,
-                                               @RequestParam(required = false) Date end) {
-        return balanceService.getBalancesPerProduct(start, end);
+    public List<Balance> getBalancesPerProduct(@RequestParam(required = false) ZonedDateTime start,
+                                               @RequestParam(required = false) ZonedDateTime end) {
+        return balanceService.getBalancesPerProduct(dateTimeOrMin(start), dateTimeOrMax(end));
     }
 
     @GetMapping("product/{productId}")
     public Balance getBalanceByProduct(@PathVariable Long productId,
-                                       @RequestParam(required = false) Date start,
-                                       @RequestParam(required = false) Date end) {
-        return balanceService.getBalanceByProduct(productId, start, end);
+                                       @RequestParam(required = false) ZonedDateTime start,
+                                       @RequestParam(required = false) ZonedDateTime end) {
+        return balanceService.getBalanceByProduct(productId, dateTimeOrMin(start), dateTimeOrMax(end));
     }
 
     @GetMapping("product/{productId}/shop")
     public List<Balance> getBalancesByProductPerShop(@PathVariable Long productId,
-                                                     @RequestParam(required = false) Date start,
-                                                     @RequestParam(required = false) Date end) {
-        return balanceService.getBalancesByProductPerShop(productId, start, end);
+                                                     @RequestParam(required = false) ZonedDateTime start,
+                                                     @RequestParam(required = false) ZonedDateTime end) {
+        return balanceService.getBalancesByProductPerShop(productId, dateTimeOrMin(start), dateTimeOrMax(end));
     }
 
     @GetMapping("shop")
-    public List<Balance> getBalancesPerShop(@RequestParam(required = false) Date start,
-                                            @RequestParam(required = false) Date end) {
-        return balanceService.getBalancesPerShop(start, end);
+    public List<Balance> getBalancesPerShop(@RequestParam(required = false) ZonedDateTime start,
+                                            @RequestParam(required = false) ZonedDateTime end) {
+        return balanceService.getBalancesPerShop(dateTimeOrMin(start), dateTimeOrMax(end));
     }
 
     @GetMapping("shop/{shopId}")
     public Balance getBalanceByShop(@PathVariable Long shopId,
-                                    @RequestParam(required = false) Date start,
-                                    @RequestParam(required = false) Date end) {
-        return balanceService.getBalanceByShop(shopId, start, end);
+                                    @RequestParam(required = false) ZonedDateTime start,
+                                    @RequestParam(required = false) ZonedDateTime end) {
+        return balanceService.getBalanceByShop(shopId, dateTimeOrMin(start), dateTimeOrMax(end));
     }
 
     @GetMapping("shop/{shopId}/product")
-    public List<Balance> getBalancesByShopPerProduct(@RequestParam(required = false) Date start,
-                                                     @RequestParam(required = false) Date end,
+    public List<Balance> getBalancesByShopPerProduct(@RequestParam(required = false) ZonedDateTime start,
+                                                     @RequestParam(required = false) ZonedDateTime end,
                                                      @PathVariable Long shopId) {
-        return balanceService.getBalancesByShopPerProduct(shopId, start, end);
+        return balanceService.getBalancesByShopPerProduct(shopId, dateTimeOrMin(start), dateTimeOrMax(end));
     }
 
     @GetMapping({"product/{productId}/shop/{shopId}", "shop/{shopId}/product/{productId}"})
     public Balance getBalanceByProductAndShop(@PathVariable Long productId,
                                               @PathVariable Long shopId,
-                                              @RequestParam(required = false) Date start,
-                                              @RequestParam(required = false) Date end) {
-        return balanceService.getBalanceByProductAndShop(productId, shopId, start, end);
+                                              @RequestParam(required = false) ZonedDateTime start,
+                                              @RequestParam(required = false) ZonedDateTime end) {
+        return balanceService.getBalanceByProductAndShop(productId, shopId, dateTimeOrMin(start), dateTimeOrMax(end));
     }
 
     @GetMapping({"product/shop", "shop/product/"})
-    public List<Balance> getBalancesPerProductPerShop(@RequestParam(required = false) Date start,
-                                                      @RequestParam(required = false) Date end) {
-        return balanceService.getBalancesPerProductPerShop(start, end);
+    public List<Balance> getBalancesPerProductPerShop(@RequestParam(required = false) ZonedDateTime start,
+                                                      @RequestParam(required = false) ZonedDateTime end) {
+        return balanceService.getBalancesPerProductPerShop(dateTimeOrMin(start), dateTimeOrMax(end));
     }
 }

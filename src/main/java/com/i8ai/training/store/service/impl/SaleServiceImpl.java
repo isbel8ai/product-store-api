@@ -13,7 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,7 +35,7 @@ public class SaleServiceImpl implements SaleService {
         Sale sale = Sale.builder()
                 .offer(offer)
                 .amount(saleDto.amount())
-                .registeredAt(DateTimeUtils.dateOrNow(saleDto.registeredAt()))
+                .registeredAt(DateTimeUtils.dateTimeOrNow(saleDto.registeredAt()))
                 .build();
 
         saleRepository.save(sale);
@@ -44,9 +44,9 @@ public class SaleServiceImpl implements SaleService {
     }
 
     @Override
-    public List<Sale> getSales(Date start, Date end, Long productId, Long shopId) {
-        start = DateTimeUtils.dateOrMin(start);
-        end = DateTimeUtils.dateOrNow(end);
+    public List<Sale> getSales(LocalDateTime start, LocalDateTime end, Long productId, Long shopId) {
+        start = DateTimeUtils.dateTimeOrMin(start);
+        end = DateTimeUtils.dateTimeOrMax(end);
 
         if (productId == null) {
             if (shopId == null) {
@@ -71,54 +71,54 @@ public class SaleServiceImpl implements SaleService {
     }
 
     @Override
-    public Double getNetSalesIncome(Date start, Date end) {
-        return saleRepository.getNetSalesIncome(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end));
+    public Double getNetSalesIncome(LocalDateTime start, LocalDateTime end) {
+        return saleRepository.getNetSalesIncome(DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end));
     }
 
     @Override
-    public Double getSalesIncomeByProduct(Long productId, Date start, Date end) {
+    public Double getSalesIncomeByProduct(Long productId, LocalDateTime start, LocalDateTime end) {
         return saleRepository.getIncomeByProductId(
-                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end), productId
+                DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end), productId
         );
     }
 
     @Override
-    public Double getSalesIncomeByShop(Long shopId, Date start, Date end) {
+    public Double getSalesIncomeByShop(Long shopId, LocalDateTime start, LocalDateTime end) {
         return saleRepository.getIncomeByShopId(
-                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end), shopId
+                DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end), shopId
         );
     }
 
     @Override
-    public Double getSalesIncomeByProductAndShop(Long productId, Long shopId, Date start, Date end) {
+    public Double getSalesIncomeByProductAndShop(Long productId, Long shopId, LocalDateTime start, LocalDateTime end) {
         return saleRepository.getIncomeByProductIdAndShopId(
-                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end), productId, shopId
+                DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end), productId, shopId
         );
     }
 
     @Override
-    public Double getNetSalesExpenses(Date start, Date end) {
-        return saleRepository.getNetSalesExpenses(DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end));
+    public Double getNetSalesExpenses(LocalDateTime start, LocalDateTime end) {
+        return saleRepository.getNetSalesExpenses(DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end));
     }
 
     @Override
-    public Double getSalesExpensesByProduct(Long productId, Date start, Date end) {
+    public Double getSalesExpensesByProduct(Long productId, LocalDateTime start, LocalDateTime end) {
         return saleRepository.getSaleExpensesByProductId(
-                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end), productId
+                DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end), productId
         );
     }
 
     @Override
-    public Double getSalesExpensesByShop(Long shopId, Date start, Date end) {
+    public Double getSalesExpensesByShop(Long shopId, LocalDateTime start, LocalDateTime end) {
         return saleRepository.getSaleExpensesByShopId(
-                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end), shopId
+                DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end), shopId
         );
     }
 
     @Override
-    public Double getSalesExpensesByProductAndShop(Long productId, Long shopId, Date start, Date end) {
+    public Double getSalesExpensesByProductAndShop(Long productId, Long shopId, LocalDateTime start, LocalDateTime end) {
         return saleRepository.getSaleExpensesByProductIdAndShopId(
-                DateTimeUtils.dateOrMin(start), DateTimeUtils.dateOrNow(end), productId, shopId
+                DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end), productId, shopId
         );
     }
 

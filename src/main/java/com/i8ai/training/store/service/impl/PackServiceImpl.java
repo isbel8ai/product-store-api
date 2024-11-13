@@ -15,7 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +42,7 @@ public class PackServiceImpl implements PackService {
                 .lot(lot)
                 .shop(shop)
                 .receivedAmount(packDto.amount())
-                .deliveredAt(DateTimeUtils.dateOrNow(packDto.deliveredAt()))
+                .receivedAt(DateTimeUtils.dateTimeOrNow(packDto.receivedAt()))
                 .build();
 
         packRepository.save(pack);
@@ -62,22 +62,22 @@ public class PackServiceImpl implements PackService {
     }
 
     @Override
-    public List<Pack> getPacks(Long productId, Long shopId, Date start, Date end) {
-        start = DateTimeUtils.dateOrMin(start);
-        end = DateTimeUtils.dateOrNow(end);
+    public List<Pack> getPacks(Long productId, Long shopId, LocalDateTime start, LocalDateTime end) {
+        start = DateTimeUtils.dateTimeOrMin(start);
+        end = DateTimeUtils.dateTimeOrMax(end);
 
         if (productId == null) {
             if (shopId == null) {
-                return packRepository.findAllByDeliveredAtBetween(start, end);
+                return packRepository.findAllByReceivedAtBetween(start, end);
             } else {
-                return packRepository.findAllByDeliveredAtBetweenAndShopId(start, end, shopId);
+                return packRepository.findAllByReceivedAtBetweenAndShopId(start, end, shopId);
             }
         }
 
         if (shopId == null) {
-            return packRepository.findAllByDeliveredAtBetweenAndLotProductId(start, end, productId);
+            return packRepository.findAllByReceivedAtBetweenAndLotProductId(start, end, productId);
         } else {
-            return packRepository.findAllByDeliveredAtBetweenAndLotProductIdAndShopId(start, end, productId, shopId);
+            return packRepository.findAllByReceivedAtBetweenAndLotProductIdAndShopId(start, end, productId, shopId);
         }
     }
 

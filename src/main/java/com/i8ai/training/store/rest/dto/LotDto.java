@@ -1,8 +1,9 @@
 package com.i8ai.training.store.rest.dto;
 
 import com.i8ai.training.store.model.Lot;
+import com.i8ai.training.store.util.DateTimeUtils;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public record LotDto(
         Long id,
@@ -10,7 +11,7 @@ public record LotDto(
         Double acquiredAmount,
         Double costPerUnit,
         Double currentAmount,
-        Date receivedAt
+        ZonedDateTime acquiredAt
 ) {
     public LotDto(Lot lot) {
         this(
@@ -19,7 +20,7 @@ public record LotDto(
                 lot.getAcquiredAmount(),
                 lot.getCostPerUnit(),
                 lot.getCurrentAmount(),
-                lot.getReceivedAt()
+                DateTimeUtils.toUtcDateTime(lot.getAcquiredAt())
         );
     }
 }

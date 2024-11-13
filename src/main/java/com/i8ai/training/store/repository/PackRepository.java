@@ -6,23 +6,23 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PackRepository extends JpaRepository<Pack, Long> {
 
-    List<Pack> findAllByDeliveredAtBetween(Date start, Date end);
+    List<Pack> findAllByReceivedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    List<Pack> findAllByDeliveredAtBetweenAndShopId(Date start, Date end, Long shopId);
+    List<Pack> findAllByReceivedAtBetweenAndShopId(LocalDateTime start, LocalDateTime end, Long shopId);
 
-    List<Pack> findAllByDeliveredAtBetweenAndLotProductId(Date start, Date end, Long productId);
+    List<Pack> findAllByReceivedAtBetweenAndLotProductId(LocalDateTime start, LocalDateTime end, Long productId);
 
-    List<Pack> findAllByDeliveredAtBetweenAndLotProductIdAndShopId(Date start, Date end, Long productId, Long shopId);
+    List<Pack> findAllByReceivedAtBetweenAndLotProductIdAndShopId(LocalDateTime start, LocalDateTime end, Long productId, Long shopId);
 
     @Query("select p from Pack p where (p.soldAmount is null or p.receivedAmount - p.soldAmount > 0) " +
-            "and p.shop.id = :shopId and p.lot.product.id = :productId order by p.deliveredAt limit 1")
+            "and p.shop.id = :shopId and p.lot.product.id = :productId order by p.receivedAt limit 1")
     Optional<Pack> findAvailableByShopIdAndProductId(Long shopId, Long productId);
 
     @Query("select sum(d.receivedAmount) from Pack d where d.lot.id = ?1")

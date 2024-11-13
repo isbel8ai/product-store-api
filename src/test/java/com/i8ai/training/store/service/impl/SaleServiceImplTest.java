@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.i8ai.training.store.util.TestConstants.*;
@@ -35,21 +35,19 @@ class SaleServiceImplTest {
     @Test
     void getSalesWithAllFilters() {
         when(saleRepositoryMock.findAllByRegisteredAtBetweenAndOfferPackLotProductIdAndOfferPackShopId(
-                new Date(35), new Date(40), PRODUCT_A_ID, SHOP1_ID)
+                any(), any(), eq(PRODUCT_A_ID), eq(SHOP1_ID))
         ).thenReturn(List.of(SALE_1A35, SALE_1A40));
 
-        List<Sale> sales = saleService.getSales(new Date(35), new Date(40), PRODUCT_A_ID, SHOP1_ID);
+        List<Sale> sales = saleService.getSales(LocalDateTime.now(), LocalDateTime.now(), PRODUCT_A_ID, SHOP1_ID);
 
         assertEquals(2, sales.size());
     }
 
     @Test
     void getSalesWithTimeFilter() {
-        when(saleRepositoryMock.findAllByRegisteredAtBetween(new Date(45), new Date(50)))
-                .thenReturn(List.of(SALE_1A35, SALE_1A40));
+        when(saleRepositoryMock.findAllByRegisteredAtBetween(any(), any())).thenReturn(List.of(SALE_1A35, SALE_1A40));
 
-        List<Sale> sales = saleService.getSales(new Date(45), new Date(50), null, null);
-
+        List<Sale> sales = saleService.getSales(LocalDateTime.now(), LocalDateTime.now(), null, null);
         assertEquals(2, sales.size());
     }
 

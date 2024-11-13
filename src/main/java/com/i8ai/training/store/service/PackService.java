@@ -3,7 +3,7 @@ package com.i8ai.training.store.service;
 import com.i8ai.training.store.model.Pack;
 import com.i8ai.training.store.rest.dto.PackDto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PackService {
@@ -14,7 +14,7 @@ public interface PackService {
 
     Pack getActivePack(Long shopId, Long productId);
 
-    List<Pack> getPacks(Long productId, Long shopId, Date start, Date end);
+    List<Pack> getPacks(Long productId, Long shopId, LocalDateTime start, LocalDateTime end);
 
     void updateSoldAmount(Long packId);
 
