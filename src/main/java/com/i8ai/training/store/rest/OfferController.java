@@ -2,15 +2,13 @@ package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.rest.dto.OfferDto;
 import com.i8ai.training.store.service.OfferService;
+import com.i8ai.training.store.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
-import static com.i8ai.training.store.util.DateTimeUtils.dateTimeOrMax;
-import static com.i8ai.training.store.util.DateTimeUtils.dateTimeOrMin;
 
 
 @RestController
@@ -36,7 +34,8 @@ public class OfferController {
                                            @RequestParam(required = false) Long productId,
                                            @RequestParam(required = false) ZonedDateTime start,
                                            @RequestParam(required = false) ZonedDateTime end) {
-        return offerService.getOffersHistory(shopId, productId, dateTimeOrMin(start), dateTimeOrMax(end)).stream()
-                .map(OfferDto::new).toList();
+        return offerService.getOffersHistory(
+                shopId, productId, DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end)
+        ).stream().map(OfferDto::new).toList();
     }
 }

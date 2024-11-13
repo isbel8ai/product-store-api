@@ -2,15 +2,13 @@ package com.i8ai.training.store.rest;
 
 import com.i8ai.training.store.rest.dto.LotDto;
 import com.i8ai.training.store.service.LotService;
+import com.i8ai.training.store.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
-import static com.i8ai.training.store.util.DateTimeUtils.dateTimeOrMax;
-import static com.i8ai.training.store.util.DateTimeUtils.dateTimeOrMin;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,8 +26,8 @@ public class LotController {
     public List<LotDto> getLots(@RequestParam(required = false) Long productId,
                                 @RequestParam(required = false) ZonedDateTime start,
                                 @RequestParam(required = false) ZonedDateTime end) {
-        return lotService.getLots(productId, dateTimeOrMin(start), dateTimeOrMax(end)).stream()
-                .map(LotDto::new).toList();
+        return lotService.getLots(productId, DateTimeUtils.dateTimeOrMin(start), DateTimeUtils.dateTimeOrMax(end))
+                .stream().map(LotDto::new).toList();
     }
 
     @DeleteMapping("{lotId}")
