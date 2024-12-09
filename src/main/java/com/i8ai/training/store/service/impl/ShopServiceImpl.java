@@ -5,6 +5,7 @@ import com.i8ai.training.store.repository.ShopRepository;
 import com.i8ai.training.store.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,13 +16,14 @@ public class ShopServiceImpl implements ShopService {
     private final ShopRepository shopRepository;
 
     @Override
-    public List<Shop> getAllShops() {
-        return shopRepository.findAll();
+    @Transactional
+    public Shop createShop(Shop newShop) {
+        return shopRepository.save(newShop);
     }
 
     @Override
-    public Shop createShop(Shop newShop) {
-        return shopRepository.save(newShop);
+    public List<Shop> getAllShops() {
+        return shopRepository.findAll();
     }
 
     @Override
@@ -30,6 +32,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public Shop replaceShop(Long shopId, Shop modifiedShop) {
         Shop shop = shopRepository.findById(shopId).orElseThrow();
         shop.setName(modifiedShop.getName());
@@ -39,6 +42,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional
     public void deleteShop(Long shopId) {
         shopRepository.deleteById(shopId);
     }

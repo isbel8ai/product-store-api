@@ -31,9 +31,14 @@ class ProductControllerTest {
 
     @Test
     void testCreateProduct() throws Exception {
+        Product product = Product.builder()
+                .code(TestConstants.PRODUCT_A_CODE)
+                .name(TestConstants.PRODUCT_A_NAME)
+                .measureUnit(TestConstants.PRODUCT_A_MEASURE)
+                .build();
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(helper.asJsonString(TestConstants.PRODUCT_A)))
+                        .content(helper.asJsonString(product)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());

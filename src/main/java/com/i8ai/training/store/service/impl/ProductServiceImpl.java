@@ -8,6 +8,7 @@ import com.i8ai.training.store.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product createProduct(Product newProduct) {
         try {
             return productRepository.save(newProduct);
@@ -37,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product replaceProduct(Long productId, Product modifiedProduct) {
         Product product = productRepository.findById(productId).orElseThrow(ElementNotFoundException::new);
         product.setCode(modifiedProduct.getCode());
@@ -52,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
     }

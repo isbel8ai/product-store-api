@@ -25,9 +25,13 @@ class ShopControllerTest {
 
     @Test
     void testCreateShop() throws Exception {
+        Shop shop = Shop.builder()
+                .name(TestConstants.SHOP1_NAME)
+                .address(TestConstants.SHOP1_ADDRESS)
+                .build();
         mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(helper.asJsonString(TestConstants.SHOP1)))
+                        .content(helper.asJsonString(shop)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());

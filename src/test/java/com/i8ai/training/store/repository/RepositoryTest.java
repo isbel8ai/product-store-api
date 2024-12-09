@@ -91,6 +91,7 @@ class RepositoryTest {
     @AfterEach
     void tearDown() {
         saleRepository.deleteAll();
+        offerRepository.deleteAll();
         packRepository.deleteAll();
         lotRepository.deleteAll();
         productRepository.deleteAll();
