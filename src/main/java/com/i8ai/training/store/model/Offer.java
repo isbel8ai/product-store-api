@@ -22,7 +22,6 @@ public class Offer {
     @Column(nullable = false)
     private Double price;
 
-
     @NotNull
     @Column(nullable = false)
     private LocalDateTime createdAt;

@@ -87,9 +87,4 @@ public class OfferServiceImpl implements OfferService {
             );
         }
     }
-
-    @Override
-    public void updateOfferPack(Long packId) {
-        packService.updateSoldAmount(packId);
-    }
 }

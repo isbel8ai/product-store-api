@@ -15,6 +15,4 @@ public interface OfferService {
     List<Offer> getCurrentOffers(Long shopId, Long productId);
 
     List<Offer> getOffersHistory(Long shopId, Long productId, LocalDateTime start, LocalDateTime end);
-
-    void updateOfferPack(Long packId);
 }
