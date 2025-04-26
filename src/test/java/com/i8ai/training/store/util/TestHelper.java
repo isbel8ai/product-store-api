@@ -23,6 +23,8 @@ public class TestHelper {
 
     private final PackRepository packRepository;
 
+    private final InvoiceRepository invoiceRepository;
+
     private final OfferRepository offerRepository;
 
     private final SaleRepository saleRepository;
@@ -105,6 +107,14 @@ public class TestHelper {
         );
     }
 
+    public Invoice createInvoice() {
+        return invoiceRepository.save(Invoice.builder()
+                .status(InvoiceStatus.CREATED)
+                .createdAt(LocalDateTime.now())
+                .build()
+        );
+    }
+
     public Offer createOffer(Pack pack, Double price) {
         return offerRepository.save(Offer.builder()
                 .createdAt(LocalDateTime.now())
@@ -114,11 +124,12 @@ public class TestHelper {
         );
     }
 
-    public Sale createSale(Offer offer, Double amount) {
+    public Sale createSale(Invoice invoice, Offer offer, Double amount) {
         return saleRepository.save(Sale.builder()
                 .registeredAt(LocalDateTime.now())
                 .amount(amount)
                 .offer(offer)
+                .invoice(invoice)
                 .build()
         );
     }
@@ -137,6 +148,10 @@ public class TestHelper {
 
     public void deleteAllPacks() {
         packRepository.deleteAll();
+    }
+
+    public void deleteAllInvoices() {
+        invoiceRepository.deleteAll();
     }
 
     public void deleteAllOffers() {

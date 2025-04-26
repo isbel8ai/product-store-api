@@ -1,5 +1,6 @@
 package com.i8ai.training.store.rest;
 
+import com.i8ai.training.store.model.Invoice;
 import com.i8ai.training.store.model.Lot;
 import com.i8ai.training.store.model.Offer;
 import com.i8ai.training.store.model.Shop;
@@ -52,14 +53,17 @@ class BalanceControllerTest {
         Offer offer2A = helper.createOffer(helper.createPack2A(lotA, shop2), TestConstants.PRODUCT_A_PRICE);
         Offer offer2B = helper.createOffer(helper.createPack2B(lotB, shop2), TestConstants.PRODUCT_B_PRICE);
 
-        helper.createSale(offer1A, SALE_1A35_AMOUNT);
-        helper.createSale(offer1A, SALE_1A40_AMOUNT);
-        helper.createSale(offer1B, SALE_1B45_AMOUNT);
-        helper.createSale(offer1B, SALE_1B50_AMOUNT);
-        helper.createSale(offer2A, SALE_2A55_AMOUNT);
-        helper.createSale(offer2A, SALE_2A60_AMOUNT);
-        helper.createSale(offer2B, SALE_2B65_AMOUNT);
-        helper.createSale(offer2B, SALE_2B70_AMOUNT);
+        Invoice invoiceFirst = helper.createInvoice();
+        Invoice invoiceSecond = helper.createInvoice();
+
+        helper.createSale(invoiceFirst, offer1A, SALE_1A35_AMOUNT);
+        helper.createSale(invoiceSecond, offer1A, SALE_1A40_AMOUNT);
+        helper.createSale(invoiceFirst, offer1B, SALE_1B45_AMOUNT);
+        helper.createSale(invoiceSecond, offer1B, SALE_1B50_AMOUNT);
+        helper.createSale(invoiceFirst, offer2A, SALE_2A55_AMOUNT);
+        helper.createSale(invoiceSecond, offer2A, SALE_2A60_AMOUNT);
+        helper.createSale(invoiceFirst, offer2B, SALE_2B65_AMOUNT);
+        helper.createSale(invoiceSecond, offer2B, SALE_2B70_AMOUNT);
     }
 
     @AfterEach

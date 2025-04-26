@@ -4,6 +4,7 @@ import com.i8ai.training.store.model.Product;
 import com.i8ai.training.store.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,8 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Product createProduct(@Valid @RequestBody Product newProduct) {
         return productService.createProduct(newProduct);
     }

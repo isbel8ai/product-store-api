@@ -1,6 +1,6 @@
 package com.i8ai.training.store.service.impl;
 
-import com.i8ai.training.store.error.ElementNotFoundException;
+import com.i8ai.training.store.exception.ElementNotFoundException;
 import com.i8ai.training.store.model.Offer;
 import com.i8ai.training.store.model.Pack;
 import com.i8ai.training.store.repository.OfferRepository;

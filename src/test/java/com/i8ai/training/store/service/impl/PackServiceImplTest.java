@@ -1,7 +1,7 @@
 package com.i8ai.training.store.service.impl;
 
-import com.i8ai.training.store.error.ElementNotFoundException;
-import com.i8ai.training.store.error.NotValidAmountException;
+import com.i8ai.training.store.exception.ElementNotFoundException;
+import com.i8ai.training.store.exception.InvalidPackAmountException;
 import com.i8ai.training.store.model.Pack;
 import com.i8ai.training.store.repository.PackRepository;
 import com.i8ai.training.store.rest.dto.PackDto;
@@ -98,6 +98,24 @@ class PackServiceImplTest {
     }
 
     @Test
+    void getNotExistingActivePack() {
+        when(packRepositoryMock.findAvailableByShopIdAndProductId(SHOP2_ID, PRODUCT_B_ID))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ElementNotFoundException.class, () -> packService.getActivePack(SHOP2_ID, PRODUCT_B_ID));
+    }
+
+    @Test
+    void getActivePack() {
+        when(packRepositoryMock.findAvailableByShopIdAndProductId(SHOP2_ID, PRODUCT_B_ID))
+                .thenReturn(Optional.of(PACK2B));
+
+        Pack pack = packService.getActivePack(SHOP2_ID, PRODUCT_B_ID);
+
+        assertEquals(PACK2B_ID, pack.getId());
+    }
+
+    @Test
     void registerPackWithNotValidAmount() {
         when(lotServiceMock.getLot(LOT_A_ID)).thenReturn(LOT_A);
 
@@ -107,7 +125,7 @@ class PackServiceImplTest {
                 .shop(SHOP1)
                 .build());
 
-        assertThrows(NotValidAmountException.class, () -> packService.registerPack(packDto));
+        assertThrows(InvalidPackAmountException.class, () -> packService.registerPack(packDto));
     }
 
     @Test
@@ -121,7 +139,7 @@ class PackServiceImplTest {
                 .shop(SHOP1)
                 .build());
 
-        assertThrows(NotValidAmountException.class, () -> packService.registerPack(packDto));
+        assertThrows(InvalidPackAmountException.class, () -> packService.registerPack(packDto));
     }
 
     @Test

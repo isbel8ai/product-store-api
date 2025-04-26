@@ -1,10 +1,16 @@
 package com.i8ai.training.store.service.impl;
 
-import com.i8ai.training.store.error.NotValidAmountException;
+import com.i8ai.training.store.exception.InvalidInvoiceStatusTransitionException;
+import com.i8ai.training.store.exception.InvalidSaleAmountException;
+import com.i8ai.training.store.exception.InvalidSaleShopForInvoiceException;
+import com.i8ai.training.store.model.Invoice;
+import com.i8ai.training.store.model.InvoiceStatus;
 import com.i8ai.training.store.model.Sale;
 import com.i8ai.training.store.repository.SaleRepository;
 import com.i8ai.training.store.rest.dto.SaleDto;
+import com.i8ai.training.store.service.InvoiceService;
 import com.i8ai.training.store.service.OfferService;
+import com.i8ai.training.store.service.PackService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +30,13 @@ import static org.mockito.Mockito.when;
 class SaleServiceImplTest {
 
     @Mock
+    private InvoiceService invoiceServiceMock;
+
+    @Mock
     private OfferService offerServiceMock;
+
+    @Mock
+    private PackService packServiceMock;
 
     @Mock
     private SaleRepository saleRepositoryMock;
@@ -83,28 +95,59 @@ class SaleServiceImplTest {
     }
 
     @Test
-    void registerSaleWithNotValidAmount() {
-        SaleDto saleDto = new SaleDto(null, OFFER1A_ID, -10.0, null);
+    void registerSaleWithPaidInvoice() {
+        Invoice invoice = Invoice.builder()
+                .id(INVOICE_SECOND_UUID)
+                .status(InvoiceStatus.PAID)
+                .sales(List.of(SALE_2A55))
+                .build();
+        when(invoiceServiceMock.getInvoice(INVOICE_SECOND_UUID)).thenReturn(invoice);
+        SaleDto saleDto = new SaleDto(null, INVOICE_SECOND_UUID, OFFER2A_ID, PACK2A_AMOUNT, null);
 
-        assertThrows(NotValidAmountException.class, () -> saleService.registerSale(saleDto));
+        assertThrows(InvalidInvoiceStatusTransitionException.class, () -> saleService.registerSale(saleDto));
+    }
+
+    @Test
+    void registerSaleWithDistinctShop() {
+        Invoice invoice = Invoice.builder()
+                .id(INVOICE_FIRST_UUID)
+                .status(InvoiceStatus.CREATED)
+                .sales(List.of(SALE_1A40))
+                .build();
+        when(invoiceServiceMock.getInvoice(INVOICE_FIRST_UUID)).thenReturn(invoice);
+        when(offerServiceMock.getOffer(OFFER2A_ID)).thenReturn(OFFER2A);
+        SaleDto saleDto = new SaleDto(null, INVOICE_FIRST_UUID, OFFER2A_ID, PACK2A_AMOUNT, null);
+
+        assertThrows(InvalidSaleShopForInvoiceException.class, () -> saleService.registerSale(saleDto));
+    }
+
+    @Test
+    void registerSaleWithNotValidAmount() {
+        when(invoiceServiceMock.getInvoice(INVOICE_FIRST_UUID)).thenReturn(INVOICE_FIRST);
+        when(offerServiceMock.getOffer(OFFER1A_ID)).thenReturn(OFFER1A);
+        SaleDto saleDto = new SaleDto(null, INVOICE_FIRST_UUID, OFFER1A_ID, -10.0, null);
+
+        assertThrows(InvalidSaleAmountException.class, () -> saleService.registerSale(saleDto));
     }
 
     @Test
     void registerSaleWithNotAvailableAmount() {
-        when(offerServiceMock.getOffer(OFFER1A_ID)).thenReturn(OFFER1A);
-        SaleDto saleDto = new SaleDto(null, OFFER1A_ID, PACK1A_AMOUNT + 1, null);
+        when(invoiceServiceMock.getInvoice(INVOICE_SECOND_UUID)).thenReturn(INVOICE_SECOND);
+        when(offerServiceMock.getOffer(OFFER2A_ID)).thenReturn(OFFER1A);
+        SaleDto saleDto = new SaleDto(null, INVOICE_SECOND_UUID, OFFER2A_ID, PACK2A_AMOUNT + 1, null);
 
-        assertThrows(NotValidAmountException.class, () -> saleService.registerSale(saleDto));
+        assertThrows(InvalidSaleAmountException.class, () -> saleService.registerSale(saleDto));
     }
 
     @Test
     void registerSale() {
+        when(invoiceServiceMock.getInvoice(INVOICE_SECOND_UUID)).thenReturn(INVOICE_SECOND);
         when(offerServiceMock.getOffer(OFFER1A_ID)).thenReturn(OFFER1A);
-        SaleDto saleDto = new SaleDto(null, OFFER1A_ID, SALE_1A40_AMOUNT, null);
+
+        SaleDto saleDto = new SaleDto(null, INVOICE_SECOND_UUID, OFFER1A_ID, SALE_1A40_AMOUNT, null);
 
         assertDoesNotThrow(() -> saleService.registerSale(saleDto));
     }
-
 
     @Test
     void getSoldAmountByProductAndShop() {
@@ -115,7 +158,6 @@ class SaleServiceImplTest {
 
         assertEquals(PACK2B_SALES_AMOUNT, amount);
     }
-
 
     @Test
     void getNetSalesIncome() {

@@ -32,7 +32,7 @@ class ShopControllerTest {
         mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(helper.asJsonString(shop)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());
     }

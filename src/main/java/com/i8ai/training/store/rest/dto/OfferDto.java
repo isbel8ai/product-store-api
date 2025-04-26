@@ -2,14 +2,15 @@ package com.i8ai.training.store.rest.dto;
 
 import com.i8ai.training.store.model.Offer;
 import com.i8ai.training.store.util.DateTimeUtils;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.ZonedDateTime;
 
 public record OfferDto(
         Long id,
-        Long shopId,
-        Long productId,
-        Double price,
+        @NotNull Long shopId,
+        @NotNull Long productId,
+        @NotNull Double price,
         Double discount,
         ZonedDateTime createdAt
 ) {

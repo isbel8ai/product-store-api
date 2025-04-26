@@ -2,8 +2,8 @@ package com.i8ai.training.store.service.impl;
 
 import com.i8ai.training.store.model.Product;
 import com.i8ai.training.store.model.Shop;
+import com.i8ai.training.store.rest.dto.ExistenceDto;
 import com.i8ai.training.store.service.*;
-import com.i8ai.training.store.service.data.Existence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,43 +24,43 @@ public class ExistenceServiceImpl implements ExistenceService {
     private final SaleService saleService;
 
     @Override
-    public List<Existence> getAllProductsExistenceInMain() {
+    public List<ExistenceDto> getAllProductsExistenceInMain() {
         return productService.getAllProducts().stream().map(this::getExistenceByProductInMain).toList();
     }
 
     @Override
-    public Existence getProductExistenceInMain(Long productId) {
+    public ExistenceDto getProductExistenceInMain(Long productId) {
         Product product = productService.getProduct(productId);
 
         return getExistenceByProductInMain(product);
     }
 
     @Override
-    public List<Existence> getProductExistenceInAllShops(Long productId) {
+    public List<ExistenceDto> getProductExistenceInAllShops(Long productId) {
         Product product = productService.getProduct(productId);
 
         return shopService.getAllShops().stream().map(shop -> getExistenceByProductAndShop(product, shop)).toList();
     }
 
     @Override
-    public Existence getProductExistenceInShop(Long productId, Long shopId) {
+    public ExistenceDto getProductExistenceInShop(Long productId, Long shopId) {
         Product product = productService.getProduct(productId);
         Shop shop = shopService.getShop(shopId);
 
         return getExistenceByProductAndShop(product, shop);
     }
 
-    public Existence getExistenceByProductInMain(Product product) {
+    public ExistenceDto getExistenceByProductInMain(Product product) {
         Double amount = lotService.getProductReceivedAmount(product.getId()) -
                 packService.getProductDeliveredAmount(product.getId());
 
-        return Existence.builder().amount(amount).product(product).build();
+        return ExistenceDto.builder().amount(amount).product(product).build();
     }
 
-    private Existence getExistenceByProductAndShop(Product product, Shop shop) {
+    private ExistenceDto getExistenceByProductAndShop(Product product, Shop shop) {
         Double amount = packService.getProductDeliveredToShopAmount(product.getId(), shop.getId()) -
                 saleService.getSoldAmountByProductAndShop(product.getId(), shop.getId());
 
-        return Existence.builder().amount(amount).product(product).shop(shop).build();
+        return ExistenceDto.builder().amount(amount).product(product).shop(shop).build();
     }
 }

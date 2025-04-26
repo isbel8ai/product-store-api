@@ -1,9 +1,6 @@
 package com.i8ai.training.store.rest;
 
-import com.i8ai.training.store.model.Lot;
-import com.i8ai.training.store.model.Offer;
-import com.i8ai.training.store.model.Sale;
-import com.i8ai.training.store.model.Shop;
+import com.i8ai.training.store.model.*;
 import com.i8ai.training.store.rest.dto.SaleDto;
 import com.i8ai.training.store.util.TestConstants;
 import com.i8ai.training.store.util.TestHelper;
@@ -31,10 +28,13 @@ class SaleControllerTest {
 
     private final TestHelper helper;
 
+    private Invoice invoice;
+
     private Offer offer1A;
     private Offer offer1B;
     private Offer offer2A;
     private Offer offer2B;
+
 
     @BeforeEach
     void setUp() {
@@ -48,11 +48,14 @@ class SaleControllerTest {
         offer1B = helper.createOffer(helper.createPack1B(lotB, shop1), TestConstants.PRODUCT_B_PRICE);
         offer2A = helper.createOffer(helper.createPack2A(lotA, shop2), TestConstants.PRODUCT_A_PRICE);
         offer2B = helper.createOffer(helper.createPack2B(lotB, shop2), TestConstants.PRODUCT_B_PRICE);
+
+        invoice = helper.createInvoice();
     }
 
     @AfterEach
     void tearDown() {
         helper.deleteAllSales();
+        helper.deleteAllInvoices();
         helper.deleteAllOffers();
         helper.deleteAllPacks();
         helper.deleteAllLots();
@@ -63,6 +66,7 @@ class SaleControllerTest {
     @Test
     void testRegisterSale() throws Exception {
         Sale sale = Sale.builder()
+                .invoice(invoice)
                 .offer(offer1A)
                 .amount(TestConstants.SALE_1A40_AMOUNT)
                 .registeredAt(LocalDateTime.now())
@@ -71,17 +75,17 @@ class SaleControllerTest {
         mockMvc.perform(post("/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(helper.asJsonString(new SaleDto(sale))))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());
     }
 
     @Test
     void testGetSales() throws Exception {
-        helper.createSale(offer1A, TestConstants.SALE_1A35_AMOUNT);
-        helper.createSale(offer1B, TestConstants.SALE_1B45_AMOUNT);
-        helper.createSale(offer2A, TestConstants.SALE_2A55_AMOUNT);
-        helper.createSale(offer2B, TestConstants.SALE_2B65_AMOUNT);
+        helper.createSale(invoice, offer1A, TestConstants.SALE_1A35_AMOUNT);
+        helper.createSale(invoice, offer1B, TestConstants.SALE_1B45_AMOUNT);
+        helper.createSale(invoice, offer2A, TestConstants.SALE_2A55_AMOUNT);
+        helper.createSale(invoice, offer2B, TestConstants.SALE_2B65_AMOUNT);
 
         mockMvc.perform(get("/sales"))
                 .andExpect(status().isOk())
@@ -95,7 +99,7 @@ class SaleControllerTest {
 
     @Test
     void testDeleteSale() throws Exception {
-        Sale sale2B = helper.createSale(offer2B, TestConstants.SALE_2B70_AMOUNT);
+        Sale sale2B = helper.createSale(invoice, offer2B, TestConstants.SALE_2B70_AMOUNT);
 
         mockMvc.perform(delete("/sales/{saleId}", sale2B.getId()))
                 .andExpect(status().isOk());

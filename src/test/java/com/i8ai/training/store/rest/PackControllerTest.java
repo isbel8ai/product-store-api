@@ -63,7 +63,7 @@ class PackControllerTest {
         mockMvc.perform(post("/packs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(helper.asJsonString(new PackDto(pack))))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists());
     }

@@ -3,6 +3,8 @@ package com.i8ai.training.store.util;
 import com.i8ai.training.store.model.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class TestConstants {
 
@@ -49,6 +51,9 @@ public class TestConstants {
     public static final Double PACK2A_AMOUNT = 350.0;
     public static final Double PACK2B_AMOUNT = 250.0;
 
+    public static final UUID INVOICE_FIRST_UUID = UUID.randomUUID();
+    public static final UUID INVOICE_SECOND_UUID = UUID.randomUUID();
+
     public static final Double SALE_1A35_AMOUNT = 150.0;
     public static final Double SALE_1A40_AMOUNT = 100.0;
     public static final Double SALE_1B45_AMOUNT = 50.0;
@@ -81,18 +86,12 @@ public class TestConstants {
     public static final Double PRODUCT_B_INCOME = PACK1B_SALES_INCOME + PACK2B_SALES_INCOME;
     public static final Double NET_SALES_INCOME = PRODUCT_A_INCOME + PRODUCT_B_INCOME;
     public static final Double SHOP2_INCOME = PACK2A_SALES_INCOME + PACK2B_SALES_INCOME;
+
     public static final Product PRODUCT_A = Product.builder()
             .id(PRODUCT_A_ID)
             .code(PRODUCT_A_CODE)
             .name(PRODUCT_A_NAME)
             .measureUnit(PRODUCT_A_MEASURE)
-            .build();
-    public static final Lot LOT_A = Lot.builder()
-            .id(LOT_A_ID)
-            .acquiredAmount(LOT_A_AMOUNT)
-            .costPerUnit(PRODUCT_A_COST)
-            .product(PRODUCT_A)
-            .acquiredAt(LocalDateTime.now().plusMinutes(5))
             .build();
     public static final Product PRODUCT_B = Product.builder()
             .id(PRODUCT_B_ID)
@@ -100,117 +99,150 @@ public class TestConstants {
             .name(PRODUCT_B_NAME)
             .measureUnit(PRODUCT_B_MEASURE)
             .build();
-    public static final Lot LOT_B = Lot.builder()
-            .id(LOT_B_ID)
-            .acquiredAmount(LOT_B_AMOUNT)
-            .costPerUnit(PRODUCT_B_COST)
-            .product(PRODUCT_B)
-            .acquiredAt(LocalDateTime.now().plusMinutes(10))
-            .build();
+
     public static final Shop SHOP1 = Shop.builder()
             .id(SHOP1_ID)
             .name(SHOP1_NAME)
             .address(SHOP1_ADDRESS)
-            .build();
-    public static final Pack PACK1A = Pack.builder()
-            .id(PACK1A_ID)
-            .receivedAmount(PACK1A_AMOUNT)
-            .lot(LOT_A)
-            .shop(SHOP1)
-            .receivedAt(LocalDateTime.now().plusMinutes(15))
-            .build();
-    public static final Offer OFFER1A = Offer.builder()
-            .id(OFFER1A_ID)
-            .price(PRODUCT_A_PRICE)
-            .pack(PACK1A)
-            .createdAt(LocalDateTime.now().plusMinutes(18))
-            .build();
-    public static final Sale SALE_1A35 = Sale.builder()
-            .id(0x1A35L)
-            .amount(SALE_1A35_AMOUNT)
-            .offer(OFFER1A)
-            .registeredAt(LocalDateTime.now().plusMinutes(35))
-            .build();
-    public static final Sale SALE_1A40 = Sale.builder()
-            .id(0x1A35L)
-            .amount(SALE_1A40_AMOUNT)
-            .offer(OFFER1A)
-            .registeredAt(LocalDateTime.now().plusMinutes(40))
-            .build();
-    public static final Pack PACK1B = Pack.builder()
-            .id(PACK1B_ID)
-            .receivedAmount(PACK1B_AMOUNT)
-            .lot(LOT_B)
-            .shop(SHOP1)
-            .receivedAt(LocalDateTime.now().plusMinutes(20))
-            .build();
-    public static final Offer OFFER1B = Offer.builder()
-            .id(OFFER1B_ID)
-            .price(PRODUCT_B_PRICE)
-            .createdAt(LocalDateTime.now().plusMinutes(22))
-            .pack(PACK1B)
-            .build();
-    public static final Sale SALE_1B45 = Sale.builder()
-            .amount(SALE_1B45_AMOUNT)
-            .offer(OFFER1B)
-            .id(0x1A35L).registeredAt(LocalDateTime.now().plusMinutes(45))
-            .build();
-    public static final Sale SALE_1B50 = Sale.builder()
-            .amount(SALE_1B50_AMOUNT)
-            .offer(OFFER1B)
-            .id(0x1A35L).registeredAt(LocalDateTime.now().plusMinutes(50))
             .build();
     public static final Shop SHOP2 = Shop.builder()
             .id(SHOP2_ID)
             .name(SHOP2_NAME)
             .address(SHOP2_ADDRESS)
             .build();
+
+    public static final Lot LOT_A = Lot.builder()
+            .id(LOT_A_ID)
+            .acquiredAmount(LOT_A_AMOUNT)
+            .costPerUnit(PRODUCT_A_COST)
+            .product(PRODUCT_A)
+            .acquiredAt(LocalDateTime.now().plusSeconds(5))
+            .build();
+    public static final Lot LOT_B = Lot.builder()
+            .id(LOT_B_ID)
+            .acquiredAmount(LOT_B_AMOUNT)
+            .costPerUnit(PRODUCT_B_COST)
+            .product(PRODUCT_B)
+            .acquiredAt(LocalDateTime.now().plusSeconds(10))
+            .build();
+
+    public static final Pack PACK1A = Pack.builder()
+            .id(PACK1A_ID)
+            .receivedAmount(PACK1A_AMOUNT)
+            .lot(LOT_A)
+            .shop(SHOP1)
+            .receivedAt(LocalDateTime.now().plusSeconds(15))
+            .build();
+    public static final Pack PACK1B = Pack.builder()
+            .id(PACK1B_ID)
+            .receivedAmount(PACK1B_AMOUNT)
+            .lot(LOT_B)
+            .shop(SHOP1)
+            .receivedAt(LocalDateTime.now().plusSeconds(20))
+            .build();
     public static final Pack PACK2A = Pack.builder()
             .id(PACK2A_ID)
             .receivedAmount(PACK2A_AMOUNT)
             .lot(LOT_A)
             .shop(SHOP2)
-            .receivedAt(LocalDateTime.now().plusMinutes(25))
-            .build();
-    public static final Offer OFFER2A = Offer.builder()
-            .id(OFFER2A_ID)
-            .price(PRODUCT_A_PRICE)
-            .pack(PACK2A)
-            .createdAt(LocalDateTime.now().plusMinutes(28))
-            .build();
-    public static final Sale SALE_2A55 = Sale.builder()
-            .id(0x1A35L)
-            .amount(SALE_2A55_AMOUNT)
-            .offer(OFFER2A)
-            .registeredAt(LocalDateTime.now().plusMinutes(55))
-            .build();
-    public static final Sale SALE_2A60 = Sale.builder()
-            .id(0x1A35L)
-            .amount(SALE_2A60_AMOUNT)
-            .offer(OFFER2A)
-            .registeredAt(LocalDateTime.now().plusMinutes(60))
+            .receivedAt(LocalDateTime.now().plusSeconds(25))
             .build();
     public static final Pack PACK2B = Pack.builder()
             .id(PACK2B_ID)
             .receivedAmount(PACK2B_AMOUNT)
             .lot(LOT_B)
             .shop(SHOP2)
-            .receivedAt(LocalDateTime.now().plusMinutes(30))
+            .receivedAt(LocalDateTime.now().plusSeconds(30))
+            .build();
+
+    public static final Offer OFFER1A = Offer.builder()
+            .id(OFFER1A_ID)
+            .price(PRODUCT_A_PRICE)
+            .pack(PACK1A)
+            .createdAt(LocalDateTime.now().plusSeconds(31))
+            .build();
+    public static final Offer OFFER1B = Offer.builder()
+            .id(OFFER1B_ID)
+            .price(PRODUCT_B_PRICE)
+            .createdAt(LocalDateTime.now().plusSeconds(32))
+            .pack(PACK1B)
+            .build();
+    public static final Offer OFFER2A = Offer.builder()
+            .id(OFFER2A_ID)
+            .price(PRODUCT_A_PRICE)
+            .pack(PACK2A)
+            .createdAt(LocalDateTime.now().plusSeconds(33))
             .build();
     public static final Offer OFFER2B = Offer.builder()
             .id(OFFER2B_ID)
             .price(PRODUCT_B_PRICE)
             .pack(PACK2B)
-            .createdAt(LocalDateTime.now().plusMinutes(32))
+            .createdAt(LocalDateTime.now().plusSeconds(34))
+            .build();
+
+    public static final Invoice INVOICE_FIRST = Invoice.builder()
+            .id(INVOICE_FIRST_UUID)
+            .status(InvoiceStatus.CREATED)
+            .sales(new ArrayList<>())
+            .build();
+    public static final Invoice INVOICE_SECOND = Invoice.builder()
+            .id(INVOICE_SECOND_UUID)
+            .status(InvoiceStatus.CREATED)
+            .sales(new ArrayList<>())
+            .build();
+
+    public static final Sale SALE_1A35 = Sale.builder()
+            .id(0x1A35L)
+            .invoice(INVOICE_FIRST)
+            .amount(SALE_1A35_AMOUNT)
+            .offer(OFFER1A)
+            .registeredAt(LocalDateTime.now().plusSeconds(35))
+            .build();
+    public static final Sale SALE_1A40 = Sale.builder()
+            .id(0x1A40L)
+            .invoice(INVOICE_FIRST)
+            .amount(SALE_1A40_AMOUNT)
+            .offer(OFFER1A)
+            .registeredAt(LocalDateTime.now().plusSeconds(40))
+            .build();
+    public static final Sale SALE_1B45 = Sale.builder()
+            .id(0x1B45L)
+            .invoice(INVOICE_FIRST)
+            .offer(OFFER1B)
+            .amount(SALE_1B45_AMOUNT)
+            .registeredAt(LocalDateTime.now().plusSeconds(45))
+            .build();
+    public static final Sale SALE_1B50 = Sale.builder()
+            .id(0x1B50L)
+            .invoice(INVOICE_FIRST)
+            .offer(OFFER1B)
+            .amount(SALE_1B50_AMOUNT)
+            .registeredAt(LocalDateTime.now().plusSeconds(50))
+            .build();
+    public static final Sale SALE_2A55 = Sale.builder()
+            .id(0x2A55L)
+            .invoice(INVOICE_SECOND)
+            .amount(SALE_2A55_AMOUNT)
+            .offer(OFFER2A)
+            .registeredAt(LocalDateTime.now().plusSeconds(55))
+            .build();
+    public static final Sale SALE_2A60 = Sale.builder()
+            .id(0x2A60L)
+            .invoice(INVOICE_SECOND)
+            .amount(SALE_2A60_AMOUNT)
+            .offer(OFFER2A)
+            .registeredAt(LocalDateTime.now().plusSeconds(60))
             .build();
     public static final Sale SALE_2B65 = Sale.builder()
-            .id(0x1A35L)
+            .id(0x2B65L)
+            .invoice(INVOICE_SECOND)
             .amount(SALE_2B65_AMOUNT)
             .offer(OFFER2B)
             .registeredAt(LocalDateTime.now().plusMinutes(65))
             .build();
     public static final Sale SALE_2B70 = Sale.builder()
-            .id(0x1A35L)
+            .id(0x2B70L)
+            .invoice(INVOICE_SECOND)
             .amount(SALE_2B70_AMOUNT)
             .offer(OFFER2B)
             .registeredAt(LocalDateTime.now().plusMinutes(70))

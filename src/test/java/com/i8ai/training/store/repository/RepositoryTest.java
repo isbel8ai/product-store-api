@@ -31,6 +31,8 @@ class RepositoryTest {
 
     private final PackRepository packRepository;
 
+    private final InvoiceRepository invoiceRepository;
+
     private final OfferRepository offerRepository;
 
     private final SaleRepository saleRepository;
@@ -78,19 +80,23 @@ class RepositoryTest {
         helper.createOffer(pack2B, PRODUCT_B_PRICE + 10);
         Offer offer2B = helper.createOffer(pack2B, PRODUCT_B_PRICE);
 
-        helper.createSale(offer1A, SALE_1A35_AMOUNT);
-        helper.createSale(offer1A, SALE_1A40_AMOUNT);
-        helper.createSale(offer1B, SALE_1B45_AMOUNT);
-        helper.createSale(offer1B, SALE_1B50_AMOUNT);
-        helper.createSale(offer2A, SALE_2A55_AMOUNT);
-        helper.createSale(offer2A, SALE_2A60_AMOUNT);
-        helper.createSale(offer2B, SALE_2B65_AMOUNT);
-        helper.createSale(offer2B, SALE_2B70_AMOUNT);
+        Invoice invoiceFist = helper.createInvoice();
+        Invoice invoiceSecond = helper.createInvoice();
+
+        helper.createSale(invoiceFist, offer1A, SALE_1A35_AMOUNT);
+        helper.createSale(invoiceSecond, offer1A, SALE_1A40_AMOUNT);
+        helper.createSale(invoiceFist, offer1B, SALE_1B45_AMOUNT);
+        helper.createSale(invoiceSecond, offer1B, SALE_1B50_AMOUNT);
+        helper.createSale(invoiceFist, offer2A, SALE_2A55_AMOUNT);
+        helper.createSale(invoiceSecond, offer2A, SALE_2A60_AMOUNT);
+        helper.createSale(invoiceFist, offer2B, SALE_2B65_AMOUNT);
+        helper.createSale(invoiceSecond, offer2B, SALE_2B70_AMOUNT);
     }
 
     @AfterEach
     void tearDown() {
         saleRepository.deleteAll();
+        invoiceRepository.deleteAll();
         offerRepository.deleteAll();
         packRepository.deleteAll();
         lotRepository.deleteAll();
@@ -146,8 +152,7 @@ class RepositoryTest {
     @Test
     void findAllPacksByDeliveredBetweenAndLotProductIdAndShopId() {
         List<Pack> packs = packRepository.findAllByReceivedAtBetweenAndLotProductIdAndShopId(
-                MIN_DATETIME, MAX_DATETIME, idProductB, idShop2
-        );
+                MIN_DATETIME, MAX_DATETIME, idProductB, idShop2);
 
         assertEquals(1, packs.size());
     }
@@ -200,8 +205,7 @@ class RepositoryTest {
     @Test
     void findAllSalesByRegisteredBetweenAndPackLotProductIdAndPackShopId() {
         List<Sale> sales = saleRepository.findAllByRegisteredAtBetweenAndOfferPackLotProductIdAndOfferPackShopId(
-                MIN_DATETIME, MAX_DATETIME, idProductA, idShop1
-        );
+                MIN_DATETIME, MAX_DATETIME, idProductA, idShop1);
 
         assertEquals(2, sales.size());
     }
@@ -272,9 +276,8 @@ class RepositoryTest {
 
     @Test
     void getSaleExpensesByProductIdAndShopId() {
-        Double expenses = saleRepository.getSaleExpensesByProductIdAndShopId(
-                MIN_DATETIME, MAX_DATETIME, idProductA, idShop1
-        );
+        Double expenses = saleRepository
+                .getSaleExpensesByProductIdAndShopId(MIN_DATETIME, MAX_DATETIME, idProductA, idShop1);
 
         assertEquals(PACK1A_SALES_EXPENSES, expenses);
     }

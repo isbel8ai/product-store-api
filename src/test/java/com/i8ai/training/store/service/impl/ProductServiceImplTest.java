@@ -1,7 +1,7 @@
 package com.i8ai.training.store.service.impl;
 
-import com.i8ai.training.store.error.ElementNotFoundException;
-import com.i8ai.training.store.error.NotValidElementDataException;
+import com.i8ai.training.store.exception.ElementNotFoundException;
+import com.i8ai.training.store.exception.NotValidElementDataException;
 import com.i8ai.training.store.model.Product;
 import com.i8ai.training.store.repository.ProductRepository;
 import org.junit.jupiter.api.Test;

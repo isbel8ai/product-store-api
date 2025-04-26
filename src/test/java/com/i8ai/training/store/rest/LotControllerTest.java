@@ -46,7 +46,7 @@ class LotControllerTest {
         mockMvc.perform(post("/lots")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(helper.asJsonString(new LotDto(helper.createLotA(productA)))))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists());
     }

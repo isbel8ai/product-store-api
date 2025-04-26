@@ -4,7 +4,7 @@ import com.i8ai.training.store.rest.dto.PackDto;
 import com.i8ai.training.store.service.PackService;
 import com.i8ai.training.store.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -16,7 +16,8 @@ import java.util.List;
 public class PackController {
     private final PackService packService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PackDto registerPack(@RequestBody PackDto packDto) {
         return new PackDto(packService.registerPack(packDto));
     }

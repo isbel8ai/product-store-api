@@ -5,6 +5,7 @@ import com.i8ai.training.store.model.Shop;
 import com.i8ai.training.store.service.ShopService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,8 @@ public class ShopController {
 
     private final ShopService shopService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Shop createShop(@Valid @RequestBody Shop newShop) {
         return shopService.createShop(newShop);
     }

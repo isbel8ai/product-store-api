@@ -73,7 +73,7 @@ class OfferControllerTest {
         mockMvc.perform(post("/offers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(helper.asJsonString(new OfferDto(offer))))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").exists());
 

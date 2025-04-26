@@ -1,7 +1,7 @@
 package com.i8ai.training.store.service.impl;
 
-import com.i8ai.training.store.error.ElementNotFoundException;
-import com.i8ai.training.store.error.NotValidAmountException;
+import com.i8ai.training.store.exception.ElementNotFoundException;
+import com.i8ai.training.store.exception.InvalidPackAmountException;
 import com.i8ai.training.store.model.Lot;
 import com.i8ai.training.store.model.Pack;
 import com.i8ai.training.store.model.Shop;
@@ -34,7 +34,7 @@ public class PackServiceImpl implements PackService {
     public Pack registerPack(PackDto packDto) {
         Lot lot = lotService.getLot(packDto.lotId());
         if (packDto.amount() <= 0.0 || packDto.amount() > lot.getCurrentAmount()) {
-            throw new NotValidAmountException();
+            throw new InvalidPackAmountException(packDto.amount(), lot);
         }
 
         Shop shop = shopService.getShop(packDto.shopId());

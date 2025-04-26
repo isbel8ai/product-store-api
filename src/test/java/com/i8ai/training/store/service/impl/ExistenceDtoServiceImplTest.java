@@ -1,7 +1,7 @@
 package com.i8ai.training.store.service.impl;
 
+import com.i8ai.training.store.rest.dto.ExistenceDto;
 import com.i8ai.training.store.service.*;
-import com.i8ai.training.store.service.data.Existence;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ExistenceServiceImplTest {
+class ExistenceDtoServiceImplTest {
 
     @Mock
     ProductService productServiceMock;
@@ -44,15 +44,15 @@ class ExistenceServiceImplTest {
         when(packServiceMock.getProductDeliveredAmount(PRODUCT_A_ID)).thenReturn(150.0);
         when(packServiceMock.getProductDeliveredAmount(PRODUCT_B_ID)).thenReturn(200.0);
 
-        List<Existence> existences = existenceService.getAllProductsExistenceInMain();
+        List<ExistenceDto> existenceDtos = existenceService.getAllProductsExistenceInMain();
 
-        assertEquals(2, existences.size());
-        assertNull(existences.get(0).getShop());
-        assertEquals(PRODUCT_A_NAME, existences.get(0).getProduct().getName());
-        assertEquals(150.0, existences.get(0).getAmount());
-        assertNull(existences.get(1).getShop());
-        assertEquals(PRODUCT_B_NAME, existences.get(1).getProduct().getName());
-        assertEquals(300.0, existences.get(1).getAmount());
+        assertEquals(2, existenceDtos.size());
+        assertNull(existenceDtos.get(0).getShop());
+        assertEquals(PRODUCT_A_NAME, existenceDtos.get(0).getProduct().getName());
+        assertEquals(150.0, existenceDtos.get(0).getAmount());
+        assertNull(existenceDtos.get(1).getShop());
+        assertEquals(PRODUCT_B_NAME, existenceDtos.get(1).getProduct().getName());
+        assertEquals(300.0, existenceDtos.get(1).getAmount());
     }
 
     @Test
@@ -73,15 +73,15 @@ class ExistenceServiceImplTest {
         when(saleServiceMock.getSoldAmountByProductAndShop(PRODUCT_B_ID, SHOP1_ID)).thenReturn(250.0);
         when(saleServiceMock.getSoldAmountByProductAndShop(PRODUCT_B_ID, SHOP2_ID)).thenReturn(350.0);
 
-        List<Existence> existences = existenceService.getProductExistenceInAllShops(PRODUCT_B_ID);
+        List<ExistenceDto> existenceDtos = existenceService.getProductExistenceInAllShops(PRODUCT_B_ID);
 
-        assertEquals(2, existences.size());
-        assertEquals(SHOP1_NAME, existences.get(0).getShop().getName());
-        assertEquals(PRODUCT_B_NAME, existences.get(0).getProduct().getName());
-        assertEquals(350.0, existences.get(0).getAmount());
-        assertEquals(SHOP2_NAME, existences.get(1).getShop().getName());
-        assertEquals(PRODUCT_B_NAME, existences.get(1).getProduct().getName());
-        assertEquals(200.0, existences.get(1).getAmount());
+        assertEquals(2, existenceDtos.size());
+        assertEquals(SHOP1_NAME, existenceDtos.get(0).getShop().getName());
+        assertEquals(PRODUCT_B_NAME, existenceDtos.get(0).getProduct().getName());
+        assertEquals(350.0, existenceDtos.get(0).getAmount());
+        assertEquals(SHOP2_NAME, existenceDtos.get(1).getShop().getName());
+        assertEquals(PRODUCT_B_NAME, existenceDtos.get(1).getProduct().getName());
+        assertEquals(200.0, existenceDtos.get(1).getAmount());
     }
 
     @Test

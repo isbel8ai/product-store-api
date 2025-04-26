@@ -1,16 +1,16 @@
 package com.i8ai.training.store.service;
 
-import com.i8ai.training.store.service.data.Existence;
+import com.i8ai.training.store.rest.dto.ExistenceDto;
 
 import java.util.List;
 
 public interface ExistenceService {
 
-    List<Existence> getAllProductsExistenceInMain();
+    List<ExistenceDto> getAllProductsExistenceInMain();
 
-    Existence getProductExistenceInMain(Long productId);
+    ExistenceDto getProductExistenceInMain(Long productId);
 
-    List<Existence> getProductExistenceInAllShops(Long productId);
+    List<ExistenceDto> getProductExistenceInAllShops(Long productId);
 
-    Existence getProductExistenceInShop(Long productId, Long shopId);
+    ExistenceDto getProductExistenceInShop(Long productId, Long shopId);
 }

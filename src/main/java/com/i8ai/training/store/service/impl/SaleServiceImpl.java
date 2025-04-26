@@ -1,12 +1,18 @@
 package com.i8ai.training.store.service.impl;
 
-import com.i8ai.training.store.error.ElementNotFoundException;
-import com.i8ai.training.store.error.NotValidAmountException;
+import com.i8ai.training.store.exception.ElementNotFoundException;
+import com.i8ai.training.store.exception.InvalidInvoiceStatusTransitionException;
+import com.i8ai.training.store.exception.InvalidSaleAmountException;
+import com.i8ai.training.store.exception.InvalidSaleShopForInvoiceException;
+import com.i8ai.training.store.model.Invoice;
+import com.i8ai.training.store.model.InvoiceStatus;
 import com.i8ai.training.store.model.Offer;
 import com.i8ai.training.store.model.Sale;
 import com.i8ai.training.store.repository.SaleRepository;
 import com.i8ai.training.store.rest.dto.SaleDto;
+import com.i8ai.training.store.service.InvoiceService;
 import com.i8ai.training.store.service.OfferService;
+import com.i8ai.training.store.service.PackService;
 import com.i8ai.training.store.service.SaleService;
 import com.i8ai.training.store.util.DateTimeUtils;
 import jakarta.transaction.Transactional;
@@ -20,26 +26,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SaleServiceImpl implements SaleService {
 
+    private final InvoiceService invoiceService;
+
     private final OfferService offerService;
+
+    private final PackService packService;
 
     private final SaleRepository saleRepository;
 
     @Override
     @Transactional
     public Sale registerSale(SaleDto saleDto) {
+        Invoice invoice = invoiceService.getInvoice(saleDto.invoiceId());
+        if (invoice.getStatus().notValidTransitionTo(InvoiceStatus.OPEN)) {
+            throw new InvalidInvoiceStatusTransitionException(invoice.getStatus(), InvoiceStatus.OPEN);
+        }
+        Long invoiceShopId = invoice.getSales().stream().findFirst()
+                .map(sale -> sale.getOffer().getPack().getShop().getId())
+                .orElse(null);
+
         Offer offer = offerService.getOffer(saleDto.offerId());
+        Long saleShopId = offer.getPack().getShop().getId();
+        if (invoiceShopId != null && !invoiceShopId.equals(saleShopId)) {
+            throw new InvalidSaleShopForInvoiceException(saleShopId, invoiceShopId);
+        }
         if (saleDto.amount() <= 0.0 || saleDto.amount() > offer.getPack().getCurrentAmount()) {
-            throw new NotValidAmountException();
+            throw new InvalidSaleAmountException(saleDto.amount(), offer.getPack());
         }
 
         Sale sale = Sale.builder()
                 .offer(offer)
+                .invoice(invoice)
                 .amount(saleDto.amount())
                 .registeredAt(DateTimeUtils.dateTimeOrNow(saleDto.registeredAt()))
                 .build();
 
         saleRepository.save(sale);
-        offerService.updateOfferPack(offer.getPack().getId());
+        packService.updateSoldAmount(offer.getPack().getId());
+        invoiceService.updateInvoice(invoice.getId(), InvoiceStatus.OPEN);
         return sale;
     }
 

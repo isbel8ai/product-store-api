@@ -4,7 +4,7 @@ import com.i8ai.training.store.rest.dto.OfferDto;
 import com.i8ai.training.store.service.OfferService;
 import com.i8ai.training.store.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -18,7 +18,8 @@ public class OfferController {
 
     private final OfferService offerService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public OfferDto createOffer(@RequestBody OfferDto offerDto) {
         return new OfferDto(offerService.createOffer(offerDto));
     }

@@ -29,4 +29,8 @@ public class Sale {
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     private Offer offer;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private Invoice invoice;
 }

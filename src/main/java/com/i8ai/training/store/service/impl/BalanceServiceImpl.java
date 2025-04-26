@@ -2,11 +2,11 @@ package com.i8ai.training.store.service.impl;
 
 import com.i8ai.training.store.model.Product;
 import com.i8ai.training.store.model.Shop;
+import com.i8ai.training.store.rest.dto.BalanceDto;
 import com.i8ai.training.store.service.BalanceService;
 import com.i8ai.training.store.service.ProductService;
 import com.i8ai.training.store.service.SaleService;
 import com.i8ai.training.store.service.ShopService;
-import com.i8ai.training.store.service.data.Balance;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +24,16 @@ public class BalanceServiceImpl implements BalanceService {
     private final SaleService saleService;
 
     @Override
-    public Balance getNetBalance(LocalDateTime start, LocalDateTime end) {
-        return Balance.builder()
+    public BalanceDto getNetBalance(LocalDateTime start, LocalDateTime end) {
+        return BalanceDto.builder()
                 .spent(saleService.getNetSalesExpenses(start, end))
                 .income(saleService.getNetSalesIncome(start, end))
                 .build();
     }
 
     @Override
-    public List<Balance> getBalancesPerProduct(LocalDateTime start, LocalDateTime end) {
-        return productService.getAllProducts().stream().map(product -> Balance.builder()
+    public List<BalanceDto> getBalancesPerProduct(LocalDateTime start, LocalDateTime end) {
+        return productService.getAllProducts().stream().map(product -> BalanceDto.builder()
                 .spent(saleService.getSalesExpensesByProduct(product.getId(), start, end))
                 .income(saleService.getSalesIncomeByProduct(product.getId(), start, end))
                 .product(product)
@@ -42,8 +42,8 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public List<Balance> getBalancesPerShop(LocalDateTime start, LocalDateTime end) {
-        return shopService.getAllShops().stream().map(shop -> Balance.builder()
+    public List<BalanceDto> getBalancesPerShop(LocalDateTime start, LocalDateTime end) {
+        return shopService.getAllShops().stream().map(shop -> BalanceDto.builder()
                 .spent(saleService.getSalesExpensesByShop(shop.getId(), start, end))
                 .income(saleService.getSalesIncomeByShop(shop.getId(), start, end))
                 .shop(shop)
@@ -52,9 +52,9 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public List<Balance> getBalancesPerProductPerShop(LocalDateTime start, LocalDateTime end) {
+    public List<BalanceDto> getBalancesPerProductPerShop(LocalDateTime start, LocalDateTime end) {
         List<Product> products = productService.getAllProducts();
-        return shopService.getAllShops().stream().flatMap(shop -> products.stream().map(product -> Balance.builder()
+        return shopService.getAllShops().stream().flatMap(shop -> products.stream().map(product -> BalanceDto.builder()
                 .spent(saleService.getSalesExpensesByProductAndShop(product.getId(), shop.getId(), start, end))
                 .income(saleService.getSalesIncomeByProductAndShop(product.getId(), shop.getId(), start, end))
                 .product(product)
@@ -64,8 +64,8 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public Balance getBalanceByProduct(Long productId, LocalDateTime start, LocalDateTime end) {
-        return Balance.builder()
+    public BalanceDto getBalanceByProduct(Long productId, LocalDateTime start, LocalDateTime end) {
+        return BalanceDto.builder()
                 .spent(saleService.getSalesExpensesByProduct(productId, start, end))
                 .income(saleService.getSalesIncomeByProduct(productId, start, end))
                 .product(productService.getProduct(productId))
@@ -73,8 +73,8 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public Balance getBalanceByShop(Long shopId, LocalDateTime start, LocalDateTime end) {
-        return Balance.builder()
+    public BalanceDto getBalanceByShop(Long shopId, LocalDateTime start, LocalDateTime end) {
+        return BalanceDto.builder()
                 .spent(saleService.getSalesExpensesByShop(shopId, start, end))
                 .income(saleService.getSalesIncomeByShop(shopId, start, end))
                 .shop(shopService.getShop(shopId))
@@ -82,9 +82,9 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public List<Balance> getBalancesByProductPerShop(Long productId, LocalDateTime start, LocalDateTime end) {
+    public List<BalanceDto> getBalancesByProductPerShop(Long productId, LocalDateTime start, LocalDateTime end) {
         Product product = productService.getProduct(productId);
-        return shopService.getAllShops().stream().map(shop -> Balance.builder()
+        return shopService.getAllShops().stream().map(shop -> BalanceDto.builder()
                 .spent(saleService.getSalesExpensesByProductAndShop(productId, shop.getId(), start, end))
                 .income(saleService.getSalesIncomeByProductAndShop(productId, shop.getId(), start, end))
                 .product(product)
@@ -94,9 +94,9 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public List<Balance> getBalancesByShopPerProduct(Long shopId, LocalDateTime start, LocalDateTime end) {
+    public List<BalanceDto> getBalancesByShopPerProduct(Long shopId, LocalDateTime start, LocalDateTime end) {
         Shop shop = shopService.getShop(shopId);
-        return productService.getAllProducts().stream().map(product -> Balance.builder()
+        return productService.getAllProducts().stream().map(product -> BalanceDto.builder()
                 .spent(saleService.getSalesExpensesByProductAndShop(product.getId(), shopId, start, end))
                 .income(saleService.getSalesIncomeByProductAndShop(product.getId(), shopId, start, end))
                 .product(product)
@@ -105,8 +105,8 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public Balance getBalanceByProductAndShop(Long productId, Long shopId, LocalDateTime start, LocalDateTime end) {
-        return Balance.builder()
+    public BalanceDto getBalanceByProductAndShop(Long productId, Long shopId, LocalDateTime start, LocalDateTime end) {
+        return BalanceDto.builder()
                 .spent(saleService.getSalesExpensesByProductAndShop(productId, shopId, start, end))
                 .income(saleService.getSalesIncomeByProductAndShop(productId, shopId, start, end))
                 .product(productService.getProduct(productId))

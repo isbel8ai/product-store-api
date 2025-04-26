@@ -4,6 +4,7 @@ import com.i8ai.training.store.rest.dto.SaleDto;
 import com.i8ai.training.store.service.SaleService;
 import com.i8ai.training.store.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -17,6 +18,7 @@ public class SaleController {
     private final SaleService saleService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public SaleDto registerSale(@RequestBody SaleDto saleDto) {
         return new SaleDto(saleService.registerSale(saleDto));
     }
