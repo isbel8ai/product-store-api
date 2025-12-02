@@ -7,7 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
@@ -113,8 +113,7 @@ class RepositoryTest {
 
     @Test
     void findAllLotsByProductIdAndReceivedBetween() {
-        List<Lot> lots = lotRepository.
-                findAllByAcquiredAtBetweenAndProductId(MIN_DATETIME, MAX_DATETIME, idProductA);
+        List<Lot> lots = lotRepository.findAllByAcquiredAtBetweenAndProductId(MIN_DATETIME, MAX_DATETIME, idProductA);
 
         assertEquals(1, lots.size());
     }
@@ -135,24 +134,21 @@ class RepositoryTest {
 
     @Test
     void findAllPacksByDeliveredBetweenAndShopId() {
-        List<Pack> packs = packRepository
-                .findAllByReceivedAtBetweenAndShopId(MIN_DATETIME, MAX_DATETIME, idShop1);
+        List<Pack> packs = packRepository.findAllByReceivedAtBetweenAndShopId(MIN_DATETIME, MAX_DATETIME, idShop1);
 
         assertEquals(2, packs.size());
     }
 
     @Test
     void findAllPacksByDeliveredBetweenAndLotProductId() {
-        List<Pack> packs = packRepository
-                .findAllByReceivedAtBetweenAndLotProductId(MIN_DATETIME, MAX_DATETIME, idProductA);
+        List<Pack> packs = packRepository.findAllByReceivedAtBetweenAndLotProductId(MIN_DATETIME, MAX_DATETIME, idProductA);
 
         assertEquals(2, packs.size());
     }
 
     @Test
     void findAllPacksByDeliveredBetweenAndLotProductIdAndShopId() {
-        List<Pack> packs = packRepository.findAllByReceivedAtBetweenAndLotProductIdAndShopId(
-                MIN_DATETIME, MAX_DATETIME, idProductB, idShop2);
+        List<Pack> packs = packRepository.findAllByReceivedAtBetweenAndLotProductIdAndShopId(MIN_DATETIME, MAX_DATETIME, idProductB, idShop2);
 
         assertEquals(1, packs.size());
     }
@@ -188,24 +184,21 @@ class RepositoryTest {
 
     @Test
     void findAllSalesByRegisteredBetweenAndPackShopId() {
-        List<Sale> sales = saleRepository
-                .findAllByRegisteredAtBetweenAndOfferPackShopId(MIN_DATETIME, MAX_DATETIME, idShop2);
+        List<Sale> sales = saleRepository.findAllByRegisteredAtBetweenAndOfferPackShopId(MIN_DATETIME, MAX_DATETIME, idShop2);
 
         assertEquals(4, sales.size());
     }
 
     @Test
     void findAllSalesByRegisteredBetweenAndPackLotProductId() {
-        List<Sale> sales = saleRepository
-                .findAllByRegisteredAtBetweenAndOfferPackShopId(MIN_DATETIME, MAX_DATETIME, idProductB);
+        List<Sale> sales = saleRepository.findAllByRegisteredAtBetweenAndOfferPackShopId(MIN_DATETIME, MAX_DATETIME, idProductB);
 
         assertEquals(4, sales.size());
     }
 
     @Test
     void findAllSalesByRegisteredBetweenAndPackLotProductIdAndPackShopId() {
-        List<Sale> sales = saleRepository.findAllByRegisteredAtBetweenAndOfferPackLotProductIdAndOfferPackShopId(
-                MIN_DATETIME, MAX_DATETIME, idProductA, idShop1);
+        List<Sale> sales = saleRepository.findAllByRegisteredAtBetweenAndOfferPackLotProductIdAndOfferPackShopId(MIN_DATETIME, MAX_DATETIME, idProductA, idShop1);
 
         assertEquals(2, sales.size());
     }
@@ -247,8 +240,7 @@ class RepositoryTest {
 
     @Test
     void getIncomeByProductIdAndShopId() {
-        Double income = saleRepository
-                .getIncomeByProductIdAndShopId(MIN_DATETIME, MAX_DATETIME, idProductA, idShop1);
+        Double income = saleRepository.getIncomeByProductIdAndShopId(MIN_DATETIME, MAX_DATETIME, idProductA, idShop1);
 
         assertEquals(PACK1A_SALES_INCOME, income);
     }
@@ -276,8 +268,7 @@ class RepositoryTest {
 
     @Test
     void getSaleExpensesByProductIdAndShopId() {
-        Double expenses = saleRepository
-                .getSaleExpensesByProductIdAndShopId(MIN_DATETIME, MAX_DATETIME, idProductA, idShop1);
+        Double expenses = saleRepository.getSaleExpensesByProductIdAndShopId(MIN_DATETIME, MAX_DATETIME, idProductA, idShop1);
 
         assertEquals(PACK1A_SALES_EXPENSES, expenses);
     }

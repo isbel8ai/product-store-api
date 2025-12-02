@@ -1,5 +1,13 @@
 spring:
   datasource:
-    url: jdbc:oracle:thin:@${PSA_ORACLE_HOST}:${PSA_ORACLE_PORT}/${PSA_ORACLE_DB}
+    url: jdbc:oracle:thin:@${PSA_ORACLE_HOST:localhost}:${PSA_ORACLE_PORT:1521}/${PSA_ORACLE_DB:XEPDB1}
+    driver-class-name: oracle.jdbc.OracleDriver
     username: ${PSA_ORACLE_USER}
     password: ${PSA_ORACLE_PASS}
+
+  liquibase:
+    default-schema: ${spring.datasource.username}
+
+springdoc:
+  api-docs.enabled: false
+  swagger-ui.enabled: false

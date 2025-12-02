@@ -47,13 +47,10 @@ Management system for a local shop business. It helps owners to supervise and co
 | Get balanceDtos for each product on a shop              | /balanceDto/shop/{shopId}/product             | GET    | start, end                       |
 | Get net balanceDto of a product on a shop               | /balanceDto/product/{productId}/shop/{shopId} | GET    | start, end                       |
 
-## Database Model
-![Product store API database model](database/product-store-api_model.png)
-
 ## Deploying the application
 
 - Install and run Docker
-- Create a .env file with the required environment variables
+- Create a file (.env) with the required environment variables
 
       # Port to map the database server out of docker network
       PSA_ORACLE_PORT=1521
