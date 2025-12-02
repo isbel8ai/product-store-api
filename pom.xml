@@ -107,7 +107,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/model/*</exclude>
-                        <exclude>**/data/*</exclude>
+                        <exclude>**/dto/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
